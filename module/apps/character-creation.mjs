@@ -5,7 +5,7 @@ const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 /**
  * Geführte Charaktererstellung: Rasse wählen -> Rassen-Details (Attributboni-Vorschau,
  * Körpermaß-Slider, freie Attributpunkte, Wahlmöglichkeiten) -> Beruf wählen -> Berufs-
- * Details -> Zusammenfassung/Übernehmen. Arbeitet auf einem lokalen State (this.state) und
+ * Details -> Zusammenfassung/Übernehmen. Arbeitet auf einem lokalen State (this.wizardData) und
  * schreibt erst beim Fertigstellen auf den Actor -- ein Abbruch verändert nichts.
  *
  * Rassen/Berufe kommen aus game.items (Welt-Items), damit die SL beliebig neue Rassen/
@@ -41,7 +41,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     const existingRace = actor.items.find(i => i.type === "race");
     const existingProfession = actor.items.find(i => i.type === "profession");
 
-    this.state = {
+    this.wizardData = {
       raceId: existingRace?.flags?.scuvanya?.sourceId ?? null,
       professionId: existingProfession?.flags?.scuvanya?.sourceId ?? null,
       body: {
@@ -66,24 +66,24 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     context.races = game.items.filter(i => i.type === "race");
     context.professions = game.items.filter(i => i.type === "profession");
-    context.selectedRace = this.state.raceId ? game.items.get(this.state.raceId) ?? null : null;
-    context.selectedProfession = this.state.professionId ? game.items.get(this.state.professionId) ?? null : null;
+    context.selectedRace = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) ?? null : null;
+    context.selectedProfession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) ?? null : null;
 
-    context.body = this.state.body;
+    context.body = this.wizardData.body;
 
     const freeFromRace = context.selectedRace?.system.freeAttributePoints ?? 0;
     const freeFromProfession = context.selectedProfession?.system.freeAttributePoints ?? 0;
     context.freeAttributePointsAvailable = freeFromRace + freeFromProfession;
-    context.freeAttributePointsSpent = Object.values(this.state.allocation).reduce((s, v) => s + v, 0);
+    context.freeAttributePointsSpent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0);
     context.attributeAllocation = Object.entries(SCUVANYA.attributes).map(([key, cfg]) => ({
-      key, abbr: cfg.abbr, allocation: this.state.allocation[key] ?? 0
+      key, abbr: cfg.abbr, allocation: this.wizardData.allocation[key] ?? 0
     }));
 
     context.raceBonusPreview = this._bonusPreview(context.selectedRace?.system);
     context.professionBonusPreview = this._bonusPreview(context.selectedProfession?.system);
 
-    context.raceChoices = this._mapChoices(context.selectedRace?.system, this.state.raceChoices);
-    context.professionChoices = this._mapChoices(context.selectedProfession?.system, this.state.professionChoices);
+    context.raceChoices = this._mapChoices(context.selectedRace?.system, this.wizardData.raceChoices);
+    context.professionChoices = this._mapChoices(context.selectedProfession?.system, this.wizardData.professionChoices);
 
     return context;
   }
@@ -136,7 +136,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       if (!input) continue;
       input.addEventListener("input", () => {
         const value = Number(input.value);
-        this.state.body[key] = value;
+        this.wizardData.body[key] = value;
         if (output) output.textContent = value;
       });
     }
@@ -144,12 +144,12 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
   static #onPickRace(event, target) {
     const id = target.closest("[data-id]")?.dataset.id;
-    this.state.raceId = id;
-    this.state.raceChoices = {};
+    this.wizardData.raceId = id;
+    this.wizardData.raceChoices = {};
     const race = game.items.get(id);
     if (race) {
       const b = race.system.body;
-      this.state.body = {
+      this.wizardData.body = {
         height: Math.round(((b.heightMin + b.heightMax) / 2) * 100) / 100,
         weight: Math.round(((b.weightMin + b.weightMax) / 2) * 10) / 10,
         age: Math.round((b.ageMin + b.ageMax) / 2)
@@ -160,60 +160,60 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
   static #onPickProfession(event, target) {
     const id = target.closest("[data-id]")?.dataset.id;
-    this.state.professionId = id;
-    this.state.professionChoices = {};
+    this.wizardData.professionId = id;
+    this.wizardData.professionChoices = {};
     this.render();
   }
 
   static #onClearProfession() {
-    this.state.professionId = null;
-    this.state.professionChoices = {};
+    this.wizardData.professionId = null;
+    this.wizardData.professionChoices = {};
     this.render();
   }
 
   static #onAllocatePoint(event, target) {
     const key = target.dataset.key;
     const delta = Number(target.dataset.delta);
-    const current = this.state.allocation[key] ?? 0;
+    const current = this.wizardData.allocation[key] ?? 0;
     const next = Math.max(0, current + delta);
 
-    const race = this.state.raceId ? game.items.get(this.state.raceId) : null;
-    const profession = this.state.professionId ? game.items.get(this.state.professionId) : null;
+    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
+    const profession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) : null;
     const available = (race?.system.freeAttributePoints ?? 0) + (profession?.system.freeAttributePoints ?? 0);
-    const spent = Object.values(this.state.allocation).reduce((s, v) => s + v, 0) - current + next;
+    const spent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0) - current + next;
     if (delta > 0 && spent > available) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
       return;
     }
-    this.state.allocation[key] = next;
+    this.wizardData.allocation[key] = next;
     this.render();
   }
 
   static #onChooseOption(event, target) {
     const scope = target.dataset.scope;
     const bucket = scope === "race" ? "raceChoices" : "professionChoices";
-    this.state[bucket][target.dataset.choiceKey] = target.dataset.option;
+    this.wizardData[bucket][target.dataset.choiceKey] = target.dataset.option;
     this.render();
   }
 
   static #onNextStep() {
-    if (this.step === 1 && !this.state.raceId) {
+    if (this.step === 1 && !this.wizardData.raceId) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedRace"));
       return;
     }
     if (this.step === 2) {
-      const race = game.items.get(this.state.raceId);
+      const race = game.items.get(this.wizardData.raceId);
       for (const choice of race?.system.choices ?? []) {
-        if (!this.state.raceChoices[choice.key]) {
+        if (!this.wizardData.raceChoices[choice.key]) {
           ui.notifications.warn(game.i18n.format("SCUVANYA.Wizard.NeedChoice", { label: choice.label }));
           return;
         }
       }
     }
-    if (this.step === 4 && this.state.professionId) {
-      const profession = game.items.get(this.state.professionId);
+    if (this.step === 4 && this.wizardData.professionId) {
+      const profession = game.items.get(this.wizardData.professionId);
       for (const choice of profession?.system.choices ?? []) {
-        if (!this.state.professionChoices[choice.key]) {
+        if (!this.wizardData.professionChoices[choice.key]) {
           ui.notifications.warn(game.i18n.format("SCUVANYA.Wizard.NeedChoice", { label: choice.label }));
           return;
         }
@@ -240,22 +240,22 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     if (existingIds.length) await actor.deleteEmbeddedDocuments("Item", existingIds);
 
     const toCreate = [];
-    if (this.state.raceId) {
-      const source = game.items.get(this.state.raceId);
+    if (this.wizardData.raceId) {
+      const source = game.items.get(this.wizardData.raceId);
       if (source) {
         const data = source.toObject();
         delete data._id;
-        data.system.choiceSelections = this.state.raceChoices;
+        data.system.choiceSelections = this.wizardData.raceChoices;
         data.flags = foundry.utils.mergeObject(data.flags ?? {}, { scuvanya: { sourceId: source.id } });
         toCreate.push(data);
       }
     }
-    if (this.state.professionId) {
-      const source = game.items.get(this.state.professionId);
+    if (this.wizardData.professionId) {
+      const source = game.items.get(this.wizardData.professionId);
       if (source) {
         const data = source.toObject();
         delete data._id;
-        data.system.choiceSelections = this.state.professionChoices;
+        data.system.choiceSelections = this.wizardData.professionChoices;
         data.flags = foundry.utils.mergeObject(data.flags ?? {}, { scuvanya: { sourceId: source.id } });
         toCreate.push(data);
       }
@@ -263,8 +263,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
 
     await actor.update({
-      "system.body": this.state.body,
-      "system.attributeAllocation": this.state.allocation
+      "system.body": this.wizardData.body,
+      "system.attributeAllocation": this.wizardData.allocation
     });
 
     ui.notifications.info(game.i18n.localize("SCUVANYA.Wizard.Done"));
