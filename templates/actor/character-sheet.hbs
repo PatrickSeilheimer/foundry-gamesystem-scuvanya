@@ -7,6 +7,7 @@
       <div class="race-profession">
         <span>{{localize 'SCUVANYA.Item.race'}}: {{#if items.race}}{{items.race.name}}{{else}}—{{/if}}</span>
         <span>{{localize 'SCUVANYA.Item.profession'}}: {{#if items.profession}}{{items.profession.name}}{{else}}—{{/if}}</span>
+        <button type="button" data-action="openCreationWizard">{{localize 'SCUVANYA.Wizard.OpenButton'}}</button>
       </div>
       <div class="resource-bars">
         <label>{{localize 'SCUVANYA.Resource.hp'}}
@@ -26,6 +27,12 @@
         </label>
         <label>{{localize 'SCUVANYA.Armor.magical'}}
           <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">
+        </label>
+        <label>{{localize 'SCUVANYA.SkillPoints.total'}}
+          <input type="number" min="0" name="system.skillPoints.total" value="{{skillPoints.total}}">
+        </label>
+        <label>{{localize 'SCUVANYA.SkillPoints.available'}}
+          <span class="skillpoints-available {{#if (lt skillPoints.available 0)}}negative{{/if}}">{{skillPoints.available}}</span> / {{skillPoints.spent}} {{localize 'SCUVANYA.SkillPoints.spentSuffix'}}
         </label>
       </div>
     </div>
@@ -56,7 +63,12 @@
           {{#each attributes as |attr|}}
           <tr>
             <td>{{attr.abbr}}</td>
-            <td><input type="number" name="system.attributes.{{attr.key}}.value" value="{{attr.value}}"></td>
+            <td class="buy">
+              <a data-action="buyAttribute" data-key="{{attr.key}}" data-delta="-1">-</a>
+              {{attr.value}}
+              <a data-action="buyAttribute" data-key="{{attr.key}}" data-delta="1" title="{{localize 'SCUVANYA.SkillPoints.CostHint'}}: {{attr.nextCost}}">+</a>
+              <span class="cost-hint">({{attr.nextCost}})</span>
+            </td>
             <td title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}">{{attr.effectiveValue}}{{#if attr.raceBonus}} ({{attr.raceBonus}}){{/if}}</td>
             <td>{{attr.mod}}</td>
             <td class="allocation">
@@ -92,7 +104,12 @@
         {{#each sozialPositiv as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.sozial.positiv.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.sozial.positiv.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}
+            <a data-action="buyTalent" data-path="talents.sozial.positiv.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollSocialSkill" data-polarity="positiv" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -103,7 +120,12 @@
         {{#each sozialNegativ as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.sozial.negativ.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.sozial.negativ.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}
+            <a data-action="buyTalent" data-path="talents.sozial.negativ.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollSocialSkill" data-polarity="negativ" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -114,7 +136,12 @@
         {{#each wissenschaftenSozial as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.wissenschaften.sozial.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.wissenschaften.sozial.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}
+            <a data-action="buyTalent" data-path="talents.wissenschaften.sozial.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollScienceSkill" data-branch="sozial" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -125,7 +152,12 @@
         {{#each wissenschaftenNatur as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.wissenschaften.natur.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.wissenschaften.natur.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}
+            <a data-action="buyTalent" data-path="talents.wissenschaften.natur.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollScienceSkill" data-branch="natur" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -137,7 +169,12 @@
         {{#each koerperlich as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.koerperlich.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.koerperlich.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}
+            <a data-action="buyTalent" data-path="talents.koerperlich.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td>{{localize 'SCUVANYA.Bonus'}}: {{skill.bonus}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}</td>
           <td><button type="button" data-action="rollPhysicalSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
@@ -150,7 +187,12 @@
         {{#each sonder as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" name="system.talents.sonder.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTalent" data-path="talents.sonder.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}
+            <a data-action="buyTalent" data-path="talents.sonder.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollSonderSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -161,7 +203,12 @@
         {{#each handwerk as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" min="0" max="5" name="system.talents.handwerk.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTiered" data-category="handwerk" data-path="talents.handwerk.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}
+            <a data-action="buyTiered" data-category="handwerk" data-path="talents.handwerk.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td>{{skill.die}}</td>
           <td><button type="button" data-action="rollHandwerkSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
@@ -173,7 +220,12 @@
         {{#each spezial as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="number" min="0" max="5" name="system.talents.spezial.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTiered" data-category="spezial" data-path="talents.spezial.{{skill.key}}.level" data-delta="-1">-</a>
+            {{skill.level}}
+            <a data-action="buyTiered" data-category="spezial" data-path="talents.spezial.{{skill.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{skill.nextCost}})</span>
+          </td>
           <td>{{skill.die}}</td>
           <td><button type="button" data-action="rollSpezialSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
@@ -185,7 +237,16 @@
         {{#each extra as |skill|}}
         <tr>
           <td>{{skill.label}}</td>
-          <td><input type="checkbox" name="system.talents.extra.{{skill.key}}.known" {{#if skill.known}}checked{{/if}}></td>
+          <td>
+            {{#if skill.granted}}
+            <input type="checkbox" checked disabled title="{{localize 'SCUVANYA.Hint.GrantedByProgression'}}">
+            {{else}}
+            <a data-action="buyExtra" data-key="{{skill.key}}" class="extra-toggle {{#if skill.known}}active{{/if}}">
+              {{#if skill.known}}✓{{else}}—{{/if}}
+            </a>
+            <span class="cost-hint">{{#unless skill.known}}({{skill.cost}}){{/unless}}</span>
+            {{/if}}
+          </td>
         </tr>
         {{/each}}
       </table>
@@ -198,7 +259,12 @@
         {{#each kampfDisziplinen as |d|}}
         <tr>
           <td>{{d.label}}</td>
-          <td><input type="number" min="0" max="10" name="system.disziplinen.kampf.{{d.key}}.level" value="{{d.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTiered" data-category="disziplin" data-path="disziplinen.kampf.{{d.key}}.level" data-delta="-1">-</a>
+            {{d.level}}{{#if d.raceBonus}} (+{{d.raceBonus}}){{/if}}
+            <a data-action="buyTiered" data-category="disziplin" data-path="disziplinen.kampf.{{d.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{d.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollDiscipline" data-kind="kampf" data-key="{{d.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -209,7 +275,12 @@
         {{#each magieDisziplinen as |d|}}
         <tr>
           <td>{{d.label}}</td>
-          <td><input type="number" min="0" max="10" name="system.disziplinen.magie.{{d.key}}.level" value="{{d.level}}"></td>
+          <td class="buy">
+            <a data-action="buyTiered" data-category="disziplin" data-path="disziplinen.magie.{{d.key}}.level" data-delta="-1">-</a>
+            {{d.level}}{{#if d.raceBonus}} (+{{d.raceBonus}}){{/if}}
+            <a data-action="buyTiered" data-category="disziplin" data-path="disziplinen.magie.{{d.key}}.level" data-delta="1">+</a>
+            <span class="cost-hint">({{d.nextCost}})</span>
+          </td>
           <td><button type="button" data-action="rollDiscipline" data-kind="magie" data-key="{{d.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
         </tr>
         {{/each}}
@@ -275,6 +346,14 @@
 
     {{!-- BIOGRAFIE --}}
     <div class="tab biografie-tab {{#if (eq activeTab 'biografie')}}active{{/if}}">
+      <div class="form-group">
+        <label>{{localize 'SCUVANYA.Body.height'}} (m)</label>
+        <input type="number" step="0.01" min="0" name="system.body.height" value="{{body.height}}">
+        <label>{{localize 'SCUVANYA.Body.weight'}} (kg)</label>
+        <input type="number" step="0.1" min="0" name="system.body.weight" value="{{body.weight}}">
+        <label>{{localize 'SCUVANYA.Body.age'}}</label>
+        <input type="number" min="0" name="system.body.age" value="{{body.age}}">
+      </div>
       <textarea name="system.biography" rows="15">{{system.biography}}</textarea>
     </div>
 

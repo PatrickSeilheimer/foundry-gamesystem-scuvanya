@@ -1,0 +1,151 @@
+<form class="scuvanya-sheet character-creation" autocomplete="off">
+
+  <nav class="wizard-steps">
+    <span class="step-indicator {{#if (eq step 1)}}active{{/if}}">1. {{localize 'SCUVANYA.Wizard.StepRace'}}</span>
+    <span class="step-indicator {{#if (eq step 2)}}active{{/if}}">2. {{localize 'SCUVANYA.Wizard.StepRaceDetails'}}</span>
+    <span class="step-indicator {{#if (eq step 3)}}active{{/if}}">3. {{localize 'SCUVANYA.Wizard.StepProfession'}}</span>
+    <span class="step-indicator {{#if (eq step 4)}}active{{/if}}">4. {{localize 'SCUVANYA.Wizard.StepProfessionDetails'}}</span>
+    <span class="step-indicator {{#if (eq step 5)}}active{{/if}}">5. {{localize 'SCUVANYA.Wizard.StepSummary'}}</span>
+  </nav>
+
+  <section class="wizard-body">
+
+    {{#if (eq step 1)}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepRace'}}</h3>
+    {{#unless races.length}}<p class="hint">{{localize 'SCUVANYA.Wizard.NoRaceItems'}}</p>{{/unless}}
+    <div class="wizard-card-grid">
+      {{#each races as |race|}}
+      <div class="wizard-card {{#if (eq race.id ../selectedRace.id)}}selected{{/if}}" data-action="pickRace" data-id="{{race.id}}">
+        <img src="{{race.img}}">
+        <span class="wizard-card-name">{{race.name}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (eq step 2)}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepRaceDetails'}}: {{selectedRace.name}}</h3>
+
+    {{#if raceBonusPreview}}
+    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview}}
+    {{/if}}
+
+    {{#if freeAttributePointsAvailable}}
+    <h4>{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</h4>
+    <div class="attribute-bonus-grid">
+      {{#each attributeAllocation as |attr|}}
+      <label>{{attr.abbr}}
+        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
+        {{attr.allocation}}
+        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
+      </label>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <h4>{{localize 'SCUVANYA.Wizard.BodyRange'}}</h4>
+    <div class="wizard-slider">
+      <label>{{localize 'SCUVANYA.Body.height'}} (m): <output data-body="height">{{body.height}}</output></label>
+      <input type="range" name="body.height" min="{{selectedRace.system.body.heightMin}}" max="{{selectedRace.system.body.heightMax}}" step="0.01" value="{{body.height}}">
+    </div>
+    <div class="wizard-slider">
+      <label>{{localize 'SCUVANYA.Body.weight'}} (kg): <output data-body="weight">{{body.weight}}</output></label>
+      <input type="range" name="body.weight" min="{{selectedRace.system.body.weightMin}}" max="{{selectedRace.system.body.weightMax}}" step="0.1" value="{{body.weight}}">
+    </div>
+    <div class="wizard-slider">
+      <label>{{localize 'SCUVANYA.Body.age'}}: <output data-body="age">{{body.age}}</output></label>
+      <input type="range" name="body.age" min="{{selectedRace.system.body.ageMin}}" max="{{selectedRace.system.body.ageMax}}" step="1" value="{{body.age}}">
+    </div>
+
+    {{#if raceChoices.length}}
+    <h4>{{localize 'SCUVANYA.Progression.choices'}}</h4>
+    {{#each raceChoices as |choice|}}
+    <div class="wizard-choice">
+      <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
+      <div class="choice-option-grid">
+        {{#each choice.options as |opt|}}
+        <a class="wizard-chip {{#if (eq opt.value ../choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="race" data-choice-key="{{../choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    {{/if}}
+
+    {{#if (eq step 3)}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepProfession'}}</h3>
+    <p class="hint">{{localize 'SCUVANYA.Wizard.ProfessionOptionalHint'}}</p>
+    {{#unless professions.length}}<p class="hint">{{localize 'SCUVANYA.Wizard.NoProfessionItems'}}</p>{{/unless}}
+    <div class="wizard-card-grid">
+      {{#each professions as |profession|}}
+      <div class="wizard-card {{#if (eq profession.id ../selectedProfession.id)}}selected{{/if}}" data-action="pickProfession" data-id="{{profession.id}}">
+        <img src="{{profession.img}}">
+        <span class="wizard-card-name">{{profession.name}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{#if selectedProfession}}
+    <button type="button" data-action="clearProfession">{{localize 'SCUVANYA.Wizard.ClearProfession'}}</button>
+    {{/if}}
+    {{/if}}
+
+    {{#if (eq step 4)}}
+    {{#if selectedProfession}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepProfessionDetails'}}: {{selectedProfession.name}}</h3>
+
+    {{#if professionBonusPreview}}
+    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=professionBonusPreview}}
+    {{/if}}
+
+    {{#if freeAttributePointsAvailable}}
+    <h4>{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</h4>
+    <div class="attribute-bonus-grid">
+      {{#each attributeAllocation as |attr|}}
+      <label>{{attr.abbr}}
+        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
+        {{attr.allocation}}
+        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
+      </label>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if professionChoices.length}}
+    <h4>{{localize 'SCUVANYA.Progression.choices'}}</h4>
+    {{#each professionChoices as |choice|}}
+    <div class="wizard-choice">
+      <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
+      <div class="choice-option-grid">
+        {{#each choice.options as |opt|}}
+        <a class="wizard-chip {{#if (eq opt.value ../choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="profession" data-choice-key="{{../choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    {{else}}
+    <p class="hint">{{localize 'SCUVANYA.Wizard.NoneSelected'}}</p>
+    {{/if}}
+    {{/if}}
+
+    {{#if (eq step 5)}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepSummary'}}</h3>
+    <p><strong>{{localize 'SCUVANYA.Item.race'}}:</strong> {{#if selectedRace}}{{selectedRace.name}}{{else}}—{{/if}}</p>
+    <p><strong>{{localize 'SCUVANYA.Item.profession'}}:</strong> {{#if selectedProfession}}{{selectedProfession.name}}{{else}}—{{/if}}</p>
+    <p>
+      <strong>{{localize 'SCUVANYA.Body.height'}}:</strong> {{body.height}} m &nbsp;
+      <strong>{{localize 'SCUVANYA.Body.weight'}}:</strong> {{body.weight}} kg &nbsp;
+      <strong>{{localize 'SCUVANYA.Body.age'}}:</strong> {{body.age}}
+    </p>
+    <p class="hint">{{localize 'SCUVANYA.Wizard.FinishHint'}}</p>
+    {{/if}}
+
+  </section>
+
+  <footer class="wizard-footer">
+    <button type="button" data-action="cancel">{{localize 'SCUVANYA.Wizard.Cancel'}}</button>
+    {{#if (lt 1 step)}}<button type="button" data-action="prevStep">{{localize 'SCUVANYA.Wizard.Back'}}</button>{{/if}}
+    {{#if (lt step 5)}}<button type="button" data-action="nextStep">{{localize 'SCUVANYA.Wizard.Next'}}</button>{{/if}}
+    {{#if (eq step 5)}}<button type="button" data-action="finish" class="finish-button">{{localize 'SCUVANYA.Wizard.Finish'}}</button>{{/if}}
+  </footer>
+</form>

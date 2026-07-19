@@ -92,6 +92,71 @@
       <input type="number" min="0" name="system.freeAttributePoints" value="{{system.freeAttributePoints}}">
     </div>
 
+    {{#if (eq item.type "race")}}
+    <h3>{{localize 'SCUVANYA.Progression.bodyRanges'}}</h3>
+    <p class="hint">{{localize 'SCUVANYA.Progression.bodyRangesHint'}}</p>
+    <div class="attribute-bonus-grid body-range-grid">
+      <label>{{localize 'SCUVANYA.Body.heightMin'}} (m)
+        <input type="number" step="0.01" min="0" name="system.body.heightMin" value="{{system.body.heightMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.heightMax'}} (m)
+        <input type="number" step="0.01" min="0" name="system.body.heightMax" value="{{system.body.heightMax}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.weightMin'}} (kg)
+        <input type="number" step="0.1" min="0" name="system.body.weightMin" value="{{system.body.weightMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.weightMax'}} (kg)
+        <input type="number" step="0.1" min="0" name="system.body.weightMax" value="{{system.body.weightMax}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.ageMin'}}
+        <input type="number" min="0" name="system.body.ageMin" value="{{system.body.ageMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.ageMax'}}
+        <input type="number" min="0" name="system.body.ageMax" value="{{system.body.ageMax}}">
+      </label>
+    </div>
+    {{/if}}
+
+    <h3>{{localize 'SCUVANYA.Progression.extraGrants'}}</h3>
+    <p class="hint">{{localize 'SCUVANYA.Progression.extraGrantsHint'}}</p>
+    <div class="extra-grants-grid">
+      {{#each config.extraSkills as |key|}}
+      <a class="extra-grant-toggle {{#if (includes ../system.extraGrants key)}}active{{/if}}" data-action="toggleExtraGrant" data-key="{{key}}">
+        {{localize (concat "SCUVANYA.Skill." key)}}
+      </a>
+      {{/each}}
+    </div>
+
+    <h3>{{localize 'SCUVANYA.Progression.choices'}}
+      <button type="button" data-action="addChoice">+</button>
+    </h3>
+    <p class="hint">{{localize 'SCUVANYA.Progression.choicesHint'}}</p>
+    {{#each system.choices as |choice choiceIndex|}}
+    <div class="choice-row" data-choice-index="{{choiceIndex}}">
+      <div class="choice-fields">
+        <input type="text" name="system.choices.{{choiceIndex}}.key" value="{{choice.key}}" placeholder="{{localize 'SCUVANYA.Progression.choiceKey'}}">
+        <input type="text" name="system.choices.{{choiceIndex}}.label" value="{{choice.label}}" placeholder="{{localize 'SCUVANYA.Progression.choiceLabel'}}">
+        <select name="system.choices.{{choiceIndex}}.kind">
+          {{#each ../config.choiceKinds as |kind|}}
+          <option value="{{kind}}" {{#if (eq kind ../choice.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.choiceKind." kind)}}</option>
+          {{/each}}
+        </select>
+        <input type="number" name="system.choices.{{choiceIndex}}.amount" value="{{choice.amount}}" title="{{localize 'SCUVANYA.Progression.choiceAmount'}}">
+        <a data-action="removeChoice" data-choice-index="{{choiceIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+      </div>
+      <div class="choice-options" data-choice-index="{{choiceIndex}}">
+        <span class="hint">{{localize 'SCUVANYA.Progression.choiceOptions'}}:</span>
+        {{#each choice.options as |option optionIndex|}}
+        <span class="choice-option" data-choice-index="{{choiceIndex}}" data-option-index="{{optionIndex}}">
+          <input type="text" name="system.choices.{{choiceIndex}}.options.{{optionIndex}}" value="{{option}}">
+          <a data-action="removeChoiceOption" data-choice-index="{{choiceIndex}}" data-option-index="{{optionIndex}}">×</a>
+        </span>
+        {{/each}}
+        <button type="button" data-action="addChoiceOption" data-choice-index="{{choiceIndex}}">+ {{localize 'SCUVANYA.Progression.choiceOption'}}</button>
+      </div>
+    </div>
+    {{/each}}
+
     <h3>{{localize 'SCUVANYA.Progression.resistanceBonuses'}}</h3>
     <div class="attribute-bonus-grid">
       {{#each config.damageTypes as |cfg key|}}

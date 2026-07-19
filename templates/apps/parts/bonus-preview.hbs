@@ -1,0 +1,26 @@
+<div class="bonus-preview">
+  {{#if preview.attributes.length}}
+  <div class="bonus-preview-row">
+    <span class="bonus-preview-label">{{localize 'SCUVANYA.Progression.attributeBonuses'}}:</span>
+    {{#each preview.attributes as |a|}}<span class="bonus-chip">{{a.abbr}} {{#if (lt 0 a.bonus)}}+{{/if}}{{a.bonus}}</span>{{/each}}
+  </div>
+  {{/if}}
+  {{#if preview.skills.length}}
+  <div class="bonus-preview-row">
+    <span class="bonus-preview-label">{{localize 'SCUVANYA.Progression.skillBonuses'}}:</span>
+    {{#each preview.skills as |s|}}<span class="bonus-chip">{{s}}</span>{{/each}}
+  </div>
+  {{/if}}
+  {{#if preview.resistances.length}}
+  <div class="bonus-preview-row">
+    <span class="bonus-preview-label">{{localize 'SCUVANYA.Progression.resistanceBonuses'}}:</span>
+    {{#each preview.resistances as |r|}}<span class="bonus-chip">{{r}}</span>{{/each}}
+  </div>
+  {{/if}}
+  {{#if preview.extra.length}}
+  <div class="bonus-preview-row">
+    <span class="bonus-preview-label">{{localize 'SCUVANYA.Progression.extraGrants'}}:</span>
+    {{#each preview.extra as |e|}}<span class="bonus-chip">{{e}}</span>{{/each}}
+  </div>
+  {{/if}}
+</div>

@@ -70,7 +70,8 @@ export default class ScuvanyaActor extends Actor {
 
   async rollDiscipline(kind, key) {
     const discipline = this.system.disziplinen[kind][key];
-    return rollToChat(this, `1d20 + ${discipline.level}`, `${this._disciplineLabel(kind, key)}`);
+    const raceBonus = discipline.raceBonus ?? 0;
+    return rollToChat(this, `1d20 + ${discipline.level} + ${raceBonus}`, `${this._disciplineLabel(kind, key)}`);
   }
 
   /**

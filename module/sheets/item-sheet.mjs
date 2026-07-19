@@ -12,7 +12,12 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
     form: { submitOnChange: true },
     actions: {
       addSkillBonus: ScuvanyaItemSheet.#onAddSkillBonus,
-      removeSkillBonus: ScuvanyaItemSheet.#onRemoveSkillBonus
+      removeSkillBonus: ScuvanyaItemSheet.#onRemoveSkillBonus,
+      addChoice: ScuvanyaItemSheet.#onAddChoice,
+      removeChoice: ScuvanyaItemSheet.#onRemoveChoice,
+      addChoiceOption: ScuvanyaItemSheet.#onAddChoiceOption,
+      removeChoiceOption: ScuvanyaItemSheet.#onRemoveChoiceOption,
+      toggleExtraGrant: ScuvanyaItemSheet.#onToggleExtraGrant
     }
   };
 
@@ -39,5 +44,42 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
     const skillBonuses = foundry.utils.deepClone(this.item.system.skillBonuses ?? []);
     skillBonuses.splice(index, 1);
     await this.item.update({ "system.skillBonuses": skillBonuses });
+  }
+
+  static async #onAddChoice() {
+    const choices = foundry.utils.deepClone(this.item.system.choices ?? []);
+    choices.push({ key: "", label: "", kind: "attribute", options: [], amount: 0 });
+    await this.item.update({ "system.choices": choices });
+  }
+
+  static async #onRemoveChoice(event, target) {
+    const index = Number(target.closest("[data-choice-index]")?.dataset.choiceIndex);
+    const choices = foundry.utils.deepClone(this.item.system.choices ?? []);
+    choices.splice(index, 1);
+    await this.item.update({ "system.choices": choices });
+  }
+
+  static async #onAddChoiceOption(event, target) {
+    const choiceIndex = Number(target.closest("[data-choice-index]")?.dataset.choiceIndex);
+    const choices = foundry.utils.deepClone(this.item.system.choices ?? []);
+    choices[choiceIndex].options.push("");
+    await this.item.update({ "system.choices": choices });
+  }
+
+  static async #onRemoveChoiceOption(event, target) {
+    const choiceIndex = Number(target.closest("[data-choice-index]")?.dataset.choiceIndex);
+    const optionIndex = Number(target.closest("[data-option-index]")?.dataset.optionIndex);
+    const choices = foundry.utils.deepClone(this.item.system.choices ?? []);
+    choices[choiceIndex].options.splice(optionIndex, 1);
+    await this.item.update({ "system.choices": choices });
+  }
+
+  static async #onToggleExtraGrant(event, target) {
+    const key = target.dataset.key;
+    const grants = foundry.utils.deepClone(this.item.system.extraGrants ?? []);
+    const index = grants.indexOf(key);
+    if (index >= 0) grants.splice(index, 1);
+    else grants.push(key);
+    await this.item.update({ "system.extraGrants": grants });
   }
 }

@@ -11,6 +11,13 @@ import {
   booleanSkillsField,
   disciplinesField
 } from "../templates.mjs";
+import {
+  attributeSpentCost,
+  talentUpgradeCost,
+  tieredUpgradeCost,
+  specialtyUpgradeCost,
+  EXTRA_TALENT_COST
+} from "../../rules/costs.mjs";
 
 const fields = foundry.data.fields;
 
@@ -29,6 +36,20 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       ac: armorClassSchema(),
       resistances: resistancesSchema(),
       biography: biographySchema(),
+
+      // Körpermaße, im Erstellungs-Wizard per Slider innerhalb der Rassen-Bereiche gewählt
+      // (siehe RaceData.body), danach frei editierbar.
+      body: new fields.SchemaField({
+        height: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+        weight: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+        age: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
+      }),
+
+      // Skillpunkt-Guthaben: "total" wird von der SL gesetzt, "spent"/"available" werden
+      // aus den investierten Stufen über alle Kategorien errechnet (siehe _computeSkillPoints).
+      skillPoints: new fields.SchemaField({
+        total: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
+      }),
 
       // Punkte, die aus Rasse/Beruf frei auf Attribute verteilt werden dürfen
       // (z.B. Mensch: 2 freie Punkte). Manuell vom Spieler zugewiesen, siehe Sheet.
@@ -91,7 +112,10 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this._prepareResources();
     this._prepareResistances();
     this._prepareSkillBonusDisplay();
+    this._prepareDisciplineBonusDisplay();
+    this._prepareExtraGrants();
     this._preparePhysicalSkillBonus();
+    this._computeSkillPoints();
   }
 
   /**
@@ -108,6 +132,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     const attribute = {};
     const resistance = {};
     const skill = {};
+    const discipline = {};
+    const extraGrants = new Set();
     for (const key of Object.keys(SCUVANYA.attributes)) attribute[key] = 0;
     for (const key of Object.keys(SCUVANYA.damageTypes)) resistance[key] = 0;
 
@@ -124,8 +150,25 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       for (const entry of data.skillBonuses ?? []) {
         skill[entry.path] = (skill[entry.path] ?? 0) + entry.bonus;
       }
+      for (const key of data.extraGrants ?? []) {
+        extraGrants.add(key);
+      }
+
+      // Wahlmöglichkeiten (choices): die getroffene Wahl liegt auf der Item-Instanz selbst
+      // (choiceSelections), die Optionsliste/Betrag auf der choice-Definition.
+      for (const choice of data.choices ?? []) {
+        const selected = data.choiceSelections?.[choice.key];
+        if (!selected || !choice.options?.includes(selected)) continue;
+        if (choice.kind === "attribute") {
+          attribute[selected] = (attribute[selected] ?? 0) + choice.amount;
+        } else if (choice.kind === "skill") {
+          skill[selected] = (skill[selected] ?? 0) + choice.amount;
+        } else if (choice.kind === "discipline") {
+          discipline[selected] = (discipline[selected] ?? 0) + choice.amount;
+        }
+      }
     }
-    return { attribute, resistance, skill };
+    return { attribute, resistance, skill, discipline, extraGrants };
   }
 
   _prepareResistances() {
@@ -141,6 +184,27 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     for (const [path, bonus] of Object.entries(skill)) {
       const target = foundry.utils.getProperty(this.talents, path);
       if (target) target.raceBonus = bonus;
+    }
+  }
+
+  /** Wie _prepareSkillBonusDisplay, aber für Disziplinen (Pfad relativ zu disziplinen, z.B. "magie.pyrokinet"). */
+  _prepareDisciplineBonusDisplay() {
+    const { discipline } = this._progressionBonus;
+    for (const [path, bonus] of Object.entries(discipline)) {
+      const target = foundry.utils.getProperty(this.disziplinen, path);
+      if (target) target.raceBonus = bonus;
+    }
+  }
+
+  /**
+   * Extra-Fähigkeiten (Lesen, Schreiben, ...), die Rasse/Beruf automatisch gewähren:
+   * angezeigt als "granted", ohne den persistierten "known"-Wert zu überschreiben
+   * (gleiche Non-Destruktiv-Logik wie bei Attributen/Talenten, siehe Klassenkommentar oben).
+   */
+  _prepareExtraGrants() {
+    const { extraGrants } = this._progressionBonus;
+    for (const key of SCUVANYA.extraSkills) {
+      this.talents.extra[key].granted = extraGrants.has(key);
     }
   }
 
@@ -186,5 +250,49 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     for (const key of keys) {
       skills[key].bonus = bonus;
     }
+  }
+
+  /**
+   * Errechnet, wie viele Skillpunkte bereits investiert sind (über alle kaufbaren
+   * Kategorien) und stellt sie neben dem SL-gesetzten Guthaben (skillPoints.total) dar.
+   * Rassen-/Berufsboni fließen hier NICHT ein -- die sind kostenlose Overlays, siehe oben.
+   */
+  _computeSkillPoints() {
+    let spent = 0;
+
+    for (const key of Object.keys(SCUVANYA.attributes)) {
+      spent += attributeSpentCost(this.attributes[key].value, SCUVANYA.attributeStartingValue);
+    }
+
+    const leveledGroups = [
+      this.talents.sozial.positiv, this.talents.sozial.negativ,
+      this.talents.wissenschaften.sozial, this.talents.wissenschaften.natur,
+      this.talents.koerperlich, this.talents.sonder
+    ];
+    for (const group of leveledGroups) {
+      for (const skill of Object.values(group)) {
+        spent += talentUpgradeCost(0, skill.level);
+      }
+    }
+
+    for (const skill of Object.values(this.talents.handwerk)) {
+      spent += tieredUpgradeCost(SCUVANYA.craftStartingLevel, skill.level);
+    }
+    for (const skill of Object.values(this.talents.spezial)) {
+      spent += specialtyUpgradeCost(SCUVANYA.specialtyStartingLevel, skill.level);
+    }
+    for (const skill of Object.values(this.talents.extra)) {
+      if (skill.known) spent += EXTRA_TALENT_COST;
+    }
+
+    for (const discipline of Object.values(this.disziplinen.kampf)) {
+      spent += tieredUpgradeCost(0, discipline.level);
+    }
+    for (const discipline of Object.values(this.disziplinen.magie)) {
+      spent += tieredUpgradeCost(0, discipline.level);
+    }
+
+    this.skillPoints.spent = spent;
+    this.skillPoints.available = this.skillPoints.total - spent;
   }
 }

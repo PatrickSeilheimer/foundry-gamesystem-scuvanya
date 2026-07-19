@@ -74,13 +74,58 @@
       "FreePoints": "Freie Attributpunkte",
       "RaceBonusIncluded": "Enthält Rassen-/Berufsbonus in Klammern",
       "Koerperlich": "Gemeinsamer Bonus = Durchschnitt aller investierten Punkte (abgerundet)",
-      "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final"
+      "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final",
+      "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden"
     },
 
     "Warning": {
       "Untrained": "{skill}: keine Ausbildung (Stufe 0), kein Wurf möglich",
       "OnlyOne": "Es kann nur eine Rasse bzw. ein Beruf pro Charakter vergeben werden ({type})",
-      "NoFreePoints": "Keine freien Attributpunkte mehr übrig"
+      "NoFreePoints": "Keine freien Attributpunkte mehr übrig",
+      "NotEnoughSkillPoints": "Nicht genug Skillpunkte (Kosten: {cost}, verfügbar: {available})"
+    },
+
+    "SkillPoints": {
+      "total": "Skillpunkte (Gesamt)",
+      "available": "Skillpunkte (Verfügbar)",
+      "spentSuffix": "verbraucht",
+      "CostHint": "Kosten"
+    },
+
+    "Body": {
+      "height": "Größe",
+      "weight": "Gewicht",
+      "age": "Alter",
+      "heightMin": "Größe (Min)",
+      "heightMax": "Größe (Max)",
+      "weightMin": "Gewicht (Min)",
+      "weightMax": "Gewicht (Max)",
+      "ageMin": "Alter (Min)",
+      "ageMax": "Alter (Max)"
+    },
+
+    "Wizard": {
+      "OpenButton": "Charaktererstellung",
+      "Title": "Charaktererstellung: {name}",
+      "StepRace": "Rasse wählen",
+      "StepRaceDetails": "Rassen-Details",
+      "StepProfession": "Beruf wählen",
+      "StepProfessionDetails": "Berufs-Details",
+      "StepSummary": "Zusammenfassung",
+      "Next": "Weiter",
+      "Back": "Zurück",
+      "Finish": "Fertigstellen",
+      "Cancel": "Abbrechen",
+      "NeedRace": "Bitte zuerst eine Rasse wählen",
+      "NeedChoice": "Bitte eine Option für \"{label}\" wählen",
+      "NoRaceItems": "Keine Rassen im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Rasse\" an.",
+      "NoProfessionItems": "Keine Berufe im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Beruf\" an.",
+      "BodyRange": "Körpermaße",
+      "ClearProfession": "Keinen Beruf wählen",
+      "ProfessionOptionalHint": "Optional -- kann übersprungen werden.",
+      "NoneSelected": "Nichts ausgewählt",
+      "FinishHint": "Beim Fertigstellen werden vorhandene Rasse/Beruf ersetzt und die Werte oben übernommen.",
+      "Done": "Charaktererstellung abgeschlossen."
     },
 
     "Item": {
@@ -118,7 +163,23 @@
       "freeAttributePoints": "Freie Attributpunkte",
       "resistanceBonuses": "Resistenzboni",
       "skillBonuses": "Talentboni",
-      "skillBonusHint": "Pfad-Beispiele: sozial.positiv.charme, wissenschaften.natur.medizin, handwerk.alchemist, sonder.schleichen"
+      "skillBonusHint": "Pfad-Beispiele: sozial.positiv.charme, wissenschaften.natur.medizin, handwerk.alchemist, sonder.schleichen",
+      "bodyRanges": "Körpermaß-Bereiche",
+      "bodyRangesHint": "Spielende wählen bei der Charaktererstellung per Slider einen Wert innerhalb dieser Bereiche.",
+      "extraGrants": "Automatische Extra-Fähigkeiten",
+      "extraGrantsHint": "Diese Extra-Fähigkeiten gelten für Charaktere mit diesem Item automatisch als vorhanden.",
+      "choices": "Wahlmöglichkeiten",
+      "choicesHint": "Bei der Charaktererstellung wählt der Spieler eine Option aus der Liste; der Betrag wird als Bonus auf das Gewählte angewendet.",
+      "choiceKey": "Interner Schlüssel",
+      "choiceLabel": "Beschriftung",
+      "choiceAmount": "Betrag",
+      "choiceOptions": "Optionen",
+      "choiceOption": "Option",
+      "choiceKind": {
+        "attribute": "Attribut",
+        "skill": "Talent (Pfad relativ zu talents, z.B. koerperlich.klettern)",
+        "discipline": "Disziplin (Pfad relativ zu disziplinen, z.B. magie.pyrokinet)"
+      }
     },
 
     "Language": {

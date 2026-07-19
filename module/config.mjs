@@ -128,3 +128,9 @@ SCUVANYA.resistanceMultiplier = function (step) {
 
 // Item-Typen, die Effekte (Active Effects) tragen können.
 SCUVANYA.itemTypes = ["weapon", "armor", "consumable", "equipment", "race", "profession"];
+
+// Wahlmöglichkeiten (choices) auf Rasse-/Berufs-Items: worauf der gewählte Bonus wirkt.
+// "attribute": eine der options ist ein Attributschlüssel (str, dex, ...).
+// "skill": eine der options ist ein Pfad relativ zu talents (z.B. "koerperlich.klettern").
+// "discipline": eine der options ist ein Pfad relativ zu disziplinen (z.B. "magie.pyrokinet").
+SCUVANYA.choiceKinds = ["attribute", "skill", "discipline"];
