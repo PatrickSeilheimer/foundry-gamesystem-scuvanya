@@ -1,0 +1,282 @@
+<form class="scuvanya-sheet character-sheet" autocomplete="off">
+
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-action="editImage" data-edit="img" title="{{actor.name}}">
+    <div class="header-fields">
+      <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'SCUVANYA.Name'}}">
+      <div class="race-profession">
+        <span>{{localize 'SCUVANYA.Item.race'}}: {{#if items.race}}{{items.race.name}}{{else}}—{{/if}}</span>
+        <span>{{localize 'SCUVANYA.Item.profession'}}: {{#if items.profession}}{{items.profession.name}}{{else}}—{{/if}}</span>
+      </div>
+      <div class="resource-bars">
+        <label>{{localize 'SCUVANYA.Resource.hp'}}
+          <input type="number" name="system.resources.hp.value" value="{{system.resources.hp.value}}"> / {{system.resources.hp.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.Resource.mana'}}
+          <input type="number" name="system.resources.mana.value" value="{{system.resources.mana.value}}"> / {{system.resources.mana.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.Resource.mentalHealth'}}
+          <input type="number" name="system.resources.mentalHealth.value" value="{{system.resources.mentalHealth.value}}"> / {{system.resources.mentalHealth.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.AC'}}
+          <input type="number" name="system.ac.value" value="{{system.ac.value}}">
+        </label>
+        <label>{{localize 'SCUVANYA.Armor.physical'}}
+          <input type="number" name="system.armor.physical" value="{{system.armor.physical}}">
+        </label>
+        <label>{{localize 'SCUVANYA.Armor.magical'}}
+          <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sheet-tabs">
+    <a class="tab-link {{#if (eq activeTab 'attribute')}}active{{/if}}" data-action="changeTab" data-tab="attribute">{{localize 'SCUVANYA.Tab.attribute'}}</a>
+    <a class="tab-link {{#if (eq activeTab 'talente')}}active{{/if}}" data-action="changeTab" data-tab="talente">{{localize 'SCUVANYA.Tab.talente'}}</a>
+    <a class="tab-link {{#if (eq activeTab 'kampf')}}active{{/if}}" data-action="changeTab" data-tab="kampf">{{localize 'SCUVANYA.Tab.kampf'}}</a>
+    <a class="tab-link {{#if (eq activeTab 'sprachen')}}active{{/if}}" data-action="changeTab" data-tab="sprachen">{{localize 'SCUVANYA.Tab.sprachen'}}</a>
+    <a class="tab-link {{#if (eq activeTab 'inventar')}}active{{/if}}" data-action="changeTab" data-tab="inventar">{{localize 'SCUVANYA.Tab.inventar'}}</a>
+    <a class="tab-link {{#if (eq activeTab 'biografie')}}active{{/if}}" data-action="changeTab" data-tab="biografie">{{localize 'SCUVANYA.Tab.biografie'}}</a>
+  </nav>
+
+  <section class="sheet-body">
+
+    {{!-- ATTRIBUTE --}}
+    <div class="tab attribute-tab {{#if (eq activeTab 'attribute')}}active{{/if}}">
+      <h3>{{localize 'SCUVANYA.Tab.attribute'}}</h3>
+      <p class="hint">{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</p>
+      <table class="attribute-table">
+        <thead><tr>
+          <th>{{localize 'SCUVANYA.AttributeLabel'}}</th><th>{{localize 'SCUVANYA.Value'}} ({{localize 'SCUVANYA.Base'}})</th>
+          <th>{{localize 'SCUVANYA.Value'}} ({{localize 'SCUVANYA.Effective'}})</th><th>{{localize 'SCUVANYA.Mod'}}</th>
+          <th>{{localize 'SCUVANYA.Hint.FreePoints'}}</th><th></th>
+        </tr></thead>
+        <tbody>
+          {{#each attributes as |attr|}}
+          <tr>
+            <td>{{attr.abbr}}</td>
+            <td><input type="number" name="system.attributes.{{attr.key}}.value" value="{{attr.value}}"></td>
+            <td title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}">{{attr.effectiveValue}}{{#if attr.raceBonus}} ({{attr.raceBonus}}){{/if}}</td>
+            <td>{{attr.mod}}</td>
+            <td class="allocation">
+              <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
+              {{attr.allocation}}
+              <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
+            </td>
+            <td><button type="button" data-action="rollAttribute" data-key="{{attr.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Resistances'}}</h3>
+      <table class="resistance-table">
+        <thead><tr><th>{{localize 'SCUVANYA.DamageLabel'}}</th><th>{{localize 'SCUVANYA.Resistances'}} (%)</th></tr></thead>
+        <tbody>
+          {{#each config.damageTypes as |cfg key|}}
+          <tr>
+            <td>{{localize cfg.label}}</td>
+            <td><input type="number" step="25" name="system.resistances.{{key}}" value="{{lookup ../system.resistances key}}"></td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    {{!-- TALENTE --}}
+    <div class="tab talente-tab {{#if (eq activeTab 'talente')}}active{{/if}}">
+
+      <h3>{{localize 'SCUVANYA.Category.sozialPositiv'}}</h3>
+      <table class="skill-table">
+        {{#each sozialPositiv as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.sozial.positiv.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td><button type="button" data-action="rollSocialSkill" data-polarity="positiv" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.sozialNegativ'}}</h3>
+      <table class="skill-table">
+        {{#each sozialNegativ as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.sozial.negativ.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td><button type="button" data-action="rollSocialSkill" data-polarity="negativ" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.wissenschaftenSozial'}}</h3>
+      <table class="skill-table">
+        {{#each wissenschaftenSozial as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.wissenschaften.sozial.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td><button type="button" data-action="rollScienceSkill" data-branch="sozial" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.wissenschaftenNatur'}}</h3>
+      <table class="skill-table">
+        {{#each wissenschaftenNatur as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.wissenschaften.natur.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td><button type="button" data-action="rollScienceSkill" data-branch="natur" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.koerperlich'}}</h3>
+      <p class="hint">{{localize 'SCUVANYA.Hint.Koerperlich'}}</p>
+      <table class="skill-table">
+        {{#each koerperlich as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.koerperlich.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td>{{localize 'SCUVANYA.Bonus'}}: {{skill.bonus}}{{#if skill.raceBonus}} (+{{skill.raceBonus}}){{/if}}</td>
+          <td><button type="button" data-action="rollPhysicalSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.sonder'}}</h3>
+      <p class="hint">{{localize 'SCUVANYA.Hint.Sonder'}}</p>
+      <table class="skill-table">
+        {{#each sonder as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" name="system.talents.sonder.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td><button type="button" data-action="rollSonderSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.handwerk'}}</h3>
+      <table class="skill-table">
+        {{#each handwerk as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" min="0" max="5" name="system.talents.handwerk.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td>{{skill.die}}</td>
+          <td><button type="button" data-action="rollHandwerkSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.spezial'}}</h3>
+      <table class="skill-table">
+        {{#each spezial as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="number" min="0" max="5" name="system.talents.spezial.{{skill.key}}.level" value="{{skill.level}}"></td>
+          <td>{{skill.die}}</td>
+          <td><button type="button" data-action="rollSpezialSkill" data-key="{{skill.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.extra'}}</h3>
+      <table class="skill-table">
+        {{#each extra as |skill|}}
+        <tr>
+          <td>{{skill.label}}</td>
+          <td><input type="checkbox" name="system.talents.extra.{{skill.key}}.known" {{#if skill.known}}checked{{/if}}></td>
+        </tr>
+        {{/each}}
+      </table>
+    </div>
+
+    {{!-- KAMPF & MAGIE --}}
+    <div class="tab kampf-tab {{#if (eq activeTab 'kampf')}}active{{/if}}">
+      <h3>{{localize 'SCUVANYA.Category.kampfdisziplinen'}}</h3>
+      <table class="skill-table">
+        {{#each kampfDisziplinen as |d|}}
+        <tr>
+          <td>{{d.label}}</td>
+          <td><input type="number" min="0" max="10" name="system.disziplinen.kampf.{{d.key}}.level" value="{{d.level}}"></td>
+          <td><button type="button" data-action="rollDiscipline" data-kind="kampf" data-key="{{d.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+
+      <h3>{{localize 'SCUVANYA.Category.magiedisziplinen'}}</h3>
+      <table class="skill-table">
+        {{#each magieDisziplinen as |d|}}
+        <tr>
+          <td>{{d.label}}</td>
+          <td><input type="number" min="0" max="10" name="system.disziplinen.magie.{{d.key}}.level" value="{{d.level}}"></td>
+          <td><button type="button" data-action="rollDiscipline" data-kind="magie" data-key="{{d.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </table>
+    </div>
+
+    {{!-- SPRACHEN --}}
+    <div class="tab sprachen-tab {{#if (eq activeTab 'sprachen')}}active{{/if}}">
+      <table class="skill-table">
+        <tr>
+          <td>{{localize 'SCUVANYA.Language.Gemeinsprache'}}</td>
+          <td>{{gemeinsprache.level}}</td>
+        </tr>
+        {{#each weitereSprachen as |sprache index|}}
+        <tr data-index="{{index}}">
+          <td><input type="text" name="system.sprachen.weitere.{{index}}.name" value="{{sprache.name}}"></td>
+          <td><input type="number" min="0" max="4" name="system.sprachen.weitere.{{index}}.level" value="{{sprache.level}}"></td>
+          <td><a data-action="removeLanguage" data-index="{{index}}">{{localize 'SCUVANYA.Delete'}}</a></td>
+        </tr>
+        {{/each}}
+      </table>
+      <button type="button" data-action="addLanguage">{{localize 'SCUVANYA.Language.Add'}}</button>
+    </div>
+
+    {{!-- INVENTAR --}}
+    <div class="tab inventar-tab {{#if (eq activeTab 'inventar')}}active{{/if}}">
+      {{#each (array "weapon" "armor" "consumable" "equipment") as |type|}}
+      <h3>{{localize (concat "SCUVANYA.ItemType." type)}}
+        <button type="button" data-action="itemCreate" data-type="{{type}}">+</button>
+      </h3>
+      <ul class="item-list">
+        {{#each (lookup ../items type) as |item|}}
+        <li data-item-id="{{item.id}}">
+          <img src="{{item.img}}">
+          <span class="item-name" data-action="itemEdit">{{item.name}}</span>
+          {{#if item.system.equipped}}<a data-action="itemToggleEquip">{{localize 'SCUVANYA.Equipped'}}</a>{{else}}<a data-action="itemToggleEquip">{{localize 'SCUVANYA.NotEquipped'}}</a>{{/if}}
+          <a data-action="itemDelete">{{localize 'SCUVANYA.Delete'}}</a>
+        </li>
+        {{/each}}
+      </ul>
+      {{/each}}
+
+      <h3>{{localize 'SCUVANYA.Item.race'}}
+        {{#unless items.race}}<button type="button" data-action="itemCreate" data-type="race">+</button>{{/unless}}
+      </h3>
+      {{#if items.race}}
+      <div class="item-list" data-item-id="{{items.race.id}}">
+        <span data-action="itemEdit">{{items.race.name}}</span>
+        <a data-action="itemDelete">{{localize 'SCUVANYA.Delete'}}</a>
+      </div>
+      {{/if}}
+
+      <h3>{{localize 'SCUVANYA.Item.profession'}}
+        {{#unless items.profession}}<button type="button" data-action="itemCreate" data-type="profession">+</button>{{/unless}}
+      </h3>
+      {{#if items.profession}}
+      <div class="item-list" data-item-id="{{items.profession.id}}">
+        <span data-action="itemEdit">{{items.profession.name}}</span>
+        <a data-action="itemDelete">{{localize 'SCUVANYA.Delete'}}</a>
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- BIOGRAFIE --}}
+    <div class="tab biografie-tab {{#if (eq activeTab 'biografie')}}active{{/if}}">
+      <textarea name="system.biography" rows="15">{{system.biography}}</textarea>
+    </div>
+
+  </section>
+</form>

@@ -1,0 +1,122 @@
+<form class="scuvanya-sheet item-sheet" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-action="editImage" data-edit="img" title="{{item.name}}">
+    <div class="header-fields">
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SCUVANYA.Name'}}">
+      <span class="item-type">{{localize (concat "SCUVANYA.ItemType." item.type)}}</span>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+
+    {{#if (eq item.type "weapon")}}
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Weapon.damageFormula'}}</label>
+      <input type="text" name="system.damageFormula" value="{{system.damageFormula}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Weapon.damageType'}}</label>
+      <select name="system.damageType">
+        {{#each config.damageTypes as |cfg key|}}
+        <option value="{{key}}" {{#if (eq key ../system.damageType)}}selected{{/if}}>{{localize cfg.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" name="system.ranged" {{#if system.ranged}}checked{{/if}}> {{localize 'SCUVANYA.Weapon.ranged'}}</label>
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Weapon.discipline'}}</label>
+      <input type="text" name="system.discipline" value="{{system.discipline}}">
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" name="system.equipped" {{#if system.equipped}}checked{{/if}}> {{localize 'SCUVANYA.Equipped'}}</label>
+    </div>
+    {{/if}}
+
+    {{#if (eq item.type "armor")}}
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Armor.armorType'}}</label>
+      <select name="system.armorType">
+        <option value="physical" {{#if (eq system.armorType "physical")}}selected{{/if}}>{{localize 'SCUVANYA.Armor.physical'}}</option>
+        <option value="magical" {{#if (eq system.armorType "magical")}}selected{{/if}}>{{localize 'SCUVANYA.Armor.magical'}}</option>
+        <option value="both" {{#if (eq system.armorType "both")}}selected{{/if}}>{{localize 'SCUVANYA.Armor.both'}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Value'}}</label>
+      <input type="number" name="system.value" value="{{system.value}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Armor.slot'}}</label>
+      <input type="text" name="system.slot" value="{{system.slot}}">
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" name="system.equipped" {{#if system.equipped}}checked{{/if}}> {{localize 'SCUVANYA.Equipped'}}</label>
+    </div>
+    {{/if}}
+
+    {{#if (eq item.type "consumable")}}
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Quantity'}}</label>
+      <input type="number" name="system.quantity" value="{{system.quantity}}">
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" name="system.consumeOnUse" {{#if system.consumeOnUse}}checked{{/if}}> {{localize 'SCUVANYA.Consumable.consumeOnUse'}}</label>
+    </div>
+    {{/if}}
+
+    {{#if (eq item.type "equipment")}}
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Quantity'}}</label>
+      <input type="number" name="system.quantity" value="{{system.quantity}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Equipment.weight'}}</label>
+      <input type="number" name="system.weight" value="{{system.weight}}">
+    </div>
+    {{/if}}
+
+    {{#if system.attributeBonuses}}
+    <h3>{{localize 'SCUVANYA.Progression.attributeBonuses'}}</h3>
+    <div class="attribute-bonus-grid">
+      {{#each config.attributes as |cfg key|}}
+      <label>{{cfg.abbr}}
+        <input type="number" name="system.attributeBonuses.{{key}}" value="{{lookup ../system.attributeBonuses key}}">
+      </label>
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Progression.freeAttributePoints'}}</label>
+      <input type="number" min="0" name="system.freeAttributePoints" value="{{system.freeAttributePoints}}">
+    </div>
+
+    <h3>{{localize 'SCUVANYA.Progression.resistanceBonuses'}}</h3>
+    <div class="attribute-bonus-grid">
+      {{#each config.damageTypes as |cfg key|}}
+      <label>{{localize cfg.label}}
+        <input type="number" step="25" name="system.resistanceBonuses.{{key}}" value="{{lookup ../system.resistanceBonuses key}}">
+      </label>
+      {{/each}}
+    </div>
+
+    <h3>{{localize 'SCUVANYA.Progression.skillBonuses'}}
+      <button type="button" data-action="addSkillBonus">+</button>
+    </h3>
+    <p class="hint">{{localize 'SCUVANYA.Progression.skillBonusHint'}}</p>
+    <table class="skill-table">
+      {{#each system.skillBonuses as |entry index|}}
+      <tr data-index="{{index}}">
+        <td><input type="text" name="system.skillBonuses.{{index}}.path" value="{{entry.path}}" placeholder="sozial.positiv.charme"></td>
+        <td><input type="number" name="system.skillBonuses.{{index}}.bonus" value="{{entry.bonus}}"></td>
+        <td><a data-action="removeSkillBonus" data-index="{{index}}">{{localize 'SCUVANYA.Delete'}}</a></td>
+      </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+
+    <h3>{{localize 'SCUVANYA.Description'}}</h3>
+    <textarea name="system.description" rows="8">{{system.description}}</textarea>
+  </section>
+</form>

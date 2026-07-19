@@ -1,0 +1,237 @@
+{
+  "SCUVANYA": {
+    "Name": "Name",
+    "Value": "Wert",
+    "Base": "Basis",
+    "Effective": "Effektiv",
+    "Mod": "Mod",
+    "Bonus": "Bonus",
+    "Roll": "Würfeln",
+    "Delete": "Löschen",
+    "Description": "Beschreibung",
+    "Quantity": "Anzahl",
+    "Equipped": "Angelegt",
+    "NotEquipped": "Nicht angelegt",
+    "AC": "Rüstungsklasse (AC)",
+    "CombatBonus": "Kampfbonus",
+    "Resistances": "Resistenz / Verwundbarkeit",
+    "SheetCharacter": "Scuvanya Charakterbogen",
+    "SheetNpc": "Scuvanya NSC-Bogen",
+    "SheetItem": "Scuvanya Item-Bogen",
+    "AttributeLabel": "Attribut",
+    "DamageLabel": "Schadensart",
+
+    "AttributeType": "Attribut",
+    "Attribute": {
+      "Str": "Stärke",
+      "Dex": "Geschick",
+      "Con": "Konstitution",
+      "Spd": "Tempo",
+      "Int": "Intelligenz",
+      "Mnd": "Belastbarkeit",
+      "Mag": "Magie",
+      "Cha": "Charisma"
+    },
+
+    "Resource": {
+      "hp": "HP",
+      "mana": "Mana",
+      "mentalHealth": "Mentale Gesundheit"
+    },
+
+    "Armor": {
+      "physical": "Rüstung (physisch)",
+      "magical": "Rüstung (magisch)",
+      "both": "Beides",
+      "armorType": "Rüstungsart",
+      "slot": "Slot"
+    },
+
+    "Tab": {
+      "attribute": "Attribute",
+      "talente": "Talente",
+      "kampf": "Kampf & Magie",
+      "sprachen": "Sprachen",
+      "inventar": "Inventar",
+      "biografie": "Biografie"
+    },
+
+    "Category": {
+      "sozialPositiv": "Soziale Talente (positiv)",
+      "sozialNegativ": "Soziale Talente (negativ)",
+      "wissenschaftenSozial": "Wissenschaften (sozial)",
+      "wissenschaftenNatur": "Wissenschaften (Natur)",
+      "koerperlich": "Körperliche Talente",
+      "sonder": "Sondertalente",
+      "handwerk": "Handwerk",
+      "spezial": "Spezial",
+      "extra": "Extra-Fähigkeiten",
+      "kampfdisziplinen": "Kampfdisziplinen",
+      "magiedisziplinen": "Magiedisziplinen"
+    },
+
+    "Hint": {
+      "FreePoints": "Freie Attributpunkte",
+      "RaceBonusIncluded": "Enthält Rassen-/Berufsbonus in Klammern",
+      "Koerperlich": "Gemeinsamer Bonus = Durchschnitt aller investierten Punkte (abgerundet)",
+      "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final"
+    },
+
+    "Warning": {
+      "Untrained": "{skill}: keine Ausbildung (Stufe 0), kein Wurf möglich",
+      "OnlyOne": "Es kann nur eine Rasse bzw. ein Beruf pro Charakter vergeben werden ({type})",
+      "NoFreePoints": "Keine freien Attributpunkte mehr übrig"
+    },
+
+    "Item": {
+      "race": "Rasse",
+      "profession": "Beruf",
+      "NewName": "Neu: {type}"
+    },
+
+    "ItemType": {
+      "weapon": "Waffe",
+      "armor": "Rüstung",
+      "consumable": "Verbrauchsgut",
+      "equipment": "Ausrüstung",
+      "race": "Rasse",
+      "profession": "Beruf"
+    },
+
+    "Weapon": {
+      "damageFormula": "Schadensformel",
+      "damageType": "Schadensart",
+      "ranged": "Fernkampf",
+      "discipline": "Disziplin"
+    },
+
+    "Consumable": {
+      "consumeOnUse": "Verbraucht sich bei Nutzung"
+    },
+
+    "Equipment": {
+      "weight": "Gewicht"
+    },
+
+    "Progression": {
+      "attributeBonuses": "Attributboni",
+      "freeAttributePoints": "Freie Attributpunkte",
+      "resistanceBonuses": "Resistenzboni",
+      "skillBonuses": "Talentboni",
+      "skillBonusHint": "Pfad-Beispiele: sozial.positiv.charme, wissenschaften.natur.medizin, handwerk.alchemist, sonder.schleichen"
+    },
+
+    "Language": {
+      "Gemeinsprache": "Gemeinsprache",
+      "Add": "Sprache hinzufügen",
+      "NewName": "Neue Sprache"
+    },
+
+    "Combat": {
+      "Krieger": "Krieger",
+      "Gauner": "Gauner",
+      "Schuetze": "Schütze"
+    },
+
+    "Magic": {
+      "Pyrokinet": "Pyrokinet",
+      "Geomant": "Geomant",
+      "Hydrosoph": "Hydrosoph",
+      "Aerothurg": "Aerothurg",
+      "Nekromant": "Nekromant",
+      "Polymorph": "Polymorph",
+      "Beschwoerer": "Beschwörer",
+      "Spiritualist": "Spiritualist",
+      "Schwarzmagier": "Schwarzmagier"
+    },
+
+    "Damage": {
+      "feuer": "Feuer",
+      "eis": "Eis",
+      "gift": "Gift",
+      "saeure": "Säure",
+      "erde": "Erde",
+      "wasser": "Wasser",
+      "nekro": "Nekro",
+      "licht": "Licht",
+      "void": "Void",
+      "luft": "Luft",
+      "blitz": "Blitz",
+      "wucht": "Wucht",
+      "psychisch": "Psychisch",
+      "stich": "Stich",
+      "stumpf": "Stumpf",
+      "hieb": "Hieb"
+    },
+
+    "Skill": {
+      "anfeuern": "Anfeuern",
+      "beruhigen": "Beruhigen",
+      "charme": "Charme",
+      "feilschen": "Feilschen",
+      "ueberreden": "Überreden",
+      "beleidigen": "Beleidigen",
+      "einschuechtern": "Einschüchtern",
+      "luegen": "Lügen",
+      "manipulieren": "Manipulieren",
+      "taeuschen": "Täuschen",
+
+      "geschichte": "Geschichte",
+      "gesellschaft": "Gesellschaft",
+      "kultur": "Kultur",
+      "arkana": "Arkana",
+      "theologie": "Theologie",
+      "botanik": "Botanik",
+      "geologie": "Geologie",
+      "mechanik": "Mechanik",
+      "medizin": "Medizin",
+      "zoologie": "Zoologie",
+
+      "klettern": "Klettern",
+      "laufen": "Laufen",
+      "schwimmen": "Schwimmen",
+      "springen": "Springen",
+      "werfen": "Werfen",
+
+      "fingerfertigkeit": "Fingerfertigkeit",
+      "taschendiebstahl": "Taschendiebstahl",
+      "schloesserKnacken": "Schlösser knacken",
+      "schleichen": "Schleichen",
+      "spurenLesen": "Spuren lesen",
+      "ueberlebenstechniken": "Überlebenstechniken",
+      "orientierung": "Orientierung",
+      "selbstvertrauen": "Selbstvertrauen",
+      "konzentration": "Konzentration",
+      "magischesGespuer": "Magisches Gespür",
+      "durchschauen": "Durchschauen",
+
+      "grobschmied": "Grobschmied",
+      "feinschmied": "Feinschmied",
+      "plattner": "Plattner",
+      "gerber": "Gerber",
+      "zimmerer": "Zimmerer",
+      "weber": "Weber",
+      "alchemist": "Alchemist",
+      "koch": "Koch",
+      "jagen": "Jagen",
+      "fischen": "Fischen",
+      "verzaubern": "Verzaubern",
+
+      "sehen": "Sehen",
+      "hoeren": "Hören",
+      "humor": "Humor",
+      "zechen": "Zechen",
+      "begluecken": "Beglücken",
+      "singen": "Singen",
+      "tanzen": "Tanzen",
+
+      "lesen": "Lesen",
+      "schreiben": "Schreiben",
+      "lippenLesen": "Lippen lesen",
+      "reiten": "Reiten",
+      "kutscheFahren": "Kutsche fahren",
+      "booteSteuern": "Boote steuern",
+      "kartenLesen": "Karten lesen"
+    }
+  }
+}

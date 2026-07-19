@@ -1,0 +1,60 @@
+<form class="scuvanya-sheet npc-sheet" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-action="editImage" data-edit="img" title="{{actor.name}}">
+    <div class="header-fields">
+      <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'SCUVANYA.Name'}}">
+      <div class="resource-bars">
+        <label>{{localize 'SCUVANYA.Resource.hp'}}
+          <input type="number" name="system.resources.hp.value" value="{{system.resources.hp.value}}"> / {{system.resources.hp.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.Resource.mana'}}
+          <input type="number" name="system.resources.mana.value" value="{{system.resources.mana.value}}"> / {{system.resources.mana.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.Resource.mentalHealth'}}
+          <input type="number" name="system.resources.mentalHealth.value" value="{{system.resources.mentalHealth.value}}"> / {{system.resources.mentalHealth.max}}
+        </label>
+        <label>{{localize 'SCUVANYA.AC'}}
+          <input type="number" name="system.ac.value" value="{{system.ac.value}}">
+        </label>
+        <label>{{localize 'SCUVANYA.Armor.physical'}}
+          <input type="number" name="system.armor.physical" value="{{system.armor.physical}}">
+        </label>
+        <label>{{localize 'SCUVANYA.Armor.magical'}}
+          <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">
+        </label>
+        <label>{{localize 'SCUVANYA.CombatBonus'}}
+          <input type="number" name="system.combatBonus" value="{{system.combatBonus}}">
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+    <table class="attribute-table">
+      <thead><tr><th>{{localize 'SCUVANYA.AttributeLabel'}}</th><th>{{localize 'SCUVANYA.Value'}}</th><th>{{localize 'SCUVANYA.Mod'}}</th><th></th></tr></thead>
+      <tbody>
+        {{#each attributes as |attr|}}
+        <tr>
+          <td>{{attr.abbr}}</td>
+          <td><input type="number" name="system.attributes.{{attr.key}}.value" value="{{attr.value}}"></td>
+          <td>{{attr.mod}}</td>
+          <td><button type="button" data-action="rollAttribute" data-key="{{attr.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <h3>{{localize 'SCUVANYA.Resistances'}}</h3>
+    <table class="resistance-table">
+      {{#each config.damageTypes as |cfg key|}}
+      <tr>
+        <td>{{localize cfg.label}}</td>
+        <td><input type="number" step="25" name="system.resistances.{{key}}" value="{{lookup ../system.resistances key}}"></td>
+      </tr>
+      {{/each}}
+    </table>
+
+    <h3>{{localize 'SCUVANYA.Tab.biografie'}}</h3>
+    <textarea name="system.biography" rows="8">{{system.biography}}</textarea>
+  </section>
+</form>

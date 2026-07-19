@@ -1,0 +1,49 @@
+{
+  "id": "scuvanya",
+  "title": "Scuvanya",
+  "description": "Ein klassenloses Rollenspielsystem mit 8 Attributen, kategorisierten Talenten und Disziplinen für Foundry VTT.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": 13,
+    "verified": 14,
+    "maximum": 14
+  },
+  "authors": [
+    {
+      "name": "Scuvanya Team"
+    }
+  ],
+  "esmodules": [
+    "scuvanya.mjs"
+  ],
+  "styles": [
+    "styles/scuvanya.css"
+  ],
+  "languages": [
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "weapon": {},
+      "armor": {},
+      "consumable": {},
+      "equipment": {},
+      "race": {},
+      "profession": {}
+    }
+  },
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
+  "primaryTokenAttribute": "resources.hp",
+  "secondaryTokenAttribute": "resources.mana"
+}
