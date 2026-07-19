@@ -1,4 +1,5 @@
 {
+  "type": "system",
   "id": "scuvanya",
   "title": "Scuvanya",
   "description": "Ein klassenloses Rollenspielsystem mit 8 Attributen, kategorisierten Talenten und Disziplinen für Foundry VTT.",
