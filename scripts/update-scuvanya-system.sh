@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 #
 # Lädt die aktuelle Version von foundry-gamesystem-scuvanya von GitHub herunter
-# und installiert sie als Foundry-System "Scuvanya".
+# und installiert sie als Foundry-System.
+#
+# Wichtig: Der Zielordner muss exakt der "id" aus system.json entsprechen
+# (case-sensitiv), sonst lehnt Foundry das System mit
+# "Invalid system ... detected in directory ..." ab. Die Anzeige in der
+# Foundry-UI kommt vom "title"-Feld in system.json, nicht vom Ordnernamen.
 #
 # Usage: ./update-scuvanya-system.sh
 #
@@ -16,7 +21,7 @@ REPO_NAME="foundry-gamesystem-scuvanya"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 FOUNDRY_DATA_DIR="${FOUNDRY_DATA_DIR:-$HOME/foundry/foundrydata}"
 SYSTEMS_DIR="${FOUNDRY_DATA_DIR}/Data/systems"
-TARGET_NAME="Scuvanya"
+TARGET_NAME="scuvanya"
 TARGET_DIR="${SYSTEMS_DIR}/${TARGET_NAME}"
 
 TARBALL_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${REPO_BRANCH}.tar.gz"
