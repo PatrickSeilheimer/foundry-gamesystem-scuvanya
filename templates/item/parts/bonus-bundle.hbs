@@ -1,88 +1,74 @@
 {{!--
   prefix/bundle/config sind Hash-Argumente des Partial-Aufrufs, KEINE Block-Parameter --
   ohne den {{#with this as |root|}}-Trick bräuchte fast jede Referenz hier drin eine
-  unterschiedliche Anzahl "../" je nach Verschachtelungstiefe (each in each in each),
-  was genau der Fehler war, der die Wahlmöglichkeiten im Wizard zuvor kaputt gemacht hat
-  (siehe choose-option-Bug). "root" als Block-Parameter ist dagegen in JEDER Tiefe ohne
-  "../" erreichbar, unabhängig davon wie viele {{#each}} dazwischenliegen.
+  unterschiedliche Anzahl "../" je nach Verschachtelungstiefe (each in each in each).
+  "root" als Block-Parameter ist dagegen in JEDER Tiefe ohne "../" erreichbar.
 --}}
 {{#with this as |root|}}
 <div class="bonus-bundle" data-prefix="{{root.prefix}}">
-  <h4>{{localize 'SCUVANYA.Progression.attributeBonuses'}}</h4>
-  <div class="attribute-bonus-grid">
-    {{#each root.config.attributes as |cfg key|}}
-    <label>{{cfg.abbr}}
-      <input type="number" name="{{root.prefix}}.attributeBonuses.{{key}}" value="{{lookup root.bundle.attributeBonuses key}}">
-    </label>
-    {{/each}}
-  </div>
-
-  <div class="form-group">
-    <label>{{localize 'SCUVANYA.Progression.freeAttributePoints'}}</label>
-    <input type="number" min="0" name="{{root.prefix}}.freeAttributePoints" value="{{root.bundle.freeAttributePoints}}">
-  </div>
-
-  <h4>{{localize 'SCUVANYA.Progression.resistanceBonuses'}}</h4>
-  <div class="attribute-bonus-grid">
-    {{#each root.config.damageTypes as |cfg key|}}
-    <label>{{localize cfg.label}}
-      <input type="number" step="25" name="{{root.prefix}}.resistanceBonuses.{{key}}" value="{{lookup root.bundle.resistanceBonuses key}}">
-    </label>
-    {{/each}}
-  </div>
-
-  <h4>{{localize 'SCUVANYA.Progression.extraGrants'}}</h4>
-  <p class="hint">{{localize 'SCUVANYA.Progression.extraGrantsHint'}}</p>
-  <div class="extra-grants-grid">
-    {{#each root.config.extraSkills as |key|}}
-    <a class="extra-grant-toggle {{#if (includes root.bundle.extraGrants key)}}active{{/if}}" data-action="toggleExtraGrant" data-prefix="{{root.prefix}}" data-key="{{key}}">
-      {{localize (concat "SCUVANYA.Skill." key)}}
-    </a>
-    {{/each}}
-  </div>
-
-  <h4>{{localize 'SCUVANYA.Progression.skillBonuses'}}
-    <button type="button" data-action="addSkillBonus" data-prefix="{{root.prefix}}">+</button>
+  <h4>{{localize 'SCUVANYA.Progression.eigenschaften'}}
+    <button type="button" data-action="addEigenschaft" data-prefix="{{root.prefix}}">+</button>
   </h4>
-  <p class="hint">{{localize 'SCUVANYA.Progression.skillBonusHint'}}</p>
-  <table class="skill-table">
-    {{#each root.bundle.skillBonuses as |entry index|}}
-    <tr data-index="{{index}}">
-      <td><input type="text" name="{{root.prefix}}.skillBonuses.{{index}}.path" value="{{entry.path}}" placeholder="sozial.positiv.charme"></td>
-      <td><input type="number" name="{{root.prefix}}.skillBonuses.{{index}}.bonus" value="{{entry.bonus}}"></td>
-      <td><a data-action="removeSkillBonus" data-prefix="{{root.prefix}}" data-index="{{index}}">{{localize 'SCUVANYA.Delete'}}</a></td>
-    </tr>
-    {{/each}}
-  </table>
 
-  <h4>{{localize 'SCUVANYA.Progression.choices'}}
-    <button type="button" data-action="addChoice" data-prefix="{{root.prefix}}">+</button>
-  </h4>
-  <p class="hint">{{localize 'SCUVANYA.Progression.choicesHint'}}</p>
-  {{#each root.bundle.choices as |choice choiceIndex|}}
-  <div class="choice-row" data-prefix="{{root.prefix}}" data-choice-index="{{choiceIndex}}">
-    <div class="choice-fields">
-      <input type="text" name="{{root.prefix}}.choices.{{choiceIndex}}.key" value="{{choice.key}}" placeholder="{{localize 'SCUVANYA.Progression.choiceKey'}}">
-      <input type="text" name="{{root.prefix}}.choices.{{choiceIndex}}.label" value="{{choice.label}}" placeholder="{{localize 'SCUVANYA.Progression.choiceLabel'}}">
-      <select name="{{root.prefix}}.choices.{{choiceIndex}}.kind">
-        {{#each root.config.choiceKinds as |kind|}}
-        <option value="{{kind}}" {{#if (eq kind choice.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.choiceKind." kind)}}</option>
+  {{#each root.bundle.eigenschaften as |eig eigIndex|}}
+  <details class="eigenschaft-section" open>
+    <summary>
+      <input type="text" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.name" value="{{eig.name}}" placeholder="{{localize 'SCUVANYA.Progression.eigenschaftName'}}">
+      <a data-action="removeEigenschaft" data-prefix="{{root.prefix}}" data-eigenschaft-index="{{eigIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+    </summary>
+
+    <textarea class="eigenschaft-description" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.description" rows="2" placeholder="{{localize 'SCUVANYA.Progression.eigenschaftDescription'}}">{{eig.description}}</textarea>
+
+    {{#each eig.boni as |bonus bonusIndex|}}
+    <div class="bonus-row" data-eigenschaft-index="{{eigIndex}}" data-bonus-index="{{bonusIndex}}">
+      <div class="bonus-fields">
+        <select name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.kind">
+          {{#each root.config.bonusKinds as |kind|}}
+          <option value="{{kind}}" {{#if (eq kind bonus.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.bonusKind." kind)}}</option>
+          {{/each}}
+        </select>
+
+        {{#if (eq bonus.kind "fixed")}}
+        <input type="text" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.path" value="{{bonus.path}}" placeholder="{{localize 'SCUVANYA.Progression.bonusPath'}}">
+        <input type="number" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.amount" value="{{bonus.amount}}" title="{{localize 'SCUVANYA.Progression.bonusAmount'}}">
+        {{/if}}
+
+        {{#if (eq bonus.kind "choice")}}
+        <input type="number" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.amount" value="{{bonus.amount}}" title="{{localize 'SCUVANYA.Progression.bonusAmount'}}">
+        {{/if}}
+
+        {{#if (eq bonus.kind "distribute")}}
+        <input type="number" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.amount" value="{{bonus.amount}}" title="{{localize 'SCUVANYA.Progression.bonusAmount'}}">
+        <input type="number" min="0" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.perOptionMax" value="{{bonus.perOptionMax}}" title="{{localize 'SCUVANYA.Progression.bonusPerOptionMax'}}">
+        {{/if}}
+
+        {{#if (eq bonus.kind "text")}}
+        <input type="text" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.text" value="{{bonus.text}}" placeholder="{{localize 'SCUVANYA.Progression.bonusText'}}">
+        {{/if}}
+
+        <a data-action="removeBonus" data-prefix="{{root.prefix}}" data-eigenschaft-index="{{eigIndex}}" data-bonus-index="{{bonusIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+      </div>
+
+      {{#if (or (eq bonus.kind "choice") (eq bonus.kind "distribute"))}}
+      <div class="bonus-key-row">
+        <label>{{localize 'SCUVANYA.Progression.choiceKey'}}</label>
+        <input type="text" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.key" value="{{bonus.key}}">
+      </div>
+      <div class="bonus-options">
+        <span class="hint">{{localize 'SCUVANYA.Progression.bonusOptions'}}:</span>
+        {{#each bonus.options as |option optionIndex|}}
+        <span class="choice-option" data-option-index="{{optionIndex}}">
+          <input type="text" name="{{root.prefix}}.eigenschaften.{{eigIndex}}.boni.{{bonusIndex}}.options.{{optionIndex}}" value="{{option}}">
+          <a data-action="removeBonusOption" data-prefix="{{root.prefix}}" data-eigenschaft-index="{{eigIndex}}" data-bonus-index="{{bonusIndex}}" data-option-index="{{optionIndex}}">×</a>
+        </span>
         {{/each}}
-      </select>
-      <input type="number" name="{{root.prefix}}.choices.{{choiceIndex}}.amount" value="{{choice.amount}}" title="{{localize 'SCUVANYA.Progression.choiceAmount'}}">
-      <a data-action="removeChoice" data-prefix="{{root.prefix}}" data-choice-index="{{choiceIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+        <button type="button" data-action="addBonusOption" data-prefix="{{root.prefix}}" data-eigenschaft-index="{{eigIndex}}" data-bonus-index="{{bonusIndex}}">+ {{localize 'SCUVANYA.Progression.choiceOption'}}</button>
+      </div>
+      {{/if}}
     </div>
-    <div class="choice-options" data-prefix="{{root.prefix}}" data-choice-index="{{choiceIndex}}">
-      <span class="hint">{{localize 'SCUVANYA.Progression.choiceOptions'}}:</span>
-      {{#each choice.options as |option optionIndex|}}
-      <span class="choice-option" data-option-index="{{optionIndex}}">
-        <input type="text" name="{{root.prefix}}.choices.{{choiceIndex}}.options.{{optionIndex}}" value="{{option}}">
-        <a data-action="removeChoiceOption" data-prefix="{{root.prefix}}" data-choice-index="{{choiceIndex}}" data-option-index="{{optionIndex}}">×</a>
-      </span>
-      {{/each}}
-      <button type="button" data-action="addChoiceOption" data-prefix="{{root.prefix}}" data-choice-index="{{choiceIndex}}">+ {{localize 'SCUVANYA.Progression.choiceOption'}}</button>
-    </div>
-  </div>
+    {{/each}}
+    <button type="button" data-action="addBonus" data-prefix="{{root.prefix}}" data-eigenschaft-index="{{eigIndex}}">+ {{localize 'SCUVANYA.Progression.boni'}}</button>
+  </details>
   {{/each}}
 </div>
 {{/with}}

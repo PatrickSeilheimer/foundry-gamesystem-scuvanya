@@ -10,6 +10,9 @@ export default class ScuvanyaActor extends Actor {
       const attr = this.system.attributes?.[key];
       data[key] = attr?.effectiveValue ?? attr?.value ?? 0;
     }
+    // Initiative-Boni aus Eigenschaften (Pfad "initiative", siehe path-resolve.mjs) --
+    // nur Charaktere kennen das, NSCs bleiben bei 0 (kein Eigenschaften-System dort).
+    data.initiativeBonus = this.system.initiativeBonus ?? 0;
     return data;
   }
 
@@ -83,8 +86,8 @@ export default class ScuvanyaActor extends Actor {
     if (!config) throw new Error(`Unbekannte Schadensart: ${damageType}`);
 
     const armorValue = config.category === "physisch"
-      ? this.system.armor.physical
-      : this.system.armor.magical;
+      ? (this.system.armorEffective?.physical ?? this.system.armor.physical)
+      : (this.system.armorEffective?.magical ?? this.system.armor.magical);
     const afterArmor = Math.max(0, amount - armorValue);
 
     const resistanceStep = this.system.resistancesEffective?.[damageType] ?? this.system.resistances[damageType] ?? 0;

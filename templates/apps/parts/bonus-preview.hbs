@@ -1,14 +1,5 @@
 <div class="bonus-preview">
-  {{#each preview.attributes as |chip|}}
-  {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=../embers}}
-  {{/each}}
-  {{#each preview.skills as |chip|}}
-  {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=../embers}}
-  {{/each}}
-  {{#each preview.resistances as |chip|}}
-  {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=../embers}}
-  {{/each}}
-  {{#each preview.extra as |chip|}}
+  {{#each preview as |chip|}}
   {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=../embers}}
   {{/each}}
 </div>

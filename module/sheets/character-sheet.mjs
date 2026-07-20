@@ -9,9 +9,9 @@ import {
 } from "./context-helpers.mjs";
 import {
   attributeSpentCost,
-  talentLevelCost,
-  tieredLevelCost,
-  specialtyLevelCost,
+  talentSpentCost,
+  tieredSpentCost,
+  specialtySpentCost,
   EXTRA_TALENT_COST
 } from "../rules/costs.mjs";
 import CharacterCreationWizard from "../apps/character-creation.mjs";
@@ -30,7 +30,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       rollHandwerkSkill: ScuvanyaCharacterSheet.#onRollHandwerkSkill,
       rollSpezialSkill: ScuvanyaCharacterSheet.#onRollSpezialSkill,
       rollDiscipline: ScuvanyaCharacterSheet.#onRollDiscipline,
-      allocatePoint: ScuvanyaCharacterSheet.#onAllocatePoint,
       addLanguage: ScuvanyaCharacterSheet.#onAddLanguage,
       removeLanguage: ScuvanyaCharacterSheet.#onRemoveLanguage,
       buyAttribute: ScuvanyaCharacterSheet.#onBuyAttribute,
@@ -52,9 +51,7 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     context.config = SCUVANYA;
     context.skillPoints = sys.skillPoints;
     context.body = sys.body;
-    context.attributes = mapAttributes(sys.attributes, sys.attributeAllocation);
-    context.freeAttributePointsAvailable = sys.freeAttributePointsAvailable;
-    context.freeAttributePointsSpent = sys.freeAttributePointsSpent;
+    context.attributes = mapAttributes(sys.attributes);
 
     context.sozialPositiv = mapLeveledSkills(SCUVANYA.socialSkills.positive, sys.talents.sozial.positiv);
     context.sozialNegativ = mapLeveledSkills(SCUVANYA.socialSkills.negative, sys.talents.sozial.negativ);
@@ -116,20 +113,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     this.actor.rollDiscipline(target.dataset.kind, target.dataset.key);
   }
 
-  static async #onAllocatePoint(event, target) {
-    const key = target.dataset.key;
-    const delta = Number(target.dataset.delta);
-    const current = this.actor.system.attributeAllocation[key] ?? 0;
-    const next = Math.max(0, current + delta);
-
-    const spent = this.actor.system.freeAttributePointsSpent - current + next;
-    if (delta > 0 && spent > this.actor.system.freeAttributePointsAvailable) {
-      ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
-      return;
-    }
-    await this.actor.update({ [`system.attributeAllocation.${key}`]: next });
-  }
-
   static async #onAddLanguage() {
     const weitere = foundry.utils.deepClone(this.actor.system.sprachen.weitere);
     weitere.push({ name: game.i18n.localize("SCUVANYA.Language.NewName"), level: 0 });
@@ -161,8 +144,9 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     const next = current + delta;
     if (next < 1) return;
     if (delta > 0) {
-      const cost = attributeSpentCost(next, SCUVANYA.attributeStartingValue)
-        - attributeSpentCost(current, SCUVANYA.attributeStartingValue);
+      const shift = actor.system.attributes[key].raceBonus ?? 0;
+      const cost = attributeSpentCost(next, SCUVANYA.attributeStartingValue, shift)
+        - attributeSpentCost(current, SCUVANYA.attributeStartingValue, shift);
       if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
     }
     await actor.update({ [`system.attributes.${key}.value`]: next });
@@ -177,7 +161,9 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     const next = Math.max(0, current + delta);
     if (next === current) return;
     if (delta > 0) {
-      const cost = talentLevelCost(next);
+      const skill = foundry.utils.getProperty(actor.system, path.replace(/\.level$/, ""));
+      const shift = skill?.raceBonus ?? 0;
+      const cost = talentSpentCost(next, shift) - talentSpentCost(current, shift);
       if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
     }
     await actor.update({ [`system.${path}`]: next });
@@ -194,12 +180,15 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       spezial: [SCUVANYA.specialtyStartingLevel, SCUVANYA.tieredSkillMaxLevel],
       disziplin: [SCUVANYA.disciplineMinLevel, SCUVANYA.disciplineMaxLevel]
     }[category];
+    const startingLevel = category === "spezial" ? SCUVANYA.specialtyStartingLevel : 0;
     const current = foundry.utils.getProperty(actor.system, path) ?? 0;
     const next = Math.min(bounds[1], Math.max(bounds[0], current + delta));
     if (next === current) return;
     if (delta > 0) {
-      const costFn = category === "spezial" ? specialtyLevelCost : tieredLevelCost;
-      const cost = costFn(next);
+      const skill = foundry.utils.getProperty(actor.system, path.replace(/\.level$/, ""));
+      const shift = skill?.raceBonus ?? 0;
+      const spentFn = category === "spezial" ? specialtySpentCost : tieredSpentCost;
+      const cost = spentFn(next, startingLevel, shift) - spentFn(current, startingLevel, shift);
       if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
     }
     await actor.update({ [`system.${path}`]: next });

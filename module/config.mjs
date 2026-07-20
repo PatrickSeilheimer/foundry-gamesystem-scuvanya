@@ -129,8 +129,9 @@ SCUVANYA.resistanceMultiplier = function (step) {
 // Item-Typen, die Effekte (Active Effects) tragen können.
 SCUVANYA.itemTypes = ["weapon", "armor", "consumable", "equipment", "race", "profession"];
 
-// Wahlmöglichkeiten (choices) auf Rasse-/Berufs-Items: worauf der gewählte Bonus wirkt.
-// "attribute": eine der options ist ein Attributschlüssel (str, dex, ...).
-// "skill": eine der options ist ein Pfad relativ zu talents (z.B. "koerperlich.klettern").
-// "discipline": eine der options ist ein Pfad relativ zu disziplinen (z.B. "magie.pyrokinet").
-SCUVANYA.choiceKinds = ["attribute", "skill", "discipline"];
+// Boni-Arten innerhalb einer Eigenschaft (siehe progression-shared.mjs bonusBundleSchema):
+// "fixed": fester Bonus auf genau ein Ziel (path).
+// "choice": wähle EIN Ziel aus options, erhält amount.
+// "distribute": verteile amount Punkte frei auf options (max. perOptionMax pro Ziel, 0 = unbegrenzt).
+// "text": reiner Beschreibungstext ohne Zahlenwert (RP-relevant, z.B. "Nachtsicht").
+SCUVANYA.bonusKinds = ["fixed", "choice", "distribute", "text"];

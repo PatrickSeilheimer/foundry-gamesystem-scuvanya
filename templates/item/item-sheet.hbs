@@ -82,26 +82,62 @@
     {{/if}}
 
     {{#if (eq item.type "race")}}
+    <h3>{{localize 'SCUVANYA.Race.genderImages'}}</h3>
+    <div class="gender-image-grid">
+      <div class="gender-image-group">
+        <label>{{localize 'SCUVANYA.Body.maennlich'}}</label>
+        <img class="gender-image-preview" src="{{system.imageMaennlich}}" data-action="editImage" data-edit="system.imageMaennlich" title="{{localize 'SCUVANYA.Body.maennlich'}}">
+      </div>
+      <div class="gender-image-group">
+        <label>{{localize 'SCUVANYA.Body.weiblich'}}</label>
+        <img class="gender-image-preview" src="{{system.imageWeiblich}}" data-action="editImage" data-edit="system.imageWeiblich" title="{{localize 'SCUVANYA.Body.weiblich'}}">
+      </div>
+    </div>
+
     <h3>{{localize 'SCUVANYA.Progression.bodyRanges'}}</h3>
     <p class="hint">{{localize 'SCUVANYA.Progression.bodyRangesHint'}}</p>
+
+    <h4>{{localize 'SCUVANYA.Body.maennlich'}}</h4>
     <div class="attribute-bonus-grid body-range-grid">
       <label>{{localize 'SCUVANYA.Body.heightMin'}} (m)
-        <input type="number" step="0.01" min="0" name="system.body.heightMin" value="{{system.body.heightMin}}">
+        <input type="number" step="0.01" min="0" name="system.body.maennlich.heightMin" value="{{system.body.maennlich.heightMin}}">
       </label>
       <label>{{localize 'SCUVANYA.Body.heightMax'}} (m)
-        <input type="number" step="0.01" min="0" name="system.body.heightMax" value="{{system.body.heightMax}}">
+        <input type="number" step="0.01" min="0" name="system.body.maennlich.heightMax" value="{{system.body.maennlich.heightMax}}">
       </label>
       <label>{{localize 'SCUVANYA.Body.weightMin'}} (kg)
-        <input type="number" step="0.1" min="0" name="system.body.weightMin" value="{{system.body.weightMin}}">
+        <input type="number" step="0.1" min="0" name="system.body.maennlich.weightMin" value="{{system.body.maennlich.weightMin}}">
       </label>
       <label>{{localize 'SCUVANYA.Body.weightMax'}} (kg)
-        <input type="number" step="0.1" min="0" name="system.body.weightMax" value="{{system.body.weightMax}}">
+        <input type="number" step="0.1" min="0" name="system.body.maennlich.weightMax" value="{{system.body.maennlich.weightMax}}">
       </label>
       <label>{{localize 'SCUVANYA.Body.ageMin'}}
-        <input type="number" min="0" name="system.body.ageMin" value="{{system.body.ageMin}}">
+        <input type="number" min="0" name="system.body.maennlich.ageMin" value="{{system.body.maennlich.ageMin}}">
       </label>
       <label>{{localize 'SCUVANYA.Body.ageMax'}}
-        <input type="number" min="0" name="system.body.ageMax" value="{{system.body.ageMax}}">
+        <input type="number" min="0" name="system.body.maennlich.ageMax" value="{{system.body.maennlich.ageMax}}">
+      </label>
+    </div>
+
+    <h4>{{localize 'SCUVANYA.Body.weiblich'}}</h4>
+    <div class="attribute-bonus-grid body-range-grid">
+      <label>{{localize 'SCUVANYA.Body.heightMin'}} (m)
+        <input type="number" step="0.01" min="0" name="system.body.weiblich.heightMin" value="{{system.body.weiblich.heightMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.heightMax'}} (m)
+        <input type="number" step="0.01" min="0" name="system.body.weiblich.heightMax" value="{{system.body.weiblich.heightMax}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.weightMin'}} (kg)
+        <input type="number" step="0.1" min="0" name="system.body.weiblich.weightMin" value="{{system.body.weiblich.weightMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.weightMax'}} (kg)
+        <input type="number" step="0.1" min="0" name="system.body.weiblich.weightMax" value="{{system.body.weiblich.weightMax}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.ageMin'}}
+        <input type="number" min="0" name="system.body.weiblich.ageMin" value="{{system.body.weiblich.ageMin}}">
+      </label>
+      <label>{{localize 'SCUVANYA.Body.ageMax'}}
+        <input type="number" min="0" name="system.body.weiblich.ageMax" value="{{system.body.weiblich.ageMax}}">
       </label>
     </div>
 

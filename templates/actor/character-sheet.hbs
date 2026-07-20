@@ -20,13 +20,13 @@
           <input type="number" name="system.resources.mentalHealth.value" value="{{system.resources.mentalHealth.value}}"> / {{system.resources.mentalHealth.max}}
         </label>
         <label>{{localize 'SCUVANYA.AC'}}
-          <input type="number" name="system.ac.value" value="{{system.ac.value}}">
+          <input type="number" name="system.ac.value" value="{{system.ac.value}}">{{#if (ne system.acEffective system.ac.value)}} ({{system.acEffective}}){{/if}}
         </label>
         <label>{{localize 'SCUVANYA.Armor.physical'}}
-          <input type="number" name="system.armor.physical" value="{{system.armor.physical}}">
+          <input type="number" name="system.armor.physical" value="{{system.armor.physical}}">{{#if (ne system.armorEffective.physical system.armor.physical)}} ({{system.armorEffective.physical}}){{/if}}
         </label>
         <label>{{localize 'SCUVANYA.Armor.magical'}}
-          <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">
+          <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">{{#if (ne system.armorEffective.magical system.armor.magical)}} ({{system.armorEffective.magical}}){{/if}}
         </label>
         <label>{{localize 'SCUVANYA.SkillPoints.total'}}
           <input type="number" min="0" name="system.skillPoints.total" value="{{skillPoints.total}}">
@@ -52,12 +52,10 @@
     {{!-- ATTRIBUTE --}}
     <div class="tab attribute-tab {{#if (eq activeTab 'attribute')}}active{{/if}}">
       <h3>{{localize 'SCUVANYA.Tab.attribute'}}</h3>
-      <p class="hint">{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</p>
       <table class="attribute-table">
         <thead><tr>
           <th>{{localize 'SCUVANYA.AttributeLabel'}}</th><th>{{localize 'SCUVANYA.Value'}} ({{localize 'SCUVANYA.Base'}})</th>
-          <th>{{localize 'SCUVANYA.Value'}} ({{localize 'SCUVANYA.Effective'}})</th><th>{{localize 'SCUVANYA.Mod'}}</th>
-          <th>{{localize 'SCUVANYA.Hint.FreePoints'}}</th><th></th>
+          <th>{{localize 'SCUVANYA.Value'}} ({{localize 'SCUVANYA.Effective'}})</th><th>{{localize 'SCUVANYA.Mod'}}</th><th></th>
         </tr></thead>
         <tbody>
           {{#each attributes as |attr|}}
@@ -71,11 +69,6 @@
             </td>
             <td title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}">{{attr.effectiveValue}}{{#if attr.raceBonus}} ({{attr.raceBonus}}){{/if}}</td>
             <td>{{attr.mod}}</td>
-            <td class="allocation">
-              <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
-              {{attr.allocation}}
-              <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
-            </td>
             <td><button type="button" data-action="rollAttribute" data-key="{{attr.key}}">{{localize 'SCUVANYA.Roll'}}</button></td>
           </tr>
           {{/each}}
@@ -84,12 +77,13 @@
 
       <h3>{{localize 'SCUVANYA.Resistances'}}</h3>
       <table class="resistance-table">
-        <thead><tr><th>{{localize 'SCUVANYA.DamageLabel'}}</th><th>{{localize 'SCUVANYA.Resistances'}} (%)</th></tr></thead>
+        <thead><tr><th>{{localize 'SCUVANYA.DamageLabel'}}</th><th>{{localize 'SCUVANYA.Resistances'}} (%)</th><th>{{localize 'SCUVANYA.Effective'}}</th></tr></thead>
         <tbody>
           {{#each config.damageTypes as |cfg key|}}
           <tr>
             <td>{{localize cfg.label}}</td>
             <td><input type="number" step="25" name="system.resistances.{{key}}" value="{{lookup ../system.resistances key}}"></td>
+            <td>{{lookup ../system.resistancesEffective key}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -359,6 +353,16 @@
         <label>{{localize 'SCUVANYA.Body.age'}}</label>
         <input type="number" min="0" name="system.body.age" value="{{body.age}}">
       </div>
+
+      {{#if system.progressionTexts.length}}
+      <h3>{{localize 'SCUVANYA.Progression.textTraits'}}</h3>
+      <ul class="progression-text-list">
+        {{#each system.progressionTexts as |entry|}}
+        <li><strong>{{entry.name}}:</strong> {{entry.text}}</li>
+        {{/each}}
+      </ul>
+      {{/if}}
+
       <textarea name="system.biography" rows="15">{{system.biography}}</textarea>
     </div>
 

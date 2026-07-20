@@ -37,7 +37,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.profession = ProfessionData;
 
   // Initiative: bestätigt W12 + flacher SPD-Wert (kein Mod).
-  CONFIG.Combat.initiative = { formula: "1d12 + @attributes.spd.value", decimals: 2 };
+  CONFIG.Combat.initiative = { formula: "1d12 + @attributes.spd.value + @initiativeBonus", decimals: 2 };
 
   // Eigene Sheets als Standard registrieren (Core-Sheet bleibt als Alternative wählbar,
   // bewusst nicht deregistriert -- reduziert Abhängigkeit von genauen Core-Klassenpfaden,
@@ -64,6 +64,7 @@ Hooks.once("init", () => {
   foundry.applications.handlebars.loadTemplates([
     "systems/scuvanya/templates/apps/parts/bonus-preview.hbs",
     "systems/scuvanya/templates/apps/parts/badge.hbs",
+    "systems/scuvanya/templates/apps/parts/decision.hbs",
     "systems/scuvanya/templates/item/parts/bonus-bundle.hbs"
   ]);
 });

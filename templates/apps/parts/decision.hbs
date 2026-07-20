@@ -1,0 +1,26 @@
+{{!-- scope/decision sind Hash-Argumente, keine Block-Parameter -- siehe root-Trick in bonus-bundle.hbs --}}
+{{#with this as |root|}}
+<div class="wizard-choice">
+  <span class="choice-label">{{root.decision.eigenschaftName}}{{#if root.decision.eigenschaftDescription}} — {{root.decision.eigenschaftDescription}}{{/if}}</span>
+
+  {{#if (eq root.decision.kind "choice")}}
+  <div class="choice-option-grid">
+    {{#each root.decision.options as |opt|}}
+    <a class="wizard-chip {{#if (eq opt.path root.decision.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="{{root.scope}}" data-key="{{root.decision.key}}" data-option="{{opt.path}}">{{opt.label}} (+{{root.decision.amount}})</a>
+    {{/each}}
+  </div>
+  {{else}}
+  <p class="hint">{{localize 'SCUVANYA.Wizard.DistributeHint'}}: {{root.decision.remaining}} / {{root.decision.amount}}</p>
+  <div class="distribute-grid">
+    {{#each root.decision.options as |opt|}}
+    <div class="distribute-row">
+      <span>{{opt.label}}</span>
+      <a data-action="distributePoint" data-scope="{{root.scope}}" data-key="{{root.decision.key}}" data-path="{{opt.path}}" data-delta="-1" data-amount="{{root.decision.amount}}" data-per-option-max="{{root.decision.perOptionMax}}">-</a>
+      {{opt.points}}
+      <a data-action="distributePoint" data-scope="{{root.scope}}" data-key="{{root.decision.key}}" data-path="{{opt.path}}" data-delta="1" data-amount="{{root.decision.amount}}" data-per-option-max="{{root.decision.perOptionMax}}">+</a>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>
+{{/with}}

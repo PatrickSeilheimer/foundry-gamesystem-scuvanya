@@ -13,12 +13,13 @@ import {
 } from "../templates.mjs";
 import {
   attributeSpentCost,
-  talentUpgradeCost,
-  tieredUpgradeCost,
-  specialtyUpgradeCost,
+  talentSpentCost,
+  tieredSpentCost,
+  specialtySpentCost,
   EXTRA_TALENT_COST
 } from "../../rules/costs.mjs";
-import { resolveRaceBonuses } from "../item/race-resolve.mjs";
+import { activeRaceBundles } from "../item/race-resolve.mjs";
+import { resolveBundles, applyPathBonuses } from "../item/path-resolve.mjs";
 
 const fields = foundry.data.fields;
 
@@ -57,16 +58,6 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       skillPoints: new fields.SchemaField({
         total: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
       }),
-
-      // Punkte, die aus Rasse/Beruf frei auf Attribute verteilt werden dürfen
-      // (z.B. Mensch: 2 freie Punkte). Manuell vom Spieler zugewiesen, siehe Sheet.
-      attributeAllocation: (() => {
-        const schema = {};
-        for (const key of Object.keys(SCUVANYA.attributes)) {
-          schema[key] = new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 });
-        }
-        return new fields.SchemaField(schema);
-      })(),
 
       talents: new fields.SchemaField({
         sozial: new fields.SchemaField({
@@ -114,137 +105,53 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
   }
 
   prepareDerivedData() {
-    this._progressionBonus = this._computeProgressionBonus();
+    // resistancesEffective muss VOR applyPathBonuses existieren, da Resistenz-Boni dort
+    // direkt hineinaddiert werden (siehe path-resolve.mjs).
+    this.resistancesEffective = foundry.utils.deepClone(this.resistances);
+
+    const { pathBonuses, texts } = this._computeProgressionBonus();
+    this.progressionTexts = texts;
+    applyPathBonuses(this, pathBonuses);
+
     this._prepareAttributes();
     this._prepareResources();
-    this._prepareResistances();
-    this._prepareSkillBonusDisplay();
-    this._prepareDisciplineBonusDisplay();
-    this._prepareExtraGrants();
+    this._prepareArmorAndAc();
     this._preparePhysicalSkillBonus();
     this._computeSkillPoints();
   }
 
   /**
-   * WICHTIG: Alle hier berechneten Rassen-/Berufsboni werden NICHT in die persistierten
-   * Basisfelder (attributes.*.value, resistances.*, talents.*.level) zurückgeschrieben,
-   * sondern als separate "effectiveValue"/"raceBonus"-Felder abgelegt. Grund: das Sheet-Form
-   * sendet bei jeder Änderung (submitOnChange) den kompletten Formularinhalt inkl. aller
-   * sichtbaren Werte. Würde ein Input direkt an ein derived-bemaltes Feld gebunden, würde
-   * der (bereits geboostete) Anzeigewert bei jedem Speichern erneut als neue Basis
-   * persistiert -- der Bonus würde sich mit jedem Klick aufaddieren. Editierbare Inputs
-   * binden deshalb ausschließlich an die reinen Basisfelder.
+   * Sammelt die Eigenschaften-Boni aller Rassen-/Berufs-Items zu EINEM flachen
+   * { [path]: amount }-Satz (siehe path-resolve.mjs) -- eine Rasse ist dabei mehrere
+   * gleichzeitig aktive Bündel (Basis + Geschlecht + ggf. Subrasse), ein Beruf ein
+   * einzelnes Bündel. Boni auf denselben Pfad aus verschiedenen Items (z.B. Rasse UND
+   * Beruf treffen zufällig dasselbe Attribut) werden aufaddiert.
    */
   _computeProgressionBonus() {
-    const attribute = {};
-    const resistance = {};
-    const skill = {};
-    const discipline = {};
-    const extraGrants = new Set();
-    for (const key of Object.keys(SCUVANYA.attributes)) attribute[key] = 0;
-    for (const key of Object.keys(SCUVANYA.damageTypes)) resistance[key] = 0;
+    const pathBonuses = {};
+    const texts = [];
 
     const items = this.parent?.items ?? [];
     for (const item of items) {
       if (item.type !== "race" && item.type !== "profession") continue;
-      // Eine Rasse ist mehrere gleichzeitig aktive Bonus-Bündel (Basis + Geschlecht + ggf.
-      // Subrasse), zu einem Netto-Bündel verrechnet (siehe race-resolve.mjs). Ein Beruf ist
-      // schlicht der Sonderfall "ein einzelnes Bündel" -- ab hier identisch behandelt.
-      const data = item.type === "race"
-        ? resolveRaceBonuses(item.system, this.geschlecht, item.system.subraceKey)
-        : item.system;
-
-      for (const key of Object.keys(SCUVANYA.attributes)) {
-        attribute[key] += data.attributeBonuses?.[key] ?? 0;
+      const bundles = item.type === "race"
+        ? activeRaceBundles(item.system, this.geschlecht, item.system.subraceKey)
+        : [item.system];
+      const resolved = resolveBundles(bundles, item.system.choiceSelections);
+      for (const [path, amount] of Object.entries(resolved.pathBonuses)) {
+        pathBonuses[path] = (pathBonuses[path] ?? 0) + amount;
       }
-      for (const key of Object.keys(SCUVANYA.damageTypes)) {
-        resistance[key] += data.resistanceBonuses?.[key] ?? 0;
-      }
-      for (const entry of data.skillBonuses ?? []) {
-        skill[entry.path] = (skill[entry.path] ?? 0) + entry.bonus;
-      }
-      for (const key of data.extraGrants ?? []) {
-        extraGrants.add(key);
-      }
-
-      // Wahlmöglichkeiten (choices): die getroffene Wahl liegt auf der Item-INSTANZ selbst
-      // (item.system.choiceSelections -- nicht Teil des Bündels, gilt für alle Bündel eines
-      // Items gemeinsam), die Optionsliste/Betrag auf der jeweiligen choice-Definition.
-      for (const choice of data.choices ?? []) {
-        const selected = item.system.choiceSelections?.[choice.key];
-        if (!selected || !choice.options?.includes(selected)) continue;
-        if (choice.kind === "attribute") {
-          attribute[selected] = (attribute[selected] ?? 0) + choice.amount;
-        } else if (choice.kind === "skill") {
-          skill[selected] = (skill[selected] ?? 0) + choice.amount;
-        } else if (choice.kind === "discipline") {
-          discipline[selected] = (discipline[selected] ?? 0) + choice.amount;
-        }
-      }
+      texts.push(...resolved.texts);
     }
-    return { attribute, resistance, skill, discipline, extraGrants };
-  }
 
-  _prepareResistances() {
-    const { resistance } = this._progressionBonus;
-    this.resistancesEffective = {};
-    for (const key of Object.keys(SCUVANYA.damageTypes)) {
-      this.resistancesEffective[key] = (this.resistances[key] ?? 0) + (resistance[key] ?? 0);
-    }
-  }
-
-  _prepareSkillBonusDisplay() {
-    const { skill } = this._progressionBonus;
-    for (const [path, bonus] of Object.entries(skill)) {
-      const target = foundry.utils.getProperty(this.talents, path);
-      if (target) target.raceBonus = bonus;
-    }
-  }
-
-  /** Wie _prepareSkillBonusDisplay, aber für Disziplinen (Pfad relativ zu disziplinen, z.B. "magie.pyrokinet"). */
-  _prepareDisciplineBonusDisplay() {
-    const { discipline } = this._progressionBonus;
-    for (const [path, bonus] of Object.entries(discipline)) {
-      const target = foundry.utils.getProperty(this.disziplinen, path);
-      if (target) target.raceBonus = bonus;
-    }
-  }
-
-  /**
-   * Extra-Fähigkeiten (Lesen, Schreiben, ...), die Rasse/Beruf automatisch gewähren:
-   * angezeigt als "granted", ohne den persistierten "known"-Wert zu überschreiben
-   * (gleiche Non-Destruktiv-Logik wie bei Attributen/Talenten, siehe Klassenkommentar oben).
-   */
-  _prepareExtraGrants() {
-    const { extraGrants } = this._progressionBonus;
-    for (const key of SCUVANYA.extraSkills) {
-      this.talents.extra[key].granted = extraGrants.has(key);
-    }
-  }
-
-  /** Summe der freien Attributpunkte, die Rasse (Basis+Geschlecht+Subrasse) und Beruf insgesamt gewähren. */
-  get freeAttributePointsAvailable() {
-    const items = this.parent?.items ?? [];
-    return items
-      .filter(i => i.type === "race" || i.type === "profession")
-      .reduce((sum, i) => {
-        const data = i.type === "race"
-          ? resolveRaceBonuses(i.system, this.geschlecht, i.system.subraceKey)
-          : i.system;
-        return sum + (data.freeAttributePoints ?? 0);
-      }, 0);
-  }
-
-  get freeAttributePointsSpent() {
-    return Object.values(this.attributeAllocation).reduce((sum, v) => sum + v, 0);
+    return { pathBonuses, texts };
   }
 
   _prepareAttributes() {
-    const { attribute } = this._progressionBonus;
     for (const key of Object.keys(SCUVANYA.attributes)) {
       const attr = this.attributes[key];
-      attr.raceBonus = attribute[key] ?? 0;
-      attr.effectiveValue = attr.value + (this.attributeAllocation[key] ?? 0) + attr.raceBonus;
+      attr.raceBonus = attr.raceBonus ?? 0;
+      attr.effectiveValue = attr.value + attr.raceBonus;
       attr.mod = attr.effectiveValue - 10;
     }
   }
@@ -254,6 +161,23 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this.resources.hp.max = 4 * attr.con.effectiveValue + attr.str.effectiveValue;
     this.resources.mana.max = 2 * attr.mnd.effectiveValue + 2 * attr.mag.effectiveValue + attr.con.effectiveValue;
     this.resources.mentalHealth.max = 3 * attr.mnd.effectiveValue + attr.int.effectiveValue + attr.con.effectiveValue;
+  }
+
+  /**
+   * Rüstungshärte/Rüstungsklasse als eigene "Effective"-Overlays -- dieselbe Non-Destruktiv-
+   * Logik wie bei Attributen: armor.physical/armor.magical/ac.value bleiben die reinen,
+   * editierbaren Basisfelder, armorEffective/acEffective sind reine Anzeigewerte.
+   */
+  _prepareArmorAndAc() {
+    const bonus = this._armorBonus ?? { physical: 0, magical: 0 };
+    this.armorEffective = {
+      physical: this.armor.physical + (bonus.physical ?? 0),
+      magical: this.armor.magical + (bonus.magical ?? 0)
+    };
+    this.acEffective = this.ac.value + (this._acBonus ?? 0);
+    // Öffentlich benannt (statt _initiativeBonus), damit getRollData() in documents/actor.mjs
+    // sauber darauf zugreifen kann -- wird in die Initiative-Formel eingerechnet (siehe scuvanya.mjs).
+    this.initiativeBonus = this._initiativeBonus ?? 0;
   }
 
   /**
@@ -274,13 +198,18 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
   /**
    * Errechnet, wie viele Skillpunkte bereits investiert sind (über alle kaufbaren
    * Kategorien) und stellt sie neben dem SL-gesetzten Guthaben (skillPoints.total) dar.
-   * Rassen-/Berufsboni fließen hier NICHT ein -- die sind kostenlose Overlays, siehe oben.
+   *
+   * WICHTIG: Rassen-/Berufsboni verschieben den KOSTENLOSEN Startwert (siehe costs.mjs) --
+   * ein Attribut, das dank Rasse bei 11 statt 6 startet, kostet für den nächsten Punkt den
+   * Preis von Stufe 12 (absolut), nicht den Preis von Stufe 7. Der "shift" ist deshalb
+   * überall der jeweilige raceBonus.
    */
   _computeSkillPoints() {
     let spent = 0;
 
     for (const key of Object.keys(SCUVANYA.attributes)) {
-      spent += attributeSpentCost(this.attributes[key].value, SCUVANYA.attributeStartingValue);
+      const attr = this.attributes[key];
+      spent += attributeSpentCost(attr.value, SCUVANYA.attributeStartingValue, attr.raceBonus);
     }
 
     const leveledGroups = [
@@ -290,25 +219,25 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     ];
     for (const group of leveledGroups) {
       for (const skill of Object.values(group)) {
-        spent += talentUpgradeCost(0, skill.level);
+        spent += talentSpentCost(skill.level, skill.raceBonus ?? 0);
       }
     }
 
     for (const skill of Object.values(this.talents.handwerk)) {
-      spent += tieredUpgradeCost(SCUVANYA.craftStartingLevel, skill.level);
+      spent += tieredSpentCost(skill.level, SCUVANYA.craftStartingLevel, skill.raceBonus ?? 0);
     }
     for (const skill of Object.values(this.talents.spezial)) {
-      spent += specialtyUpgradeCost(SCUVANYA.specialtyStartingLevel, skill.level);
+      spent += specialtySpentCost(skill.level, SCUVANYA.specialtyStartingLevel, skill.raceBonus ?? 0);
     }
     for (const skill of Object.values(this.talents.extra)) {
       if (skill.known) spent += EXTRA_TALENT_COST;
     }
 
     for (const discipline of Object.values(this.disziplinen.kampf)) {
-      spent += tieredUpgradeCost(0, discipline.level);
+      spent += tieredSpentCost(discipline.level, 0, discipline.raceBonus ?? 0);
     }
     for (const discipline of Object.values(this.disziplinen.magie)) {
-      spent += tieredUpgradeCost(0, discipline.level);
+      spent += tieredSpentCost(discipline.level, 0, discipline.raceBonus ?? 0);
     }
 
     this.skillPoints.spent = spent;

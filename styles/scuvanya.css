@@ -251,14 +251,74 @@
   margin-top: 0.5rem;
 }
 
-.scuvanya-sheet .choice-row {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  padding: 0.4rem;
-  margin-bottom: 0.5rem;
+.scuvanya-sheet .gender-image-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.scuvanya-sheet .choice-fields {
+.scuvanya-sheet .gender-image-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 11px;
+}
+
+.scuvanya-sheet .gender-image-preview {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 1px solid #666;
+  cursor: pointer;
+}
+
+.scuvanya-sheet .progression-text-list {
+  list-style: none;
+  margin: 0 0 0.75rem 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+.scuvanya-sheet .progression-text-list li {
+  padding: 0.15rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.scuvanya-sheet .choice-option input[type="text"] {
+  width: 10rem;
+}
+
+.scuvanya-sheet .eigenschaft-section {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.scuvanya-sheet .eigenschaft-section > summary {
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scuvanya-sheet .eigenschaft-description {
+  width: 100%;
+  resize: vertical;
+  margin-bottom: 0.4rem;
+}
+
+.scuvanya-sheet .bonus-row {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 0.35rem;
+  margin-bottom: 0.4rem;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.scuvanya-sheet .bonus-fields {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
@@ -266,19 +326,23 @@
   margin-bottom: 0.3rem;
 }
 
-.scuvanya-sheet .choice-fields input[type="text"] {
-  width: 8rem;
+.scuvanya-sheet .bonus-fields input[type="text"] {
+  width: 9rem;
 }
 
-.scuvanya-sheet .choice-options {
+.scuvanya-sheet .bonus-key-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 11px;
+  margin-bottom: 0.3rem;
+}
+
+.scuvanya-sheet .bonus-options {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
   align-items: center;
-}
-
-.scuvanya-sheet .choice-option input[type="text"] {
-  width: 10rem;
 }
 
 /* Charaktererstellungs-Wizard */
@@ -422,6 +486,29 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+}
+
+.character-creation .distribute-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.character-creation .distribute-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+}
+
+.character-creation .distribute-row span {
+  flex: 1;
+}
+
+.character-creation .distribute-row a {
+  cursor: pointer;
+  padding: 0 0.3rem;
+  color: var(--scv-accent);
 }
 
 .character-creation .wizard-chip {

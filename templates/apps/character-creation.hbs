@@ -49,44 +49,24 @@
     {{#if (eq step 2)}}
     <h3>{{localize 'SCUVANYA.Wizard.StepRaceDetails'}}: {{selectedRace.name}}</h3>
 
-    {{#if freeAttributePointsAvailable}}
-    <h4>{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</h4>
-    <div class="attribute-bonus-grid">
-      {{#each attributeAllocation as |attr|}}
-      <label>{{attr.abbr}}
-        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
-        {{attr.allocation}}
-        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
-      </label>
-      {{/each}}
-    </div>
-    {{/if}}
-
     <h4>{{localize 'SCUVANYA.Wizard.BodyRange'}}</h4>
     <div class="wizard-slider">
       <label>{{localize 'SCUVANYA.Body.height'}} (m): <output data-body="height">{{body.height}}</output></label>
-      <input type="range" name="body.height" min="{{selectedRace.system.body.heightMin}}" max="{{selectedRace.system.body.heightMax}}" step="0.01" value="{{body.height}}">
+      <input type="range" name="body.height" min="{{selectedRaceBody.heightMin}}" max="{{selectedRaceBody.heightMax}}" step="0.01" value="{{body.height}}">
     </div>
     <div class="wizard-slider">
       <label>{{localize 'SCUVANYA.Body.weight'}} (kg): <output data-body="weight">{{body.weight}}</output></label>
-      <input type="range" name="body.weight" min="{{selectedRace.system.body.weightMin}}" max="{{selectedRace.system.body.weightMax}}" step="0.1" value="{{body.weight}}">
+      <input type="range" name="body.weight" min="{{selectedRaceBody.weightMin}}" max="{{selectedRaceBody.weightMax}}" step="0.1" value="{{body.weight}}">
     </div>
     <div class="wizard-slider">
       <label>{{localize 'SCUVANYA.Body.age'}}: <output data-body="age">{{body.age}}</output></label>
-      <input type="range" name="body.age" min="{{selectedRace.system.body.ageMin}}" max="{{selectedRace.system.body.ageMax}}" step="1" value="{{body.age}}">
+      <input type="range" name="body.age" min="{{selectedRaceBody.ageMin}}" max="{{selectedRaceBody.ageMax}}" step="1" value="{{body.age}}">
     </div>
 
-    {{#if raceChoices.length}}
-    <h4>{{localize 'SCUVANYA.Progression.choices'}}</h4>
-    {{#each raceChoices as |choice|}}
-    <div class="wizard-choice">
-      <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
-      <div class="choice-option-grid">
-        {{#each choice.options as |opt|}}
-        <a class="wizard-chip {{#if (eq opt.value choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="race" data-choice-key="{{choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
-        {{/each}}
-      </div>
-    </div>
+    {{#if raceDecisions.length}}
+    <h4>{{localize 'SCUVANYA.Progression.eigenschaften'}}</h4>
+    {{#each raceDecisions as |decision|}}
+    {{> "systems/scuvanya/templates/apps/parts/decision.hbs" scope="race" decision=decision}}
     {{/each}}
     {{/if}}
     {{/if}}
@@ -116,30 +96,10 @@
     {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=professionBonusPreview embers=embers}}
     {{/if}}
 
-    {{#if freeAttributePointsAvailable}}
-    <h4>{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</h4>
-    <div class="attribute-bonus-grid">
-      {{#each attributeAllocation as |attr|}}
-      <label>{{attr.abbr}}
-        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="-1">-</a>
-        {{attr.allocation}}
-        <a data-action="allocatePoint" data-key="{{attr.key}}" data-delta="1">+</a>
-      </label>
-      {{/each}}
-    </div>
-    {{/if}}
-
-    {{#if professionChoices.length}}
-    <h4>{{localize 'SCUVANYA.Progression.choices'}}</h4>
-    {{#each professionChoices as |choice|}}
-    <div class="wizard-choice">
-      <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
-      <div class="choice-option-grid">
-        {{#each choice.options as |opt|}}
-        <a class="wizard-chip {{#if (eq opt.value choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="profession" data-choice-key="{{choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
-        {{/each}}
-      </div>
-    </div>
+    {{#if professionDecisions.length}}
+    <h4>{{localize 'SCUVANYA.Progression.eigenschaften'}}</h4>
+    {{#each professionDecisions as |decision|}}
+    {{> "systems/scuvanya/templates/apps/parts/decision.hbs" scope="profession" decision=decision}}
     {{/each}}
     {{/if}}
     {{else}}

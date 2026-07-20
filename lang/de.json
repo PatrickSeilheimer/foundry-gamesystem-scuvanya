@@ -13,6 +13,7 @@
     "Equipped": "Angelegt",
     "NotEquipped": "Nicht angelegt",
     "AC": "Rüstungsklasse (AC)",
+    "Initiative": "Initiative",
     "CombatBonus": "Kampfbonus",
     "Resistances": "Resistenz / Verwundbarkeit",
     "SheetCharacter": "Scuvanya Charakterbogen",
@@ -120,11 +121,12 @@
       "Finish": "Fertigstellen",
       "Cancel": "Abbrechen",
       "NeedRace": "Bitte zuerst eine Rasse wählen",
-      "NeedChoice": "Bitte eine Option für \"{label}\" wählen",
+      "NeedChoice": "Bitte alle Wahlmöglichkeiten treffen bzw. alle Punkte verteilen, bevor du weitergehst",
       "NoRaceItems": "Keine Rassen im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Rasse\" an.",
       "NoSubrace": "Keine",
       "NoProfessionItems": "Keine Berufe im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Beruf\" an.",
       "BodyRange": "Körpermaße",
+      "DistributeHint": "Verbleibende Punkte",
       "ClearProfession": "Keinen Beruf wählen",
       "ProfessionOptionalHint": "Optional -- kann übersprungen werden.",
       "NoneSelected": "Nichts ausgewählt",
@@ -145,7 +147,8 @@
       "subraces": "Subrassen",
       "subracesHint": "Subrassen-Boni kommen zusätzlich zu Basis und Geschlecht hinzu, wenn im Erstellungs-Wizard diese Subrasse gewählt wird.",
       "subraceKey": "Interner Schlüssel",
-      "subraceName": "Name"
+      "subraceName": "Name",
+      "genderImages": "Bilder je Geschlecht"
     },
 
     "ItemType": {
@@ -173,27 +176,26 @@
     },
 
     "Progression": {
-      "attributeBonuses": "Attributboni",
-      "freeAttributePoints": "Freie Attributpunkte",
-      "resistanceBonuses": "Resistenzboni",
-      "skillBonuses": "Talentboni",
-      "skillBonusHint": "Pfad-Beispiele: sozial.positiv.charme, wissenschaften.natur.medizin, handwerk.alchemist, sonder.schleichen",
       "bodyRanges": "Körpermaß-Bereiche",
       "bodyRangesHint": "Spielende wählen bei der Charaktererstellung per Slider einen Wert innerhalb dieser Bereiche.",
-      "extraGrants": "Automatische Extra-Fähigkeiten",
-      "extraGrantsHint": "Diese Extra-Fähigkeiten gelten für Charaktere mit diesem Item automatisch als vorhanden.",
-      "choices": "Wahlmöglichkeiten",
-      "choicesHint": "Bei der Charaktererstellung wählt der Spieler eine Option aus der Liste; der Betrag wird als Bonus auf das Gewählte angewendet.",
       "choiceKey": "Interner Schlüssel",
-      "choiceLabel": "Beschriftung",
-      "choiceAmount": "Betrag",
-      "choiceOptions": "Optionen",
       "choiceOption": "Option",
-      "choiceKind": {
-        "attribute": "Attribut",
-        "skill": "Talent (Pfad relativ zu talents, z.B. koerperlich.klettern)",
-        "discipline": "Disziplin (Pfad relativ zu disziplinen, z.B. magie.pyrokinet)"
-      }
+      "textTraits": "Besondere Merkmale",
+      "eigenschaften": "Eigenschaften",
+      "eigenschaftName": "Name",
+      "eigenschaftDescription": "Beschreibung",
+      "boni": "Boni",
+      "bonusKind": {
+        "fixed": "Fest (path + amount)",
+        "choice": "Wahl (eine Option aus options, +amount)",
+        "distribute": "Verteilen (amount Punkte frei auf options, je max. perOptionMax)",
+        "text": "Text (reiner RP-Bonus ohne Zahlenwert)"
+      },
+      "bonusPath": "Ziel-Pfad (z.B. attributes.mag, talents.koerperlich.klettern, resistances.feuer, armor.physical, ac.value, initiative)",
+      "bonusAmount": "Betrag",
+      "bonusPerOptionMax": "Max. pro Ziel (0 = unbegrenzt)",
+      "bonusText": "Text",
+      "bonusOptions": "Ziele zur Auswahl"
     },
 
     "Language": {

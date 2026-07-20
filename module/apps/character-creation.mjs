@@ -1,14 +1,14 @@
 import { SCUVANYA } from "../config.mjs";
 import { buildBadge, EMBER_STYLES } from "./badge-util.mjs";
-import { resolveRaceBonuses } from "../data/item/race-resolve.mjs";
+import { activeRaceBundles } from "../data/item/race-resolve.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
 /**
- * Geführte Charaktererstellung: Rasse wählen -> Rassen-Details (Attributboni-Vorschau,
- * Körpermaß-Slider, freie Attributpunkte, Wahlmöglichkeiten) -> Beruf wählen -> Berufs-
- * Details -> Zusammenfassung/Übernehmen. Arbeitet auf einem lokalen State (this.wizardData) und
- * schreibt erst beim Fertigstellen auf den Actor -- ein Abbruch verändert nichts.
+ * Geführte Charaktererstellung: Rasse (+Geschlecht+Subrasse) wählen -> Rassen-Entscheidungen
+ * (Körpermaß-Slider, Wahl-/Verteil-Boni) -> Beruf wählen -> Berufs-Entscheidungen ->
+ * Zusammenfassung/Übernehmen. Arbeitet auf einem lokalen State (this.wizardData) und schreibt
+ * erst beim Fertigstellen auf den Actor -- ein Abbruch verändert nichts.
  *
  * Rassen/Berufe kommen aus game.items (Welt-Items), damit die SL beliebig neue Rassen/
  * Berufe im Items-Verzeichnis anlegen kann, ohne Code anzufassen (siehe item-sheet.hbs).
@@ -24,8 +24,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       clearProfession: CharacterCreationWizard.#onClearProfession,
       setGender: CharacterCreationWizard.#onSetGender,
       selectSubrace: CharacterCreationWizard.#onSelectSubrace,
-      allocatePoint: CharacterCreationWizard.#onAllocatePoint,
       chooseOption: CharacterCreationWizard.#onChooseOption,
+      distributePoint: CharacterCreationWizard.#onDistributePoint,
       nextStep: CharacterCreationWizard.#onNextStep,
       prevStep: CharacterCreationWizard.#onPrevStep,
       finish: CharacterCreationWizard.#onFinish,
@@ -55,7 +55,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         weight: actor.system.body?.weight ?? 0,
         age: actor.system.body?.age ?? 0
       },
-      allocation: foundry.utils.deepClone(actor.system.attributeAllocation ?? {}),
+      // Je bonus.key: ein String (choice) oder ein { [optionPath]: punkte }-Objekt (distribute).
       raceChoices: foundry.utils.deepClone(existingRace?.system.choiceSelections ?? {}),
       professionChoices: foundry.utils.deepClone(existingProfession?.system.choiceSelections ?? {})
     };
@@ -70,91 +70,128 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.step = this.step;
     context.config = SCUVANYA;
 
-    context.races = game.items.filter(i => i.type === "race");
+    context.gender = this.wizardData.gender;
+
+    // Kartenbild hängt vom aktuell gewählten Geschlecht ab (siehe #onSetGender) --
+    // fällt auf das allgemeine Item-Bild zurück, falls für ein Geschlecht keins gepflegt ist.
+    context.races = game.items.filter(i => i.type === "race").map(race => ({
+      id: race.id,
+      name: race.name,
+      img: this._genderImage(race, this.wizardData.gender)
+    }));
     context.professions = game.items.filter(i => i.type === "profession");
     context.selectedRace = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) ?? null : null;
     context.selectedProfession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) ?? null : null;
 
     context.body = this.wizardData.body;
+    context.selectedRaceBody = context.selectedRace?.system.body?.[this.wizardData.gender] ?? null;
     context.embers = EMBER_STYLES;
 
-    context.gender = this.wizardData.gender;
     context.subraces = context.selectedRace?.system.subraces ?? [];
     context.subraceKey = this.wizardData.subraceKey;
 
-    // Basis + Geschlecht + ggf. Subrasse zu einem Netto-Bündel verrechnet (siehe
-    // race-resolve.mjs) -- dieselbe Form wie ein Berufs-Bündel, daher lassen sich
-    // _bonusPreview/_mapChoices unverändert für beide wiederverwenden.
-    const resolvedRace = context.selectedRace
-      ? resolveRaceBonuses(context.selectedRace.system, this.wizardData.gender, this.wizardData.subraceKey)
-      : null;
+    const raceBundles = context.selectedRace
+      ? activeRaceBundles(context.selectedRace.system, this.wizardData.gender, this.wizardData.subraceKey)
+      : [];
+    const professionBundles = context.selectedProfession ? [context.selectedProfession.system] : [];
 
-    const freeFromRace = resolvedRace?.freeAttributePoints ?? 0;
-    const freeFromProfession = context.selectedProfession?.system.freeAttributePoints ?? 0;
-    context.freeAttributePointsAvailable = freeFromRace + freeFromProfession;
-    context.freeAttributePointsSpent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0);
-    context.attributeAllocation = Object.entries(SCUVANYA.attributes).map(([key, cfg]) => ({
-      key, abbr: cfg.abbr, allocation: this.wizardData.allocation[key] ?? 0
-    }));
+    context.raceBonusPreview = this._bonusPreview(raceBundles);
+    context.professionBonusPreview = this._bonusPreview(professionBundles);
 
-    context.raceBonusPreview = this._bonusPreview(resolvedRace);
-    context.professionBonusPreview = this._bonusPreview(context.selectedProfession?.system);
-
-    context.raceChoices = this._mapChoices(resolvedRace, this.wizardData.raceChoices);
-    context.professionChoices = this._mapChoices(context.selectedProfession?.system, this.wizardData.professionChoices);
+    context.raceDecisions = this._collectDecisions(raceBundles, this.wizardData.raceChoices);
+    context.professionDecisions = this._collectDecisions(professionBundles, this.wizardData.professionChoices);
 
     return context;
   }
 
-  _bonusPreview(itemSystem) {
-    if (!itemSystem) return null;
-
-    const attributes = Object.entries(SCUVANYA.attributes)
-      .map(([key, cfg]) => ({ label: cfg.abbr, bonus: itemSystem.attributeBonuses?.[key] ?? 0 }))
-      .filter(a => a.bonus !== 0)
-      .map(chip => buildBadge(chip));
-
-    const skills = (itemSystem.skillBonuses ?? [])
-      .map(entry => ({ label: this._describeOption("skill", entry.path), bonus: entry.bonus }))
-      .map(chip => buildBadge(chip, true));
-
-    // Resistenz-Boni sind in 25%-Schritten (-100..100) gespeichert -- auf die kleine
-    // Bonusskala der Badge-Stufen (1-6) normalisiert, damit die Farbstufen sinnvoll greifen.
-    const resistances = Object.entries(itemSystem.resistanceBonuses ?? {})
-      .filter(([, v]) => v)
-      .map(([key, v]) => ({ label: game.i18n.localize(SCUVANYA.damageTypes[key].label), bonus: Math.round(v / 25) }))
-      .map(chip => buildBadge(chip, true));
-
-    const extra = (itemSystem.extraGrants ?? [])
-      .map(key => ({ label: game.i18n.localize(`SCUVANYA.Skill.${key}`), bonus: 0, binaer: true }))
-      .map(chip => buildBadge(chip, true));
-
-    return { attributes, skills, resistances, extra };
+  _genderImage(race, gender) {
+    const genderImage = gender === "weiblich" ? race.system.imageWeiblich : race.system.imageMaennlich;
+    return genderImage || race.img;
   }
 
-  _mapChoices(itemSystem, selections) {
-    return (itemSystem?.choices ?? []).map(choice => ({
-      key: choice.key,
-      label: choice.label,
-      amount: choice.amount,
-      selected: selections?.[choice.key] ?? null,
-      options: choice.options.map(value => ({ value, label: this._describeOption(choice.kind, value) }))
-    }));
+  _bodyMidpoint(race, gender) {
+    const b = race.system.body?.[gender];
+    if (!b) return { height: 0, weight: 0, age: 0 };
+    return {
+      height: Math.round(((b.heightMin + b.heightMax) / 2) * 100) / 100,
+      weight: Math.round(((b.weightMin + b.weightMax) / 2) * 10) / 10,
+      age: Math.round((b.ageMin + b.ageMax) / 2)
+    };
   }
 
-  _describeOption(kind, path) {
-    if (kind === "attribute") {
-      const cfg = SCUVANYA.attributes[path];
+  /** Vorschau der GARANTIERTEN Boni (fixed/text) über alle aktiven Bündel -- keine Wahl nötig. */
+  _bonusPreview(bundles) {
+    const chips = [];
+    for (const bundle of bundles) {
+      for (const eig of bundle?.eigenschaften ?? []) {
+        for (const bonus of eig.boni ?? []) {
+          if (bonus.kind === "fixed" && bonus.path && bonus.amount) {
+            chips.push(buildBadge({ label: this._describePath(bonus.path), bonus: bonus.amount }, true));
+          } else if (bonus.kind === "text" && bonus.text) {
+            chips.push(buildBadge({ label: eig.name || bonus.text, bonus: 0, binaer: true }, true));
+          }
+        }
+      }
+    }
+    return chips;
+  }
+
+  /** Interaktive choice-/distribute-Boni über alle aktiven Bündel, gruppiert nach Eigenschaft. */
+  _collectDecisions(bundles, selections) {
+    const decisions = [];
+    for (const bundle of bundles) {
+      for (const eig of bundle?.eigenschaften ?? []) {
+        for (const bonus of eig.boni ?? []) {
+          if (bonus.kind !== "choice" && bonus.kind !== "distribute") continue;
+          const options = (bonus.options ?? []).map(path => ({ path, label: this._describePath(path) }));
+
+          if (bonus.kind === "choice") {
+            decisions.push({
+              key: bonus.key, kind: "choice", eigenschaftName: eig.name, eigenschaftDescription: eig.description,
+              amount: bonus.amount, options, selected: selections?.[bonus.key] ?? null
+            });
+          } else {
+            const allocation = (selections?.[bonus.key] && typeof selections[bonus.key] === "object") ? selections[bonus.key] : {};
+            const spent = Object.values(allocation).reduce((s, v) => s + v, 0);
+            decisions.push({
+              key: bonus.key, kind: "distribute", eigenschaftName: eig.name, eigenschaftDescription: eig.description,
+              amount: bonus.amount, perOptionMax: bonus.perOptionMax, spent, remaining: bonus.amount - spent,
+              options: options.map(o => ({ ...o, points: allocation[o.path] ?? 0 }))
+            });
+          }
+        }
+      }
+    }
+    return decisions;
+  }
+
+  _describePath(path) {
+    if (path.startsWith("attributes.")) {
+      const cfg = SCUVANYA.attributes[path.slice("attributes.".length)];
       return cfg ? game.i18n.localize(cfg.label) : path;
     }
-    if (kind === "discipline") {
+    if (path.startsWith("disziplinen.")) {
       const key = path.split(".").pop();
       const cfg = SCUVANYA.combatDisciplines[key] ?? SCUVANYA.magicDisciplines[key];
       return cfg ? game.i18n.localize(cfg.label) : path;
     }
-    const key = path.split(".").pop();
-    const localized = game.i18n.localize(`SCUVANYA.Skill.${key}`);
-    return localized.startsWith("SCUVANYA.") ? path : localized;
+    if (path.startsWith("talents.extra.")) {
+      return game.i18n.localize(`SCUVANYA.Skill.${path.slice("talents.extra.".length)}`);
+    }
+    if (path.startsWith("talents.")) {
+      const key = path.split(".").pop();
+      const localized = game.i18n.localize(`SCUVANYA.Skill.${key}`);
+      return localized.startsWith("SCUVANYA.") ? path : localized;
+    }
+    if (path.startsWith("resistances.")) {
+      const cfg = SCUVANYA.damageTypes[path.slice("resistances.".length)];
+      return cfg ? game.i18n.localize(cfg.label) : path;
+    }
+    if (path === "armor.physical") return game.i18n.localize("SCUVANYA.Armor.physical");
+    if (path === "armor.magical") return game.i18n.localize("SCUVANYA.Armor.magical");
+    if (path === "ac.value") return game.i18n.localize("SCUVANYA.AC");
+    if (path === "initiative") return game.i18n.localize("SCUVANYA.Initiative");
+    return path;
   }
 
   _onRender(context, options) {
@@ -177,22 +214,19 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.wizardData.raceChoices = {};
     this.wizardData.subraceKey = "";
     const race = game.items.get(id);
-    if (race) {
-      const b = race.system.body;
-      this.wizardData.body = {
-        height: Math.round(((b.heightMin + b.heightMax) / 2) * 100) / 100,
-        weight: Math.round(((b.weightMin + b.weightMax) / 2) * 10) / 10,
-        age: Math.round((b.ageMin + b.ageMax) / 2)
-      };
-    }
+    if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
     this.render();
   }
 
   static #onSetGender(event, target) {
     this.wizardData.gender = target.dataset.gender;
-    // Geschlecht kann eigene Wahlmöglichkeiten mitbringen -- bei Wechsel sollen alte,
-    // nicht mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+    // Geschlecht kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
+    // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
     this.wizardData.raceChoices = {};
+    // Körpermaß-Bereiche sind pro Geschlecht getrennt -- bereits gewählte Werte auf den
+    // Mittelwert des neuen Geschlechts zurücksetzen, statt sie außerhalb der neuen Grenzen zu lassen.
+    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
+    if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
     this.render();
   }
 
@@ -200,8 +234,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     // Wahl bleibt erhalten, wenn dieselbe Subrasse erneut angeklickt wird; "" (Keine) via
     // eigenem Chip mit data-key="" wählbar (siehe character-creation.hbs).
     this.wizardData.subraceKey = target.dataset.key ?? "";
-    // Subrasse kann eigene Wahlmöglichkeiten mitbringen -- bei Wechsel sollen alte,
-    // nicht mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+    // Subrasse kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
+    // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
     this.wizardData.raceChoices = {};
     this.render();
   }
@@ -219,31 +253,37 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.render();
   }
 
-  static #onAllocatePoint(event, target) {
-    const key = target.dataset.key;
-    const delta = Number(target.dataset.delta);
-    const current = this.wizardData.allocation[key] ?? 0;
-    const next = Math.max(0, current + delta);
-
-    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
-    const profession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) : null;
-    const freeFromRace = race
-      ? resolveRaceBonuses(race.system, this.wizardData.gender, this.wizardData.subraceKey).freeAttributePoints
-      : 0;
-    const available = freeFromRace + (profession?.system.freeAttributePoints ?? 0);
-    const spent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0) - current + next;
-    if (delta > 0 && spent > available) {
-      ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
-      return;
-    }
-    this.wizardData.allocation[key] = next;
-    this.render();
-  }
-
   static #onChooseOption(event, target) {
     const scope = target.dataset.scope;
     const bucket = scope === "race" ? "raceChoices" : "professionChoices";
-    this.wizardData[bucket][target.dataset.choiceKey] = target.dataset.option;
+    this.wizardData[bucket][target.dataset.key] = target.dataset.option;
+    this.render();
+  }
+
+  static #onDistributePoint(event, target) {
+    const scope = target.dataset.scope;
+    const bucket = scope === "race" ? "raceChoices" : "professionChoices";
+    const key = target.dataset.key;
+    const path = target.dataset.path;
+    const delta = Number(target.dataset.delta);
+    const amount = Number(target.dataset.amount);
+    const perOptionMax = Number(target.dataset.perOptionMax);
+
+    const current = (this.wizardData[bucket][key] && typeof this.wizardData[bucket][key] === "object")
+      ? this.wizardData[bucket][key] : {};
+    const currentPoints = current[path] ?? 0;
+    const nextPoints = Math.max(0, currentPoints + delta);
+    if (perOptionMax > 0 && nextPoints > perOptionMax) return;
+
+    const otherSpent = Object.entries(current).reduce((s, [p, v]) => s + (p === path ? 0 : v), 0);
+    if (delta > 0 && otherSpent + nextPoints > amount) {
+      ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
+      return;
+    }
+
+    const updated = { ...current, [path]: nextPoints };
+    if (nextPoints === 0) delete updated[path];
+    this.wizardData[bucket][key] = updated;
     this.render();
   }
 
@@ -252,27 +292,30 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedRace"));
       return;
     }
-    if (this.step === 2) {
-      const race = game.items.get(this.wizardData.raceId);
-      const resolved = race ? resolveRaceBonuses(race.system, this.wizardData.gender, this.wizardData.subraceKey) : null;
-      for (const choice of resolved?.choices ?? []) {
-        if (!this.wizardData.raceChoices[choice.key]) {
-          ui.notifications.warn(game.i18n.format("SCUVANYA.Wizard.NeedChoice", { label: choice.label }));
-          return;
-        }
-      }
+    if (this.step === 2 && !this._decisionsComplete(this._raceBundles(), this.wizardData.raceChoices)) {
+      ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
+      return;
     }
     if (this.step === 4 && this.wizardData.professionId) {
       const profession = game.items.get(this.wizardData.professionId);
-      for (const choice of profession?.system.choices ?? []) {
-        if (!this.wizardData.professionChoices[choice.key]) {
-          ui.notifications.warn(game.i18n.format("SCUVANYA.Wizard.NeedChoice", { label: choice.label }));
-          return;
-        }
+      if (!this._decisionsComplete([profession?.system], this.wizardData.professionChoices)) {
+        ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
+        return;
       }
     }
     this.step = Math.min(5, this.step + 1);
     this.render();
+  }
+
+  _raceBundles() {
+    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
+    return race ? activeRaceBundles(race.system, this.wizardData.gender, this.wizardData.subraceKey) : [];
+  }
+
+  _decisionsComplete(bundles, selections) {
+    return this._collectDecisions(bundles, selections).every(decision =>
+      decision.kind === "choice" ? !!decision.selected : decision.remaining <= 0
+    );
   }
 
   static #onPrevStep() {
@@ -317,8 +360,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     await actor.update({
       "system.body": this.wizardData.body,
-      "system.geschlecht": this.wizardData.gender,
-      "system.attributeAllocation": this.wizardData.allocation
+      "system.geschlecht": this.wizardData.gender
     });
 
     ui.notifications.info(game.i18n.localize("SCUVANYA.Wizard.Done"));
