@@ -138,7 +138,7 @@
         <input type="text" name="system.choices.{{choiceIndex}}.label" value="{{choice.label}}" placeholder="{{localize 'SCUVANYA.Progression.choiceLabel'}}">
         <select name="system.choices.{{choiceIndex}}.kind">
           {{#each ../config.choiceKinds as |kind|}}
-          <option value="{{kind}}" {{#if (eq kind ../choice.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.choiceKind." kind)}}</option>
+          <option value="{{kind}}" {{#if (eq kind choice.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.choiceKind." kind)}}</option>
           {{/each}}
         </select>
         <input type="number" name="system.choices.{{choiceIndex}}.amount" value="{{choice.amount}}" title="{{localize 'SCUVANYA.Progression.choiceAmount'}}">

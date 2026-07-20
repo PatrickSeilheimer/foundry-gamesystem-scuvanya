@@ -64,7 +64,7 @@
       <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
       <div class="choice-option-grid">
         {{#each choice.options as |opt|}}
-        <a class="wizard-chip {{#if (eq opt.value ../choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="race" data-choice-key="{{../choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
+        <a class="wizard-chip {{#if (eq opt.value choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="race" data-choice-key="{{choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
         {{/each}}
       </div>
     </div>
@@ -117,7 +117,7 @@
       <span class="choice-label">{{choice.label}} (+{{choice.amount}})</span>
       <div class="choice-option-grid">
         {{#each choice.options as |opt|}}
-        <a class="wizard-chip {{#if (eq opt.value ../choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="profession" data-choice-key="{{../choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
+        <a class="wizard-chip {{#if (eq opt.value choice.selected)}}selected{{/if}}" data-action="chooseOption" data-scope="profession" data-choice-key="{{choice.key}}" data-option="{{opt.value}}">{{opt.label}}</a>
         {{/each}}
       </div>
     </div>
