@@ -27,7 +27,7 @@
     <h3>{{localize 'SCUVANYA.Wizard.StepRaceDetails'}}: {{selectedRace.name}}</h3>
 
     {{#if raceBonusPreview}}
-    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview}}
+    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview embers=embers}}
     {{/if}}
 
     {{#if freeAttributePointsAvailable}}
@@ -94,7 +94,7 @@
     <h3>{{localize 'SCUVANYA.Wizard.StepProfessionDetails'}}: {{selectedProfession.name}}</h3>
 
     {{#if professionBonusPreview}}
-    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=professionBonusPreview}}
+    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=professionBonusPreview embers=embers}}
     {{/if}}
 
     {{#if freeAttributePointsAvailable}}

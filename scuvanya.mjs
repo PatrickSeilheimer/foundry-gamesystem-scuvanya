@@ -62,7 +62,8 @@ Hooks.once("init", () => {
   registerHandlebarsHelpers();
 
   foundry.applications.handlebars.loadTemplates([
-    "systems/scuvanya/templates/apps/parts/bonus-preview.hbs"
+    "systems/scuvanya/templates/apps/parts/bonus-preview.hbs",
+    "systems/scuvanya/templates/apps/parts/badge.hbs"
   ]);
 });
 

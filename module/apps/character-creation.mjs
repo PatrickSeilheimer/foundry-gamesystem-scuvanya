@@ -1,4 +1,5 @@
 import { SCUVANYA } from "../config.mjs";
+import { buildBadge, EMBER_STYLES } from "./badge-util.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
@@ -70,6 +71,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.selectedProfession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) ?? null : null;
 
     context.body = this.wizardData.body;
+    context.embers = EMBER_STYLES;
 
     const freeFromRace = context.selectedRace?.system.freeAttributePoints ?? 0;
     const freeFromProfession = context.selectedProfession?.system.freeAttributePoints ?? 0;
@@ -90,16 +92,27 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
   _bonusPreview(itemSystem) {
     if (!itemSystem) return null;
+
     const attributes = Object.entries(SCUVANYA.attributes)
-      .map(([key, cfg]) => ({ abbr: cfg.abbr, bonus: itemSystem.attributeBonuses?.[key] ?? 0 }))
-      .filter(a => a.bonus !== 0);
+      .map(([key, cfg]) => ({ label: cfg.abbr, bonus: itemSystem.attributeBonuses?.[key] ?? 0 }))
+      .filter(a => a.bonus !== 0)
+      .map(chip => buildBadge(chip));
+
     const skills = (itemSystem.skillBonuses ?? [])
-      .map(entry => `${this._describeOption("skill", entry.path)} +${entry.bonus}`);
+      .map(entry => ({ label: this._describeOption("skill", entry.path), bonus: entry.bonus }))
+      .map(chip => buildBadge(chip, true));
+
+    // Resistenz-Boni sind in 25%-Schritten (-100..100) gespeichert -- auf die kleine
+    // Bonusskala der Badge-Stufen (1-6) normalisiert, damit die Farbstufen sinnvoll greifen.
     const resistances = Object.entries(itemSystem.resistanceBonuses ?? {})
       .filter(([, v]) => v)
-      .map(([key, v]) => `${game.i18n.localize(SCUVANYA.damageTypes[key].label)} ${v > 0 ? "+" : ""}${v}%`);
+      .map(([key, v]) => ({ label: game.i18n.localize(SCUVANYA.damageTypes[key].label), bonus: Math.round(v / 25) }))
+      .map(chip => buildBadge(chip, true));
+
     const extra = (itemSystem.extraGrants ?? [])
-      .map(key => game.i18n.localize(`SCUVANYA.Skill.${key}`));
+      .map(key => ({ label: game.i18n.localize(`SCUVANYA.Skill.${key}`), bonus: 0, binaer: true }))
+      .map(chip => buildBadge(chip, true));
+
     return { attributes, skills, resistances, extra };
   }
 

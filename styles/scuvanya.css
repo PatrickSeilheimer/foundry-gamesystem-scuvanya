@@ -1,3 +1,6 @@
+/* Nur für den Charaktererstellungs-Wizard (.character-creation) genutzt -- siehe unten. */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
 .scuvanya-sheet {
   display: flex;
   flex-direction: column;
@@ -252,125 +255,176 @@
 }
 
 /* Charaktererstellungs-Wizard */
+/* ══════════════════════════════════════════════════════════════════
+   Charaktererstellungs-Wizard -- dunkles Gold/Pergament-Theme, an die
+   Angular-Charaktererstellung (app.scuvanya.online) angelehnt. Bewusst
+   auf .character-creation begrenzt: der Rest der Foundry-UI (inkl. der
+   übrigen Scuvanya-Sheets) bleibt im Standard-Foundry-Look.
+   ══════════════════════════════════════════════════════════════════ */
+
+.character-creation {
+  --scv-bg: #17150e;
+  --scv-surface: #201d15;
+  --scv-accent: #c9a84c;
+  --scv-accent-dim: rgba(201, 168, 76, 0.12);
+  --scv-accent-border: rgba(201, 168, 76, 0.35);
+  --scv-accent-hover: #dfbc6a;
+  --scv-text: #d8d3c2;
+  --scv-text-muted: #8b8676;
+  --scv-border: #34301f;
+  --scv-transition: 0.25s ease;
+
+  background: var(--scv-bg);
+  color: var(--scv-text);
+  font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.character-creation h3,
+.character-creation h4 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  color: var(--scv-accent);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.character-creation .hint {
+  color: var(--scv-text-muted);
+}
+
 .character-creation .wizard-steps {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
   font-size: 11px;
 }
 
 .character-creation .step-indicator {
-  padding: 0.2rem 0.5rem;
-  border: 1px solid #999;
-  border-radius: 3px;
-  opacity: 0.6;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 12px;
+  color: var(--scv-text-muted);
+  transition: all var(--scv-transition);
 }
 
 .character-creation .step-indicator.active {
-  opacity: 1;
+  color: var(--scv-accent);
+  border-color: var(--scv-accent-border);
+  background: var(--scv-accent-dim);
   font-weight: bold;
-  background: rgba(0, 0, 0, 0.08);
 }
 
 .character-creation .wizard-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.9rem;
 }
 
 .character-creation .wizard-card {
-  border: 2px solid transparent;
-  border-radius: 4px;
-  padding: 0.4rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 5px;
+  padding: 0.5rem;
   text-align: center;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--scv-surface);
+  transition: all var(--scv-transition);
+}
+
+.character-creation .wizard-card:hover {
+  border-color: var(--scv-accent-border);
+  color: var(--scv-accent-hover);
 }
 
 .character-creation .wizard-card.selected {
-  border-color: var(--color-border-dark-4, #782e22);
-  background: rgba(0, 0, 0, 0.08);
+  border-color: var(--scv-accent);
+  background: var(--scv-accent-dim);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.35);
 }
 
 .character-creation .wizard-card img {
   width: 64px;
   height: 64px;
   object-fit: cover;
+  border-radius: 3px;
 }
 
 .character-creation .wizard-card-name {
   display: block;
+  font-family: 'Cinzel', serif;
   font-size: 12px;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
 }
 
 .character-creation .wizard-slider {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
 }
 
 .character-creation .wizard-slider label {
   display: block;
   font-size: 11px;
-  margin-bottom: 0.2rem;
+  color: var(--scv-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.character-creation .wizard-slider output {
+  color: var(--scv-accent);
+  font-weight: bold;
 }
 
 .character-creation .wizard-slider input[type="range"] {
   width: 100%;
+  accent-color: var(--scv-accent);
 }
 
 .character-creation .wizard-choice {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.75rem;
 }
 
 .character-creation .choice-label {
   display: block;
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 0.2rem;
+  color: var(--scv-text);
+  margin-bottom: 0.3rem;
 }
 
 .character-creation .choice-option-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 
 .character-creation .wizard-chip {
-  padding: 0.2rem 0.5rem;
-  border: 1px solid #999;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--scv-border);
   border-radius: 12px;
   cursor: pointer;
   font-size: 11px;
+  background: var(--scv-surface);
+  color: var(--scv-text-muted);
+  transition: all var(--scv-transition);
+}
+
+.character-creation .wizard-chip:hover {
+  color: var(--scv-accent-hover);
+  border-color: var(--scv-accent-border);
 }
 
 .character-creation .wizard-chip.selected {
-  background: var(--color-border-dark-4, #782e22);
-  color: white;
-  border-color: transparent;
+  background: var(--scv-accent-dim);
+  color: var(--scv-accent);
+  border-color: var(--scv-accent);
+  font-weight: bold;
 }
 
 .character-creation .bonus-preview {
-  font-size: 11px;
-  margin-bottom: 0.5rem;
-}
-
-.character-creation .bonus-preview-row {
-  margin-bottom: 0.2rem;
-}
-
-.character-creation .bonus-preview-label {
-  font-weight: bold;
-  margin-right: 0.4rem;
-}
-
-.character-creation .bonus-chip {
-  display: inline-block;
-  padding: 0.05rem 0.4rem;
-  margin-right: 0.3rem;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
 }
 
 .character-creation .wizard-footer {
@@ -378,6 +432,192 @@
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #999;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--scv-border);
+}
+
+.character-creation .wizard-footer button {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 3px;
+  background: var(--scv-surface);
+  color: var(--scv-text);
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  transition: all var(--scv-transition);
+}
+
+.character-creation .wizard-footer button:hover {
+  border-color: var(--scv-accent-border);
+  color: var(--scv-accent-hover);
+}
+
+.character-creation .wizard-footer button.finish-button {
+  border-color: var(--scv-accent);
+  color: var(--scv-accent);
+  background: var(--scv-accent-dim);
+}
+
+/* ── Bonus-Badges: Rarity-Stufen mit Glow/Funkeln/Glutfunken/Flamme ──
+   Portiert aus app.scuvanya.online (bonus-badge.util.ts + styles.scss).
+   Stufe 1-2 statischer Glow, Stufe 3-4 zusätzlich seltenes Sparkle-Sweep,
+   Stufe 5-6 zusätzlich Glutfunken, Stufe 6 zusätzlich Flammen-Flicker.
+   "special" (binaer=true, z.B. Lesen/Schreiben) ist immer golden. */
+
+.character-creation .scv-badge {
+  position: relative;
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid var(--scv-border);
+  color: var(--scv-text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all var(--scv-transition);
+}
+
+.character-creation .scv-badge--talent {
+  font-size: 10.5px;
+  font-weight: 500;
+}
+
+.character-creation .scv-badge__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.character-creation .scv-badge__label {
+  position: relative;
+  z-index: 1;
+}
+
+.character-creation .scv-badge--tier1 {
+  color: #8fd694;
+  border-color: rgba(143, 214, 148, 0.7);
+}
+
+.character-creation .scv-badge--tier2 {
+  color: #6fb8e6;
+  border-color: rgba(111, 184, 230, 0.7);
+  background: rgba(111, 184, 230, 0.1);
+  box-shadow: 0 0 11px rgba(111, 184, 230, 0.6), 0 0 3px rgba(111, 184, 230, 0.65) inset;
+}
+
+.character-creation .scv-badge--tier3 {
+  color: #c99bf0;
+  border-color: rgba(201, 155, 240, 0.65);
+  background: rgba(201, 155, 240, 0.1);
+  box-shadow: 0 0 12px rgba(201, 155, 240, 0.6), 0 0 3px rgba(201, 155, 240, 0.65) inset;
+}
+
+.character-creation .scv-badge--tier3 .scv-badge__clip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.65) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: scv-sparkle-sweep 5s linear infinite;
+}
+
+.character-creation .scv-badge--tier4 {
+  color: #ffd873;
+  border-color: rgba(255, 216, 115, 0.75);
+  background: rgba(255, 216, 115, 0.1);
+  animation: scv-legendary-pulse 2.2s ease-in-out infinite;
+}
+
+.character-creation .scv-badge--tier4 .scv-badge__clip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.65) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: scv-sparkle-sweep 5s linear infinite;
+}
+
+.character-creation .scv-badge--tier5,
+.character-creation .scv-badge--tier6 {
+  color: #ff8a76;
+  border-color: rgba(255, 138, 118, 0.8);
+  background: rgba(255, 138, 118, 0.12);
+  animation: scv-epic-pulse 2.2s ease-in-out infinite;
+}
+
+.character-creation .scv-badge--tier5 .scv-badge__clip::after,
+.character-creation .scv-badge--tier6 .scv-badge__clip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: scv-sparkle-sweep 5s linear infinite;
+}
+
+.character-creation .scv-badge--tier5 .scv-ember,
+.character-creation .scv-badge--tier6 .scv-ember {
+  display: block;
+}
+
+.character-creation .scv-badge--special {
+  color: #ffd873;
+  border-color: rgba(255, 216, 115, 0.75);
+  background: rgba(255, 216, 115, 0.12);
+  box-shadow: 0 0 10px rgba(255, 216, 115, 0.55), 0 0 3px rgba(255, 216, 115, 0.7) inset;
+}
+
+.character-creation .scv-badge--flame {
+  animation: scv-epic-pulse 2.2s ease-in-out infinite, scv-flame-flicker 1.6s ease-in-out infinite;
+}
+
+@keyframes scv-flame-flicker {
+  0%   { box-shadow: 0 0 10px 1px rgba(255, 90, 40, 0.75), 0 0 18px 3px rgba(255, 150, 30, 0.4), 0 0 4px rgba(255, 138, 118, 0.85) inset; }
+  25%  { box-shadow: 0 0 14px 2px rgba(255, 200, 60, 0.85), 0 0 22px 4px rgba(255, 100, 20, 0.45), 0 0 5px rgba(255, 138, 118, 0.9) inset; }
+  50%  { box-shadow: 0 0 8px 1px rgba(255, 60, 20, 0.7), 0 0 16px 3px rgba(255, 170, 40, 0.5), 0 0 4px rgba(255, 138, 118, 0.85) inset; }
+  75%  { box-shadow: 0 0 16px 2px rgba(255, 210, 80, 0.9), 0 0 24px 5px rgba(255, 90, 20, 0.4), 0 0 6px rgba(255, 138, 118, 0.95) inset; }
+  100% { box-shadow: 0 0 10px 1px rgba(255, 90, 40, 0.75), 0 0 18px 3px rgba(255, 150, 30, 0.4), 0 0 4px rgba(255, 138, 118, 0.85) inset; }
+}
+
+.character-creation .scv-ember {
+  display: none;
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6e0 0%, #ff8a52 45%, transparent 75%);
+  box-shadow: 0 0 4px rgba(255, 138, 82, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  animation: scv-ember-rise 1.2s ease-out infinite;
+}
+
+@keyframes scv-ember-rise {
+  0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translate(var(--ember-drift, 4px), -20px) scale(0.15); opacity: 0; }
+}
+
+@keyframes scv-legendary-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 216, 115, 0.5); }
+  50%      { box-shadow: 0 0 16px rgba(255, 216, 115, 0.95), 0 0 4px rgba(255, 216, 115, 0.8) inset; }
+}
+
+@keyframes scv-epic-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 138, 118, 0.55); }
+  50%      { box-shadow: 0 0 18px rgba(255, 138, 118, 1), 0 0 5px rgba(255, 138, 118, 0.85) inset; }
+}
+
+/* Kurzes, seltenes Funkeln statt Dauerschleife: der Sweep läuft nur die ersten 15% des
+   3s-Zyklus schnell durch und steht die restliche Zeit unsichtbar außerhalb der Badge
+   (dank overflow:hidden am __clip) -- wirkt dadurch wie ein seltenes Aufblitzen. */
+@keyframes scv-sparkle-sweep {
+  0%   { transform: translateX(-100%); }
+  30%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
 }
