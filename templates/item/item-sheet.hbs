@@ -77,20 +77,9 @@
     </div>
     {{/if}}
 
-    {{#if system.attributeBonuses}}
-    <h3>{{localize 'SCUVANYA.Progression.attributeBonuses'}}</h3>
-    <div class="attribute-bonus-grid">
-      {{#each config.attributes as |cfg key|}}
-      <label>{{cfg.abbr}}
-        <input type="number" name="system.attributeBonuses.{{key}}" value="{{lookup ../system.attributeBonuses key}}">
-      </label>
-      {{/each}}
-    </div>
-
-    <div class="form-group">
-      <label>{{localize 'SCUVANYA.Progression.freeAttributePoints'}}</label>
-      <input type="number" min="0" name="system.freeAttributePoints" value="{{system.freeAttributePoints}}">
-    </div>
+    {{#if (eq item.type "profession")}}
+    {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix="system" bundle=system config=config}}
+    {{/if}}
 
     {{#if (eq item.type "race")}}
     <h3>{{localize 'SCUVANYA.Progression.bodyRanges'}}</h3>
@@ -115,70 +104,36 @@
         <input type="number" min="0" name="system.body.ageMax" value="{{system.body.ageMax}}">
       </label>
     </div>
-    {{/if}}
 
-    <h3>{{localize 'SCUVANYA.Progression.extraGrants'}}</h3>
-    <p class="hint">{{localize 'SCUVANYA.Progression.extraGrantsHint'}}</p>
-    <div class="extra-grants-grid">
-      {{#each config.extraSkills as |key|}}
-      <a class="extra-grant-toggle {{#if (includes ../system.extraGrants key)}}active{{/if}}" data-action="toggleExtraGrant" data-key="{{key}}">
-        {{localize (concat "SCUVANYA.Skill." key)}}
-      </a>
-      {{/each}}
-    </div>
+    <details class="bonus-bundle-section" open>
+      <summary>{{localize 'SCUVANYA.Race.base'}}</summary>
+      {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix="system.base" bundle=system.base config=config}}
+    </details>
 
-    <h3>{{localize 'SCUVANYA.Progression.choices'}}
-      <button type="button" data-action="addChoice">+</button>
+    <details class="bonus-bundle-section">
+      <summary>{{localize 'SCUVANYA.Race.maennlich'}}</summary>
+      {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix="system.maennlich" bundle=system.maennlich config=config}}
+    </details>
+
+    <details class="bonus-bundle-section">
+      <summary>{{localize 'SCUVANYA.Race.weiblich'}}</summary>
+      {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix="system.weiblich" bundle=system.weiblich config=config}}
+    </details>
+
+    <h3>{{localize 'SCUVANYA.Race.subraces'}}
+      <button type="button" data-action="addSubrace">+</button>
     </h3>
-    <p class="hint">{{localize 'SCUVANYA.Progression.choicesHint'}}</p>
-    {{#each system.choices as |choice choiceIndex|}}
-    <div class="choice-row" data-choice-index="{{choiceIndex}}">
-      <div class="choice-fields">
-        <input type="text" name="system.choices.{{choiceIndex}}.key" value="{{choice.key}}" placeholder="{{localize 'SCUVANYA.Progression.choiceKey'}}">
-        <input type="text" name="system.choices.{{choiceIndex}}.label" value="{{choice.label}}" placeholder="{{localize 'SCUVANYA.Progression.choiceLabel'}}">
-        <select name="system.choices.{{choiceIndex}}.kind">
-          {{#each ../config.choiceKinds as |kind|}}
-          <option value="{{kind}}" {{#if (eq kind choice.kind)}}selected{{/if}}>{{localize (concat "SCUVANYA.Progression.choiceKind." kind)}}</option>
-          {{/each}}
-        </select>
-        <input type="number" name="system.choices.{{choiceIndex}}.amount" value="{{choice.amount}}" title="{{localize 'SCUVANYA.Progression.choiceAmount'}}">
-        <a data-action="removeChoice" data-choice-index="{{choiceIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
-      </div>
-      <div class="choice-options" data-choice-index="{{choiceIndex}}">
-        <span class="hint">{{localize 'SCUVANYA.Progression.choiceOptions'}}:</span>
-        {{#each choice.options as |option optionIndex|}}
-        <span class="choice-option" data-choice-index="{{choiceIndex}}" data-option-index="{{optionIndex}}">
-          <input type="text" name="system.choices.{{choiceIndex}}.options.{{optionIndex}}" value="{{option}}">
-          <a data-action="removeChoiceOption" data-choice-index="{{choiceIndex}}" data-option-index="{{optionIndex}}">×</a>
-        </span>
-        {{/each}}
-        <button type="button" data-action="addChoiceOption" data-choice-index="{{choiceIndex}}">+ {{localize 'SCUVANYA.Progression.choiceOption'}}</button>
-      </div>
-    </div>
+    <p class="hint">{{localize 'SCUVANYA.Race.subracesHint'}}</p>
+    {{#each system.subraces as |subrace subraceIndex|}}
+    <details class="bonus-bundle-section subrace-section" data-subrace-index="{{subraceIndex}}">
+      <summary>
+        <input type="text" name="system.subraces.{{subraceIndex}}.key" value="{{subrace.key}}" placeholder="{{localize 'SCUVANYA.Race.subraceKey'}}">
+        <input type="text" name="system.subraces.{{subraceIndex}}.name" value="{{subrace.name}}" placeholder="{{localize 'SCUVANYA.Race.subraceName'}}">
+        <a data-action="removeSubrace" data-subrace-index="{{subraceIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+      </summary>
+      {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix=(concat "system.subraces." subraceIndex ".bonuses") bundle=subrace.bonuses config=../config}}
+    </details>
     {{/each}}
-
-    <h3>{{localize 'SCUVANYA.Progression.resistanceBonuses'}}</h3>
-    <div class="attribute-bonus-grid">
-      {{#each config.damageTypes as |cfg key|}}
-      <label>{{localize cfg.label}}
-        <input type="number" step="25" name="system.resistanceBonuses.{{key}}" value="{{lookup ../system.resistanceBonuses key}}">
-      </label>
-      {{/each}}
-    </div>
-
-    <h3>{{localize 'SCUVANYA.Progression.skillBonuses'}}
-      <button type="button" data-action="addSkillBonus">+</button>
-    </h3>
-    <p class="hint">{{localize 'SCUVANYA.Progression.skillBonusHint'}}</p>
-    <table class="skill-table">
-      {{#each system.skillBonuses as |entry index|}}
-      <tr data-index="{{index}}">
-        <td><input type="text" name="system.skillBonuses.{{index}}.path" value="{{entry.path}}" placeholder="sozial.positiv.charme"></td>
-        <td><input type="number" name="system.skillBonuses.{{index}}.bonus" value="{{entry.bonus}}"></td>
-        <td><a data-action="removeSkillBonus" data-index="{{index}}">{{localize 'SCUVANYA.Delete'}}</a></td>
-      </tr>
-      {{/each}}
-    </table>
     {{/if}}
 
     <h3>{{localize 'SCUVANYA.Description'}}</h3>

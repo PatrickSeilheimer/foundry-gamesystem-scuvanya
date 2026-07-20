@@ -1,5 +1,6 @@
 import { SCUVANYA } from "../config.mjs";
 import { buildBadge, EMBER_STYLES } from "./badge-util.mjs";
+import { resolveRaceBonuses } from "../data/item/race-resolve.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
@@ -21,6 +22,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       pickRace: CharacterCreationWizard.#onPickRace,
       pickProfession: CharacterCreationWizard.#onPickProfession,
       clearProfession: CharacterCreationWizard.#onClearProfession,
+      setGender: CharacterCreationWizard.#onSetGender,
+      selectSubrace: CharacterCreationWizard.#onSelectSubrace,
       allocatePoint: CharacterCreationWizard.#onAllocatePoint,
       chooseOption: CharacterCreationWizard.#onChooseOption,
       nextStep: CharacterCreationWizard.#onNextStep,
@@ -45,6 +48,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.wizardData = {
       raceId: existingRace?.flags?.scuvanya?.sourceId ?? null,
       professionId: existingProfession?.flags?.scuvanya?.sourceId ?? null,
+      gender: actor.system.geschlecht ?? "maennlich",
+      subraceKey: existingRace?.system.subraceKey ?? "",
       body: {
         height: actor.system.body?.height ?? 0,
         weight: actor.system.body?.weight ?? 0,
@@ -73,7 +78,18 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.body = this.wizardData.body;
     context.embers = EMBER_STYLES;
 
-    const freeFromRace = context.selectedRace?.system.freeAttributePoints ?? 0;
+    context.gender = this.wizardData.gender;
+    context.subraces = context.selectedRace?.system.subraces ?? [];
+    context.subraceKey = this.wizardData.subraceKey;
+
+    // Basis + Geschlecht + ggf. Subrasse zu einem Netto-Bündel verrechnet (siehe
+    // race-resolve.mjs) -- dieselbe Form wie ein Berufs-Bündel, daher lassen sich
+    // _bonusPreview/_mapChoices unverändert für beide wiederverwenden.
+    const resolvedRace = context.selectedRace
+      ? resolveRaceBonuses(context.selectedRace.system, this.wizardData.gender, this.wizardData.subraceKey)
+      : null;
+
+    const freeFromRace = resolvedRace?.freeAttributePoints ?? 0;
     const freeFromProfession = context.selectedProfession?.system.freeAttributePoints ?? 0;
     context.freeAttributePointsAvailable = freeFromRace + freeFromProfession;
     context.freeAttributePointsSpent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0);
@@ -81,10 +97,10 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       key, abbr: cfg.abbr, allocation: this.wizardData.allocation[key] ?? 0
     }));
 
-    context.raceBonusPreview = this._bonusPreview(context.selectedRace?.system);
+    context.raceBonusPreview = this._bonusPreview(resolvedRace);
     context.professionBonusPreview = this._bonusPreview(context.selectedProfession?.system);
 
-    context.raceChoices = this._mapChoices(context.selectedRace?.system, this.wizardData.raceChoices);
+    context.raceChoices = this._mapChoices(resolvedRace, this.wizardData.raceChoices);
     context.professionChoices = this._mapChoices(context.selectedProfession?.system, this.wizardData.professionChoices);
 
     return context;
@@ -159,6 +175,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     const id = target.closest("[data-id]")?.dataset.id;
     this.wizardData.raceId = id;
     this.wizardData.raceChoices = {};
+    this.wizardData.subraceKey = "";
     const race = game.items.get(id);
     if (race) {
       const b = race.system.body;
@@ -168,6 +185,24 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         age: Math.round((b.ageMin + b.ageMax) / 2)
       };
     }
+    this.render();
+  }
+
+  static #onSetGender(event, target) {
+    this.wizardData.gender = target.dataset.gender;
+    // Geschlecht kann eigene Wahlmöglichkeiten mitbringen -- bei Wechsel sollen alte,
+    // nicht mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+    this.wizardData.raceChoices = {};
+    this.render();
+  }
+
+  static #onSelectSubrace(event, target) {
+    // Wahl bleibt erhalten, wenn dieselbe Subrasse erneut angeklickt wird; "" (Keine) via
+    // eigenem Chip mit data-key="" wählbar (siehe character-creation.hbs).
+    this.wizardData.subraceKey = target.dataset.key ?? "";
+    // Subrasse kann eigene Wahlmöglichkeiten mitbringen -- bei Wechsel sollen alte,
+    // nicht mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+    this.wizardData.raceChoices = {};
     this.render();
   }
 
@@ -192,7 +227,10 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
     const profession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) : null;
-    const available = (race?.system.freeAttributePoints ?? 0) + (profession?.system.freeAttributePoints ?? 0);
+    const freeFromRace = race
+      ? resolveRaceBonuses(race.system, this.wizardData.gender, this.wizardData.subraceKey).freeAttributePoints
+      : 0;
+    const available = freeFromRace + (profession?.system.freeAttributePoints ?? 0);
     const spent = Object.values(this.wizardData.allocation).reduce((s, v) => s + v, 0) - current + next;
     if (delta > 0 && spent > available) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
@@ -216,7 +254,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     }
     if (this.step === 2) {
       const race = game.items.get(this.wizardData.raceId);
-      for (const choice of race?.system.choices ?? []) {
+      const resolved = race ? resolveRaceBonuses(race.system, this.wizardData.gender, this.wizardData.subraceKey) : null;
+      for (const choice of resolved?.choices ?? []) {
         if (!this.wizardData.raceChoices[choice.key]) {
           ui.notifications.warn(game.i18n.format("SCUVANYA.Wizard.NeedChoice", { label: choice.label }));
           return;
@@ -259,6 +298,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         const data = source.toObject();
         delete data._id;
         data.system.choiceSelections = this.wizardData.raceChoices;
+        data.system.subraceKey = this.wizardData.subraceKey;
         data.flags = foundry.utils.mergeObject(data.flags ?? {}, { scuvanya: { sourceId: source.id } });
         toCreate.push(data);
       }
@@ -277,6 +317,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     await actor.update({
       "system.body": this.wizardData.body,
+      "system.geschlecht": this.wizardData.gender,
       "system.attributeAllocation": this.wizardData.allocation
     });
 

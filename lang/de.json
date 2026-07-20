@@ -93,6 +93,9 @@
     },
 
     "Body": {
+      "geschlecht": "Geschlecht",
+      "maennlich": "Männlich",
+      "weiblich": "Weiblich",
       "height": "Größe",
       "weight": "Gewicht",
       "age": "Alter",
@@ -119,6 +122,7 @@
       "NeedRace": "Bitte zuerst eine Rasse wählen",
       "NeedChoice": "Bitte eine Option für \"{label}\" wählen",
       "NoRaceItems": "Keine Rassen im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Rasse\" an.",
+      "NoSubrace": "Keine",
       "NoProfessionItems": "Keine Berufe im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Beruf\" an.",
       "BodyRange": "Körpermaße",
       "ClearProfession": "Keinen Beruf wählen",
@@ -132,6 +136,16 @@
       "race": "Rasse",
       "profession": "Beruf",
       "NewName": "Neu: {type}"
+    },
+
+    "Race": {
+      "base": "Basis (beide Geschlechter)",
+      "maennlich": "Männlich (zusätzlich zur Basis)",
+      "weiblich": "Weiblich (zusätzlich zur Basis)",
+      "subraces": "Subrassen",
+      "subracesHint": "Subrassen-Boni kommen zusätzlich zu Basis und Geschlecht hinzu, wenn im Erstellungs-Wizard diese Subrasse gewählt wird.",
+      "subraceKey": "Interner Schlüssel",
+      "subraceName": "Name"
     },
 
     "ItemType": {

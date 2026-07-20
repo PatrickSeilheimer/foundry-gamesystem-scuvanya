@@ -25,9 +25,12 @@ export const DEFAULT_ITEMS = [
     type: "race",
     system: {
       description: "<p>Vielseitig und anpassungsfähig -- ohne ausgeprägte Schwächen, dafür ohne Spezialisierung.</p>",
-      attributeBonuses: { str: 1, dex: 1, con: 2, spd: 1, int: 1, mnd: 1, mag: 1, cha: 2 },
-      freeAttributePoints: 2,
-      body: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, ageMin: 18, ageMax: 80 }
+      body: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, ageMin: 18, ageMax: 80 },
+      base: {
+        attributeBonuses: { str: 1, dex: 1, con: 2, spd: 1, int: 1, mnd: 1, mag: 1, cha: 2 },
+        freeAttributePoints: 2
+      }
+      // Kein Geschlechter-/Subrassen-Unterschied bei Menschen -- maennlich/weiblich/subraces bleiben leer.
     }
   },
   {
@@ -35,23 +38,29 @@ export const DEFAULT_ITEMS = [
     type: "race",
     system: {
       description: "<p>Klein, langlebig und von Kindheit an in Schrift und arkanem Wissen geschult.</p>",
-      // Startattribute 5,6,8,5,10,9,11,6 -- als Bonus relativ zum Standardwert 6 hinterlegt.
-      attributeBonuses: { str: -1, dex: 0, con: 2, spd: -1, int: 4, mnd: 3, mag: 5, cha: 0 },
-      freeAttributePoints: 0,
       body: { heightMin: 0.90, heightMax: 1.25, weightMin: 40, weightMax: 70, ageMin: 20, ageMax: 90 },
-      extraGrants: ["lesen", "schreiben"],
-      skillBonuses: [
-        { path: "wissenschaften.sozial.arkana", bonus: 3 }
-      ],
-      choices: [
-        {
-          key: "magieDisziplin",
-          label: "Magiedisziplin (Wahl, Stufe 3)",
-          kind: "discipline",
-          options: MAGIC_DISCIPLINE_PATHS,
-          amount: 3
-        }
-      ]
+      base: {
+        // Startattribute 5,6,8,5,10,9,11,6 -- als Bonus relativ zum Standardwert 6 hinterlegt.
+        attributeBonuses: { str: -1, dex: 0, con: 2, spd: -1, int: 4, mnd: 3, mag: 5, cha: 0 },
+        extraGrants: ["lesen", "schreiben"],
+        skillBonuses: [
+          { path: "wissenschaften.sozial.arkana", bonus: 3 }
+        ],
+        choices: [
+          {
+            key: "magieDisziplin",
+            label: "Magiedisziplin (Wahl, Stufe 3)",
+            kind: "discipline",
+            options: MAGIC_DISCIPLINE_PATHS,
+            amount: 3
+          }
+        ]
+      },
+      // Beispiel für Geschlechter-Deltas: Frauen sind etwas weniger magiebegabt, dafür
+      // etwas belastbarer als der Basiswert -- Männer bleiben unverändert bei der Basis.
+      weiblich: {
+        attributeBonuses: { mag: -1, mnd: 1 }
+      }
     }
   },
   {

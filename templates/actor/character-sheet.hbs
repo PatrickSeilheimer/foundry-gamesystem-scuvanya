@@ -347,6 +347,11 @@
     {{!-- BIOGRAFIE --}}
     <div class="tab biografie-tab {{#if (eq activeTab 'biografie')}}active{{/if}}">
       <div class="form-group">
+        <label>{{localize 'SCUVANYA.Body.geschlecht'}}</label>
+        <select name="system.geschlecht">
+          <option value="maennlich" {{#if (eq system.geschlecht "maennlich")}}selected{{/if}}>{{localize 'SCUVANYA.Body.maennlich'}}</option>
+          <option value="weiblich" {{#if (eq system.geschlecht "weiblich")}}selected{{/if}}>{{localize 'SCUVANYA.Body.weiblich'}}</option>
+        </select>
         <label>{{localize 'SCUVANYA.Body.height'}} (m)</label>
         <input type="number" step="0.01" min="0" name="system.body.height" value="{{body.height}}">
         <label>{{localize 'SCUVANYA.Body.weight'}} (kg)</label>

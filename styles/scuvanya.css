@@ -224,6 +224,33 @@
   font-weight: bold;
 }
 
+.scuvanya-sheet .bonus-bundle-section {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.scuvanya-sheet .bonus-bundle-section > summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.scuvanya-sheet .bonus-bundle-section.subrace-section > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scuvanya-sheet .bonus-bundle-section.subrace-section > summary input[type="text"] {
+  width: auto;
+}
+
+.scuvanya-sheet .bonus-bundle .attribute-bonus-grid,
+.scuvanya-sheet .bonus-bundle h4 {
+  margin-top: 0.5rem;
+}
+
 .scuvanya-sheet .choice-row {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
@@ -457,6 +484,67 @@
   border-color: var(--scv-accent);
   color: var(--scv-accent);
   background: var(--scv-accent-dim);
+}
+
+.character-creation .wizard-bonus-section {
+  margin-bottom: 0.9rem;
+}
+
+/* ── Geschlechter-Switch: gleitende Pille zwischen ♂/♀, blau/pink mit sanftem
+   Glow-Puls -- portiert aus app.scuvanya.online (gender-switch.component.scss). ── */
+.character-creation .gender-switch {
+  position: relative;
+  display: inline-flex;
+  width: 84px;
+  height: 38px;
+  border-radius: 19px;
+  background: var(--scv-surface);
+  border: 1px solid var(--scv-border);
+  overflow: hidden;
+  margin-bottom: 0.9rem;
+}
+
+.character-creation .gender-switch__slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7cc6f2, #3a9bdc);
+  box-shadow: 0 0 12px rgba(124, 198, 242, 0.75), 0 0 4px rgba(124, 198, 242, 0.9) inset;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, box-shadow 0.3s;
+  animation: scv-gender-glow-pulse 2.4s ease-in-out infinite;
+}
+
+.character-creation .gender-switch__slider--weiblich {
+  transform: translateX(100%);
+  background: linear-gradient(135deg, #f5a2cf, #e563a6);
+  box-shadow: 0 0 12px rgba(245, 162, 207, 0.75), 0 0 4px rgba(245, 162, 207, 0.9) inset;
+}
+
+.character-creation .gender-switch__btn {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--scv-text-muted);
+  cursor: pointer;
+  transition: color 0.25s, text-shadow 0.25s;
+}
+
+.character-creation .gender-switch__btn--active {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+}
+
+@keyframes scv-gender-glow-pulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.18); }
 }
 
 /* ── Bonus-Badges: Rarity-Stufen mit Glow/Funkeln/Glutfunken/Flamme ──

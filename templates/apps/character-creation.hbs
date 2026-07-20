@@ -12,6 +12,13 @@
 
     {{#if (eq step 1)}}
     <h3>{{localize 'SCUVANYA.Wizard.StepRace'}}</h3>
+
+    <div class="gender-switch" role="group" aria-label="{{localize 'SCUVANYA.Body.geschlecht'}}">
+      <div class="gender-switch__slider {{#if (eq gender "weiblich")}}gender-switch__slider--weiblich{{/if}}"></div>
+      <a class="gender-switch__btn {{#if (eq gender "maennlich")}}gender-switch__btn--active{{/if}}" data-action="setGender" data-gender="maennlich" aria-label="{{localize 'SCUVANYA.Body.maennlich'}}">♂</a>
+      <a class="gender-switch__btn {{#if (eq gender "weiblich")}}gender-switch__btn--active{{/if}}" data-action="setGender" data-gender="weiblich" aria-label="{{localize 'SCUVANYA.Body.weiblich'}}">♀</a>
+    </div>
+
     {{#unless races.length}}<p class="hint">{{localize 'SCUVANYA.Wizard.NoRaceItems'}}</p>{{/unless}}
     <div class="wizard-card-grid">
       {{#each races as |race|}}
@@ -21,14 +28,26 @@
       </div>
       {{/each}}
     </div>
+
+    {{#if subraces.length}}
+    <h4>{{localize 'SCUVANYA.Race.subraces'}}</h4>
+    <div class="choice-option-grid">
+      <a class="wizard-chip {{#unless subraceKey}}selected{{/unless}}" data-action="selectSubrace" data-key="">{{localize 'SCUVANYA.Wizard.NoSubrace'}}</a>
+      {{#each subraces as |subrace|}}
+      <a class="wizard-chip {{#if (eq subrace.key ../subraceKey)}}selected{{/if}}" data-action="selectSubrace" data-key="{{subrace.key}}">{{subrace.name}}</a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if raceBonusPreview}}
+    <div class="wizard-bonus-section">
+      {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview embers=embers}}
+    </div>
+    {{/if}}
     {{/if}}
 
     {{#if (eq step 2)}}
     <h3>{{localize 'SCUVANYA.Wizard.StepRaceDetails'}}: {{selectedRace.name}}</h3>
-
-    {{#if raceBonusPreview}}
-    {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview embers=embers}}
-    {{/if}}
 
     {{#if freeAttributePointsAvailable}}
     <h4>{{localize 'SCUVANYA.Hint.FreePoints'}}: {{freeAttributePointsSpent}} / {{freeAttributePointsAvailable}}</h4>

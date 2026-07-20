@@ -18,6 +18,7 @@ import {
   specialtyUpgradeCost,
   EXTRA_TALENT_COST
 } from "../../rules/costs.mjs";
+import { resolveRaceBonuses } from "../item/race-resolve.mjs";
 
 const fields = foundry.data.fields;
 
@@ -36,6 +37,12 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       ac: armorClassSchema(),
       resistances: resistancesSchema(),
       biography: biographySchema(),
+
+      // Bestimmt, welches Geschlechter-Bündel der Rasse (RaceData.maennlich/weiblich)
+      // zusätzlich zur Basis aktiv ist, siehe _computeProgressionBonus/race-resolve.mjs.
+      geschlecht: new fields.StringField({
+        required: true, choices: ["maennlich", "weiblich"], initial: "maennlich"
+      }),
 
       // Körpermaße, im Erstellungs-Wizard per Slider innerhalb der Rassen-Bereiche gewählt
       // (siehe RaceData.body), danach frei editierbar.
@@ -140,7 +147,13 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     const items = this.parent?.items ?? [];
     for (const item of items) {
       if (item.type !== "race" && item.type !== "profession") continue;
-      const data = item.system;
+      // Eine Rasse ist mehrere gleichzeitig aktive Bonus-Bündel (Basis + Geschlecht + ggf.
+      // Subrasse), zu einem Netto-Bündel verrechnet (siehe race-resolve.mjs). Ein Beruf ist
+      // schlicht der Sonderfall "ein einzelnes Bündel" -- ab hier identisch behandelt.
+      const data = item.type === "race"
+        ? resolveRaceBonuses(item.system, this.geschlecht, item.system.subraceKey)
+        : item.system;
+
       for (const key of Object.keys(SCUVANYA.attributes)) {
         attribute[key] += data.attributeBonuses?.[key] ?? 0;
       }
@@ -154,10 +167,11 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         extraGrants.add(key);
       }
 
-      // Wahlmöglichkeiten (choices): die getroffene Wahl liegt auf der Item-Instanz selbst
-      // (choiceSelections), die Optionsliste/Betrag auf der choice-Definition.
+      // Wahlmöglichkeiten (choices): die getroffene Wahl liegt auf der Item-INSTANZ selbst
+      // (item.system.choiceSelections -- nicht Teil des Bündels, gilt für alle Bündel eines
+      // Items gemeinsam), die Optionsliste/Betrag auf der jeweiligen choice-Definition.
       for (const choice of data.choices ?? []) {
-        const selected = data.choiceSelections?.[choice.key];
+        const selected = item.system.choiceSelections?.[choice.key];
         if (!selected || !choice.options?.includes(selected)) continue;
         if (choice.kind === "attribute") {
           attribute[selected] = (attribute[selected] ?? 0) + choice.amount;
@@ -208,12 +222,17 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     }
   }
 
-  /** Summe der freien Attributpunkte, die Rasse/Beruf insgesamt gewähren. */
+  /** Summe der freien Attributpunkte, die Rasse (Basis+Geschlecht+Subrasse) und Beruf insgesamt gewähren. */
   get freeAttributePointsAvailable() {
     const items = this.parent?.items ?? [];
     return items
       .filter(i => i.type === "race" || i.type === "profession")
-      .reduce((sum, i) => sum + (i.system.freeAttributePoints ?? 0), 0);
+      .reduce((sum, i) => {
+        const data = i.type === "race"
+          ? resolveRaceBonuses(i.system, this.geschlecht, i.system.subraceKey)
+          : i.system;
+        return sum + (data.freeAttributePoints ?? 0);
+      }, 0);
   }
 
   get freeAttributePointsSpent() {
