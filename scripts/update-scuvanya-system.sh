@@ -52,3 +52,5 @@ rm -rf "${TARGET_DIR}"
 mv "${EXTRACTED_DIR}" "${TARGET_DIR}"
 
 echo "Fertig. Scuvanya-System liegt jetzt unter: ${TARGET_DIR}"
+
+pm2 restart 7
