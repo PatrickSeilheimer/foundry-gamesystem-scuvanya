@@ -384,6 +384,11 @@
   color: var(--scv-text-muted);
 }
 
+.character-creation .wizard-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
 .character-creation .wizard-steps {
   display: flex;
   flex-wrap: wrap;

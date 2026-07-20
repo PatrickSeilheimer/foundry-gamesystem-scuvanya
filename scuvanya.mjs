@@ -1,6 +1,5 @@
 import { SCUVANYA } from "./module/config.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers.mjs";
-import { seedDefaultItems } from "./module/seed-data.mjs";
 
 import CharacterData from "./module/data/actor/character.mjs";
 import NpcData from "./module/data/actor/npc.mjs";
@@ -67,8 +66,4 @@ Hooks.once("init", () => {
     "systems/scuvanya/templates/apps/parts/decision.hbs",
     "systems/scuvanya/templates/item/parts/bonus-bundle.hbs"
   ]);
-});
-
-Hooks.once("ready", () => {
-  seedDefaultItems();
 });

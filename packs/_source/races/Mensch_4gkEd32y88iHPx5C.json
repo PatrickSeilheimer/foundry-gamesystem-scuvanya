@@ -1,0 +1,118 @@
+{
+  "_id": "4gkEd32y88iHPx5C",
+  "_key": "!items!4gkEd32y88iHPx5C",
+  "name": "Mensch",
+  "type": "race",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Vielseitig und anpassungsfähig -- ohne ausgeprägte Schwächen, dafür ohne Spezialisierung.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.5,
+        "heightMax": 2.1,
+        "weightMin": 40,
+        "weightMax": 150,
+        "ageMin": 18,
+        "ageMax": 80
+      },
+      "weiblich": {
+        "heightMin": 1.5,
+        "heightMax": 2.1,
+        "weightMin": 40,
+        "weightMax": 150,
+        "ageMin": 18,
+        "ageMax": 80
+      }
+    },
+    "base": {
+      "eigenschaften": [
+        {
+          "key": "grundwerte",
+          "name": "Ausgeglichene Grundwerte",
+          "description": "Alle Attribute leicht über dem Durchschnitt, Konstitution und Charisma noch etwas mehr.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "attributes.str",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.dex",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.con",
+              "amount": 2
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.spd",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.int",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.mnd",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.mag",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.cha",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "anpassungsfaehigkeit",
+          "name": "Anpassungsfähigkeit",
+          "description": "Verteile 2 Punkte komplett frei auf beliebige Attribute (auch beide auf dasselbe).",
+          "boni": [
+            {
+              "kind": "distribute",
+              "key": "menschAnpassung",
+              "options": [
+                "attributes.str",
+                "attributes.dex",
+                "attributes.con",
+                "attributes.spd",
+                "attributes.int",
+                "attributes.mnd",
+                "attributes.mag",
+                "attributes.cha"
+              ],
+              "amount": 2,
+              "perOptionMax": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

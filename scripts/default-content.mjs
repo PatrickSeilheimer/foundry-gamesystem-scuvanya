@@ -1,13 +1,16 @@
 /**
- * Standard-Rassen/-Berufe als Welt-Items. Werden einmalig (idempotent, per Name+Typ geprüft)
- * beim ersten Start durch die SL angelegt -- es gibt noch keine Compendium-Pack-Pipeline für
- * dieses System, daher der pragmatische Weg über das Items-Verzeichnis. Die Liste ist bewusst
- * noch nicht final (siehe Auftrag: weitere Rassen folgen), neue Einträge können jederzeit direkt
- * in Foundry über das Item-Sheet ergänzt werden, ohne dass hier etwas geändert werden muss.
+ * Standard-Rassen/-Berufe, die mit dem System ausgeliefert werden -- Quelle für die
+ * Compendium-Packs unter packs/races und packs/professions (siehe generate-pack-sources.mjs
+ * und package.json "build:packs"). Nur zur Build-Zeit genutzt, ist kein Teil des laufenden
+ * Systems (die Packs selbst werden über system.json geladen, siehe scuvanya.mjs).
+ *
+ * Die Liste ist bewusst noch nicht final (siehe Auftrag: weitere Rassen folgen). Um einen
+ * Eintrag zu ändern oder zu ergänzen: hier bearbeiten, dann `npm run build:packs` ausführen
+ * und die neu kompilierten packs/races bzw. packs/professions committen.
  *
  * Jede Rasse/jeder Beruf besteht aus "Eigenschaften" (Name + Beschreibung + Boni-Liste, siehe
- * bonusBundleSchema in progression-shared.mjs). Boni-Pfade sind relativ zu system, z.B.
- * "attributes.mag", "talents.koerperlich.klettern", "disziplinen.magie.pyrokinet".
+ * bonusBundleSchema in module/data/item/progression-shared.mjs). Boni-Pfade sind relativ zu
+ * system, z.B. "attributes.mag", "talents.koerperlich.klettern", "disziplinen.magie.pyrokinet".
  */
 const ATTRIBUTE_PATHS = ["str", "dex", "con", "spd", "int", "mnd", "mag", "cha"].map(k => `attributes.${k}`);
 
@@ -191,11 +194,3 @@ export const DEFAULT_ITEMS = [
     }
   }
 ];
-
-export async function seedDefaultItems() {
-  if (!game.user.isGM) return;
-  const missing = DEFAULT_ITEMS.filter(entry =>
-    !game.items.find(i => i.name === entry.name && i.type === entry.type)
-  );
-  if (missing.length) await Item.createDocuments(missing);
-}

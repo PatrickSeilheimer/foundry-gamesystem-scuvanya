@@ -14,7 +14,7 @@ export default class ScuvanyaNpcSheet extends BaseActorSheet {
   };
 
   static PARTS = {
-    form: { template: "systems/scuvanya/templates/actor/npc-sheet.hbs", scrollable: [""] }
+    form: { template: "systems/scuvanya/templates/actor/npc-sheet.hbs", scrollable: [".sheet-body"] }
   };
 
   async _prepareContext(options) {

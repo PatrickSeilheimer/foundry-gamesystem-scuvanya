@@ -41,7 +41,7 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
   };
 
   static PARTS = {
-    form: { template: "systems/scuvanya/templates/actor/character-sheet.hbs", scrollable: [""] }
+    form: { template: "systems/scuvanya/templates/actor/character-sheet.hbs", scrollable: [".sheet-body"] }
   };
 
   async _prepareContext(options) {

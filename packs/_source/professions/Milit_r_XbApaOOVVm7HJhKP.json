@@ -1,0 +1,86 @@
+{
+  "_id": "XbApaOOVVm7HJhKP",
+  "_key": "!items!XbApaOOVVm7HJhKP",
+  "name": "Militär",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ausbildung an Waffen, Erste Hilfe im Feld und die Fähigkeit, Widerstand zu brechen.</p>",
+    "eigenschaften": [
+      {
+        "key": "kampfausbildung",
+        "name": "Kampfausbildung",
+        "description": "Drill und Felderfahrung stärken Konstitution, Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "attributes.con",
+            "amount": 2
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.natur.medizin",
+            "amount": 2
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.sozial.negativ.einschuechtern",
+            "amount": 4
+          }
+        ]
+      },
+      {
+        "key": "kampfschwerpunkt",
+        "name": "Kampfschwerpunkt",
+        "description": "Wähle ein Kampfattribut, das durch die Ausbildung geschärft wurde.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "kampfattribut",
+            "options": [
+              "attributes.str",
+              "attributes.dex",
+              "attributes.mag"
+            ],
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "koerperlicheEignung",
+        "name": "Körperliche Eignung",
+        "description": "Wähle ein körperliches Talent, das im Dienst besonders trainiert wurde.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "koerperlichesTalent",
+            "options": [
+              "talents.koerperlich.klettern",
+              "talents.koerperlich.laufen",
+              "talents.koerperlich.schwimmen",
+              "talents.koerperlich.springen",
+              "talents.koerperlich.werfen"
+            ],
+            "amount": 5
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

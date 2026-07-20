@@ -10,8 +10,10 @@ const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
  * Zusammenfassung/Übernehmen. Arbeitet auf einem lokalen State (this.wizardData) und schreibt
  * erst beim Fertigstellen auf den Actor -- ein Abbruch verändert nichts.
  *
- * Rassen/Berufe kommen aus game.items (Welt-Items), damit die SL beliebig neue Rassen/
- * Berufe im Items-Verzeichnis anlegen kann, ohne Code anzufassen (siehe item-sheet.hbs).
+ * Rassen/Berufe kommen sowohl aus den mitgelieferten Compendium-Packs (scuvanya.races/
+ * scuvanya.professions -- Standard-Rassen/-Berufe, die in JEDER Welt verfügbar sind) als auch
+ * aus game.items (Welt-Items, für eigene Ergänzungen der SL), siehe _availableRaces/
+ * _availableProfessions/_getSourceItem.
  */
 export default class CharacterCreationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -34,7 +36,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
   };
 
   static PARTS = {
-    form: { template: "systems/scuvanya/templates/apps/character-creation.hbs", scrollable: [""] }
+    form: { template: "systems/scuvanya/templates/apps/character-creation.hbs", scrollable: [".wizard-body"] }
   };
 
   constructor(actor, options = {}) {
@@ -74,14 +76,15 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     // Kartenbild hängt vom aktuell gewählten Geschlecht ab (siehe #onSetGender) --
     // fällt auf das allgemeine Item-Bild zurück, falls für ein Geschlecht keins gepflegt ist.
-    context.races = game.items.filter(i => i.type === "race").map(race => ({
+    const races = await this._availableRaces();
+    context.races = races.map(race => ({
       id: race.id,
       name: race.name,
       img: this._genderImage(race, this.wizardData.gender)
     }));
-    context.professions = game.items.filter(i => i.type === "profession");
-    context.selectedRace = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) ?? null : null;
-    context.selectedProfession = this.wizardData.professionId ? game.items.get(this.wizardData.professionId) ?? null : null;
+    context.professions = await this._availableProfessions();
+    context.selectedRace = this.wizardData.raceId ? await this._getSourceItem(this.wizardData.raceId) : null;
+    context.selectedProfession = this.wizardData.professionId ? await this._getSourceItem(this.wizardData.professionId) : null;
 
     context.body = this.wizardData.body;
     context.selectedRaceBody = context.selectedRace?.system.body?.[this.wizardData.gender] ?? null;
@@ -102,6 +105,34 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.professionDecisions = this._collectDecisions(professionBundles, this.wizardData.professionChoices);
 
     return context;
+  }
+
+  /** Standard-Rassen aus dem Compendium-Pack + eigene Ergänzungen der SL als Welt-Item. */
+  async _availableRaces() {
+    const pack = game.packs.get("scuvanya.races");
+    const packRaces = pack ? await pack.getDocuments() : [];
+    const worldRaces = game.items.filter(i => i.type === "race");
+    return [...packRaces, ...worldRaces];
+  }
+
+  /** Standard-Berufe aus dem Compendium-Pack + eigene Ergänzungen der SL als Welt-Item. */
+  async _availableProfessions() {
+    const pack = game.packs.get("scuvanya.professions");
+    const packProfessions = pack ? await pack.getDocuments() : [];
+    const worldProfessions = game.items.filter(i => i.type === "profession");
+    return [...packProfessions, ...worldProfessions];
+  }
+
+  /** Löst eine Rasse/Beruf-ID auf: zuerst Welt-Items, dann die mitgelieferten Compendium-Packs. */
+  async _getSourceItem(id) {
+    if (!id) return null;
+    const worldItem = game.items.get(id);
+    if (worldItem) return worldItem;
+    for (const packName of ["scuvanya.races", "scuvanya.professions"]) {
+      const doc = await game.packs.get(packName)?.getDocument(id);
+      if (doc) return doc;
+    }
+    return null;
   }
 
   _genderImage(race, gender) {
@@ -208,24 +239,24 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     }
   }
 
-  static #onPickRace(event, target) {
+  static async #onPickRace(event, target) {
     const id = target.closest("[data-id]")?.dataset.id;
     this.wizardData.raceId = id;
     this.wizardData.raceChoices = {};
     this.wizardData.subraceKey = "";
-    const race = game.items.get(id);
+    const race = await this._getSourceItem(id);
     if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
     this.render();
   }
 
-  static #onSetGender(event, target) {
+  static async #onSetGender(event, target) {
     this.wizardData.gender = target.dataset.gender;
     // Geschlecht kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
     // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
     this.wizardData.raceChoices = {};
     // Körpermaß-Bereiche sind pro Geschlecht getrennt -- bereits gewählte Werte auf den
     // Mittelwert des neuen Geschlechts zurücksetzen, statt sie außerhalb der neuen Grenzen zu lassen.
-    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
+    const race = await this._getSourceItem(this.wizardData.raceId);
     if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
     this.render();
   }
@@ -287,17 +318,17 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.render();
   }
 
-  static #onNextStep() {
+  static async #onNextStep() {
     if (this.step === 1 && !this.wizardData.raceId) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedRace"));
       return;
     }
-    if (this.step === 2 && !this._decisionsComplete(this._raceBundles(), this.wizardData.raceChoices)) {
+    if (this.step === 2 && !this._decisionsComplete(await this._raceBundles(), this.wizardData.raceChoices)) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
       return;
     }
     if (this.step === 4 && this.wizardData.professionId) {
-      const profession = game.items.get(this.wizardData.professionId);
+      const profession = await this._getSourceItem(this.wizardData.professionId);
       if (!this._decisionsComplete([profession?.system], this.wizardData.professionChoices)) {
         ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
         return;
@@ -307,8 +338,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.render();
   }
 
-  _raceBundles() {
-    const race = this.wizardData.raceId ? game.items.get(this.wizardData.raceId) : null;
+  async _raceBundles() {
+    const race = this.wizardData.raceId ? await this._getSourceItem(this.wizardData.raceId) : null;
     return race ? activeRaceBundles(race.system, this.wizardData.gender, this.wizardData.subraceKey) : [];
   }
 
@@ -336,7 +367,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     const toCreate = [];
     if (this.wizardData.raceId) {
-      const source = game.items.get(this.wizardData.raceId);
+      const source = await this._getSourceItem(this.wizardData.raceId);
       if (source) {
         const data = source.toObject();
         delete data._id;
@@ -347,7 +378,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       }
     }
     if (this.wizardData.professionId) {
-      const source = game.items.get(this.wizardData.professionId);
+      const source = await this._getSourceItem(this.wizardData.professionId);
       if (source) {
         const data = source.toObject();
         delete data._id;

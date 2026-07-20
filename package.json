@@ -1,0 +1,32 @@
+{
+  "name": "foundry-gamesystem-scuvanya",
+  "version": "1.0.0",
+  "description": "Scuvanya game system for Foundry VTT",
+  "main": "scuvanya.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:packs": "node scripts/generate-pack-sources.mjs",
+    "pack:races": "fvtt package pack -n races -t Item --in packs/_source/races --out packs -v",
+    "pack:professions": "fvtt package pack -n professions -t Item --in packs/_source/professions --out packs -v",
+    "pack:items": "fvtt package pack -n items -t Item --in packs/_source/items --out packs -v",
+    "build:packs": "npm run generate:packs && npm run pack:races && npm run pack:professions && npm run pack:items",
+    "unpack:races": "fvtt package unpack -n races -t Item --in packs --out packs/_source/races -c -v",
+    "unpack:professions": "fvtt package unpack -n professions -t Item --in packs --out packs/_source/professions -c -v",
+    "unpack:items": "fvtt package unpack -n items -t Item --in packs --out packs/_source/items -c -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PatrickSeilheimer/foundry-gamesystem-scuvanya.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PatrickSeilheimer/foundry-gamesystem-scuvanya/issues"
+  },
+  "homepage": "https://github.com/PatrickSeilheimer/foundry-gamesystem-scuvanya#readme",
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^3.0.4"
+  }
+}

@@ -41,6 +41,35 @@
       "profession": {}
     }
   },
+  "packs": [
+    {
+      "name": "races",
+      "label": "Rassen",
+      "path": "packs/races",
+      "type": "Item",
+      "system": "scuvanya",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" },
+      "locked": false
+    },
+    {
+      "name": "professions",
+      "label": "Berufe",
+      "path": "packs/professions",
+      "type": "Item",
+      "system": "scuvanya",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" },
+      "locked": false
+    },
+    {
+      "name": "items",
+      "label": "Items",
+      "path": "packs/items",
+      "type": "Item",
+      "system": "scuvanya",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" },
+      "locked": false
+    }
+  ],
   "grid": {
     "distance": 1,
     "units": "m"

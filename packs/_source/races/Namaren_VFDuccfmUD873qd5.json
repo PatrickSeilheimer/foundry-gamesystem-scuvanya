@@ -1,0 +1,151 @@
+{
+  "_id": "VFDuccfmUD873qd5",
+  "_key": "!items!VFDuccfmUD873qd5",
+  "name": "Namaren",
+  "type": "race",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Klein, langlebig und von Kindheit an in Schrift und arkanem Wissen geschult.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 0.9,
+        "heightMax": 1.25,
+        "weightMin": 40,
+        "weightMax": 70,
+        "ageMin": 20,
+        "ageMax": 90
+      },
+      "weiblich": {
+        "heightMin": 0.9,
+        "heightMax": 1.25,
+        "weightMin": 40,
+        "weightMax": 70,
+        "ageMin": 20,
+        "ageMax": 90
+      }
+    },
+    "base": {
+      "eigenschaften": [
+        {
+          "key": "namarischeAbstammung",
+          "name": "Namarische Abstammung",
+          "description": "Zäh und geistig belastbar, dafür körperlich zurückhaltend, mit ausgeprägter Begabung für Magie.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "attributes.str",
+              "amount": -1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.con",
+              "amount": 2
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.spd",
+              "amount": -1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.int",
+              "amount": 4
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.mnd",
+              "amount": 3
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.mag",
+              "amount": 5
+            }
+          ]
+        },
+        {
+          "key": "schriftgelehrt",
+          "name": "Schriftgelehrt",
+          "description": "Von Kindheit an in Lesen und Schreiben unterrichtet.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.extra.lesen",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.extra.schreiben",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.wissenschaften.sozial.arkana",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "key": "arkaneBegabung",
+          "name": "Arkane Begabung",
+          "description": "Wähle eine Magiedisziplin, in der du bereits Stufe 3 beherrschst.",
+          "boni": [
+            {
+              "kind": "choice",
+              "key": "magieDisziplin",
+              "options": [
+                "disziplinen.magie.pyrokinet",
+                "disziplinen.magie.geomant",
+                "disziplinen.magie.hydrosoph",
+                "disziplinen.magie.aerothurg",
+                "disziplinen.magie.nekromant",
+                "disziplinen.magie.polymorph",
+                "disziplinen.magie.beschwoerer",
+                "disziplinen.magie.spiritualist",
+                "disziplinen.magie.schwarzmagier"
+              ],
+              "amount": 3
+            }
+          ]
+        }
+      ]
+    },
+    "weiblich": {
+      "eigenschaften": [
+        {
+          "key": "weiblicheAbstammung",
+          "name": "Geschlechtstypische Abweichung",
+          "description": "Namarische Frauen sind etwas weniger magiebegabt, dafür etwas belastbarer.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "attributes.mag",
+              "amount": -1
+            },
+            {
+              "kind": "fixed",
+              "path": "attributes.mnd",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

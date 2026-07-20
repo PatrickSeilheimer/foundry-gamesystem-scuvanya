@@ -33,7 +33,7 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
   };
 
   static PARTS = {
-    form: { template: "systems/scuvanya/templates/item/item-sheet.hbs", scrollable: [""] }
+    form: { template: "systems/scuvanya/templates/item/item-sheet.hbs", scrollable: [".sheet-body"] }
   };
 
   async _prepareContext(options) {
