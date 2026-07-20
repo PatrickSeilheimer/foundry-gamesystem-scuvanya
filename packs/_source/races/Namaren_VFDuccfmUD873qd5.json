@@ -12,57 +12,30 @@
         "heightMax": 1.25,
         "weightMin": 40,
         "weightMax": 70,
-        "ageMin": 20,
-        "ageMax": 90
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 30,
+        "lebenserwartung": 90
       },
       "weiblich": {
         "heightMin": 0.9,
         "heightMax": 1.25,
         "weightMin": 40,
         "weightMax": 70,
-        "ageMin": 20,
-        "ageMax": 90
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 30,
+        "lebenserwartung": 90
       }
     },
     "base": {
+      "attributeStart": {
+        "str": -1,
+        "con": 2,
+        "spd": -1,
+        "int": 4,
+        "mnd": 3,
+        "mag": 5
+      },
       "eigenschaften": [
-        {
-          "key": "namarischeAbstammung",
-          "name": "Namarische Abstammung",
-          "description": "Zäh und geistig belastbar, dafür körperlich zurückhaltend, mit ausgeprägter Begabung für Magie.",
-          "boni": [
-            {
-              "kind": "fixed",
-              "path": "attributes.str",
-              "amount": -1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.con",
-              "amount": 2
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.spd",
-              "amount": -1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.int",
-              "amount": 4
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.mnd",
-              "amount": 3
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.mag",
-              "amount": 5
-            }
-          ]
-        },
         {
           "key": "schriftgelehrt",
           "name": "Schriftgelehrt",
@@ -111,25 +84,10 @@
       ]
     },
     "weiblich": {
-      "eigenschaften": [
-        {
-          "key": "weiblicheAbstammung",
-          "name": "Geschlechtstypische Abweichung",
-          "description": "Namarische Frauen sind etwas weniger magiebegabt, dafür etwas belastbarer.",
-          "boni": [
-            {
-              "kind": "fixed",
-              "path": "attributes.mag",
-              "amount": -1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.mnd",
-              "amount": 1
-            }
-          ]
-        }
-      ]
+      "attributeStart": {
+        "mag": -1,
+        "mnd": 1
+      }
     }
   },
   "effects": [],

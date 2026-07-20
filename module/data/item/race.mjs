@@ -5,14 +5,24 @@ const fields = foundry.data.fields;
 
 const PLACEHOLDER_IMAGE = "icons/svg/mystery-man.svg";
 
+/**
+ * Alter wird über drei Ankerpunkte abgebildet statt einer simplen Min/Max-Spanne:
+ *  - muendigkeitsalter: Geschlechtsreife + kulturelle Mündigkeit in einem Wert.
+ *  - erwachsenenalter:  körperlich voll ausgewachsen (kann von der Mündigkeit abweichen).
+ *  - lebenserwartung:   maximales Alter.
+ * Der Alters-Slider im Erstellungs-Wizard beginnt bei muendigkeitsalter und endet bei
+ * lebenserwartung +10%; alle drei Punkte werden dort als Meilensteine markiert (siehe
+ * character-creation.mjs _ageMilestones).
+ */
 function bodyRangeSchema() {
   return new fields.SchemaField({
     heightMin: new fields.NumberField({ required: true, initial: 0, min: 0 }),
     heightMax: new fields.NumberField({ required: true, initial: 0, min: 0 }),
     weightMin: new fields.NumberField({ required: true, initial: 0, min: 0 }),
     weightMax: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-    ageMin: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
-    ageMax: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
+    muendigkeitsalter: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
+    erwachsenenalter: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
+    lebenserwartung: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
   });
 }
 

@@ -39,7 +39,7 @@
     </div>
     {{/if}}
 
-    {{#if raceBonusPreview}}
+    {{#if (or raceBonusPreview.attributeBadges.length raceBonusPreview.eigenschaften.length)}}
     <div class="wizard-bonus-section">
       {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=raceBonusPreview embers=embers}}
     </div>
@@ -60,7 +60,16 @@
     </div>
     <div class="wizard-slider">
       <label>{{localize 'SCUVANYA.Body.age'}}: <output data-body="age">{{body.age}}</output></label>
-      <input type="range" name="body.age" min="{{selectedRaceBody.ageMin}}" max="{{selectedRaceBody.ageMax}}" step="1" value="{{body.age}}">
+      <div class="age-slider-track">
+        <input type="range" name="body.age" min="{{ageMilestones.min}}" max="{{ageMilestones.max}}" step="1" value="{{body.age}}">
+        <div class="age-milestones">
+          {{#each ageMilestones.markers as |marker|}}
+          <span class="age-milestone" style="left: {{marker.percent}}%">
+            <span class="age-milestone-tooltip">{{marker.tooltip}}</span>
+          </span>
+          {{/each}}
+        </div>
+      </div>
     </div>
 
     {{#if raceDecisions.length}}
@@ -92,7 +101,7 @@
     {{#if selectedProfession}}
     <h3>{{localize 'SCUVANYA.Wizard.StepProfessionDetails'}}: {{selectedProfession.name}}</h3>
 
-    {{#if professionBonusPreview}}
+    {{#if (or professionBonusPreview.attributeBadges.length professionBonusPreview.eigenschaften.length)}}
     {{> "systems/scuvanya/templates/apps/parts/bonus-preview.hbs" preview=professionBonusPreview embers=embers}}
     {{/if}}
 

@@ -6,17 +6,15 @@
   "img": "icons/svg/mystery-man.svg",
   "system": {
     "description": "<p>Ausbildung an Waffen, Erste Hilfe im Feld und die Fähigkeit, Widerstand zu brechen.</p>",
+    "attributeStart": {
+      "con": 2
+    },
     "eigenschaften": [
       {
         "key": "kampfausbildung",
         "name": "Kampfausbildung",
-        "description": "Drill und Felderfahrung stärken Konstitution, Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
+        "description": "Drill und Felderfahrung stärken Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
         "boni": [
-          {
-            "kind": "fixed",
-            "path": "attributes.con",
-            "amount": 2
-          },
           {
             "kind": "fixed",
             "path": "talents.wissenschaften.natur.medizin",

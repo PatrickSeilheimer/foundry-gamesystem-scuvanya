@@ -6,22 +6,16 @@
   "img": "icons/svg/mystery-man.svg",
   "system": {
     "description": "<p>Systematische Bildung in Naturwissenschaften und methodischem Denken.</p>",
+    "attributeStart": {
+      "int": 2,
+      "mnd": 1
+    },
     "eigenschaften": [
       {
         "key": "wissenschaftlicheBildung",
         "name": "Wissenschaftliche Bildung",
-        "description": "Jahrelange akademische Ausbildung schärft Intellekt, Belastbarkeit und Konzentration.",
+        "description": "Jahrelange akademische Ausbildung schärft die Konzentrationsfähigkeit.",
         "boni": [
-          {
-            "kind": "fixed",
-            "path": "attributes.int",
-            "amount": 2
-          },
-          {
-            "kind": "fixed",
-            "path": "attributes.mnd",
-            "amount": 1
-          },
           {
             "kind": "fixed",
             "path": "talents.sonder.konzentration",

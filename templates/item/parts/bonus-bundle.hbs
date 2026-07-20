@@ -6,6 +6,16 @@
 --}}
 {{#with this as |root|}}
 <div class="bonus-bundle" data-prefix="{{root.prefix}}">
+  <h4>{{localize 'SCUVANYA.Progression.attributeStart'}}</h4>
+  <p class="hint">{{localize 'SCUVANYA.Progression.attributeStartHint'}}</p>
+  <div class="attribute-bonus-grid">
+    {{#each root.config.attributes as |cfg key|}}
+    <label>{{cfg.abbr}}
+      <input type="number" name="{{root.prefix}}.attributeStart.{{key}}" value="{{lookup root.bundle.attributeStart key}}">
+    </label>
+    {{/each}}
+  </div>
+
   <h4>{{localize 'SCUVANYA.Progression.eigenschaften'}}
     <button type="button" data-action="addEigenschaft" data-prefix="{{root.prefix}}">+</button>
   </h4>

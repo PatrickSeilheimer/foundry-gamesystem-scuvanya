@@ -41,15 +41,26 @@ function eigenschaftSchema() {
 }
 
 /**
- * Ein "Bonus-Bündel": eine Liste von Eigenschaften (Name + Beschreibung + Boni). Das ist die
- * wiederverwendbare Grundeinheit für Boni -- ein Beruf hat genau eins (siehe
+ * Ein "Bonus-Bündel": feste Start-Attributwerte OHNE Namen/Beschreibung (die sind einfach da,
+ * siehe attributeStart) plus eine Liste benannter Eigenschaften (Name + Beschreibung + Boni).
+ * Das ist die wiederverwendbare Grundeinheit für Boni -- ein Beruf hat genau eins (siehe
  * professionItemSchema), eine Rasse dagegen mehrere gleichzeitig aktive Bündel (Basis +
- * Geschlecht + ggf. Subrasse, siehe race.mjs/race-resolve.mjs), deren Eigenschaften-Listen
- * am Ende einfach aneinandergehängt und zu einem gemeinsamen Boni-Satz aufgelöst werden
- * (siehe path-resolve.mjs).
+ * Geschlecht + ggf. Subrasse, siehe race.mjs/race-resolve.mjs), die am Ende zu einem
+ * gemeinsamen Boni-Satz aufgelöst werden (siehe path-resolve.mjs).
+ *
+ * Wahlmöglichkeiten, die (zufällig) ein Attribut treffen (choice/distribute, z.B. "wähle ein
+ * Kampfattribut"), bleiben in den Eigenschaften -- die brauchen weiterhin einen Namen, damit
+ * der Wizard die Entscheidung beschriften kann. Nur FESTE Attributboni ohne jede Wahl gehören
+ * in attributeStart.
  */
 export function bonusBundleSchema() {
+  const attributeStart = {};
+  for (const key of Object.keys(SCUVANYA.attributes)) {
+    attributeStart[key] = new fields.NumberField({ required: true, integer: true, initial: 0 });
+  }
+
   return {
+    attributeStart: new fields.SchemaField(attributeStart),
     eigenschaften: new fields.ArrayField(eigenschaftSchema())
   };
 }

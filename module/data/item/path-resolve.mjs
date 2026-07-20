@@ -1,8 +1,11 @@
+import { SCUVANYA } from "../../config.mjs";
+
 /**
  * Löst die Eigenschaften/Boni eines oder mehrerer Bonus-Bündel (siehe bonusBundleSchema in
- * progression-shared.mjs) zu einem flachen Satz von Ziel-Boni auf. "choice"/"distribute"
- * werden dabei anhand der getroffenen Auswahl (selections, aus item.system.choiceSelections)
- * eingerechnet; "text" landet als reine Anzeige-Badge ohne Zahlenwert; "fixed" fließt direkt ein.
+ * progression-shared.mjs) zu einem flachen Satz von Ziel-Boni auf. attributeStart fließt immer
+ * direkt ein (keine Wahl nötig); "choice"/"distribute" werden anhand der getroffenen Auswahl
+ * (selections, aus item.system.choiceSelections) eingerechnet; "text" landet als reine
+ * Anzeige-Badge ohne Zahlenwert; "fixed" fließt direkt ein.
  *
  * Das Ergebnis ist EIN flacher { [path]: amount }-Satz -- unabhängig davon, ob er aus einem
  * einzelnen Bündel (Beruf) oder mehreren gleichzeitig aktiven Bündeln (Rasse: Basis +
@@ -19,6 +22,9 @@ export function resolveBundles(bundles, selections) {
   };
 
   for (const bundle of bundles) {
+    for (const key of Object.keys(SCUVANYA.attributes)) {
+      add(`attributes.${key}`, bundle?.attributeStart?.[key] ?? 0);
+    }
     for (const eigenschaft of bundle?.eigenschaften ?? []) {
       for (const bonus of eigenschaft.boni ?? []) {
         if (bonus.kind === "fixed") {

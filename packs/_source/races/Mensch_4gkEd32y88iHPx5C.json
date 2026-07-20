@@ -12,67 +12,32 @@
         "heightMax": 2.1,
         "weightMin": 40,
         "weightMax": 150,
-        "ageMin": 18,
-        "ageMax": 80
+        "muendigkeitsalter": 14,
+        "erwachsenenalter": 18,
+        "lebenserwartung": 65
       },
       "weiblich": {
         "heightMin": 1.5,
         "heightMax": 2.1,
         "weightMin": 40,
         "weightMax": 150,
-        "ageMin": 18,
-        "ageMax": 80
+        "muendigkeitsalter": 14,
+        "erwachsenenalter": 18,
+        "lebenserwartung": 65
       }
     },
     "base": {
+      "attributeStart": {
+        "str": 1,
+        "dex": 1,
+        "con": 2,
+        "spd": 1,
+        "int": 1,
+        "mnd": 1,
+        "mag": 1,
+        "cha": 2
+      },
       "eigenschaften": [
-        {
-          "key": "grundwerte",
-          "name": "Ausgeglichene Grundwerte",
-          "description": "Alle Attribute leicht über dem Durchschnitt, Konstitution und Charisma noch etwas mehr.",
-          "boni": [
-            {
-              "kind": "fixed",
-              "path": "attributes.str",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.dex",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.con",
-              "amount": 2
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.spd",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.int",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.mnd",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.mag",
-              "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "attributes.cha",
-              "amount": 2
-            }
-          ]
-        },
         {
           "key": "anpassungsfaehigkeit",
           "name": "Anpassungsfähigkeit",

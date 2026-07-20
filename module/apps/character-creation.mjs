@@ -88,6 +88,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     context.body = this.wizardData.body;
     context.selectedRaceBody = context.selectedRace?.system.body?.[this.wizardData.gender] ?? null;
+    context.ageMilestones = this._ageMilestones(context.selectedRaceBody);
     context.embers = EMBER_STYLES;
 
     context.subraces = context.selectedRace?.system.subraces ?? [];
@@ -146,25 +147,81 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     return {
       height: Math.round(((b.heightMin + b.heightMax) / 2) * 100) / 100,
       weight: Math.round(((b.weightMin + b.weightMax) / 2) * 10) / 10,
-      age: Math.round((b.ageMin + b.ageMax) / 2)
+      // Vorbelegung: frisch erwachsen -- sinnvollerer Startwert für einen neuen Charakter
+      // als ein Mittelwert über die gesamte Lebensspanne.
+      age: b.erwachsenenalter || b.muendigkeitsalter || 0
     };
   }
 
-  /** Vorschau der GARANTIERTEN Boni (fixed/text) über alle aktiven Bündel -- keine Wahl nötig. */
+  /**
+   * Baut die Alters-Slider-Grenzen (Mündigkeit bis Lebenserwartung +10%) und die drei
+   * Meilensteine (Mündigkeit/Erwachsen/Lebenserwartung) mit ihrer Position auf dem Slider
+   * (in %) und einem Tooltip-Text. Fallen zwei Ankerpunkte auf denselben Wert (z.B. Mündigkeit
+   * == Erwachsen), werden sie zu EINEM Meilenstein mit beiden Bezeichnungen zusammengefasst.
+   */
+  _ageMilestones(body) {
+    if (!body) return null;
+    const min = body.muendigkeitsalter;
+    const max = Math.round(body.lebenserwartung * 1.1);
+
+    const anchors = [
+      { value: body.muendigkeitsalter, label: game.i18n.localize("SCUVANYA.Body.muendigkeitsalter") },
+      { value: body.erwachsenenalter, label: game.i18n.localize("SCUVANYA.Body.erwachsenenalter") },
+      { value: body.lebenserwartung, label: game.i18n.localize("SCUVANYA.Body.lebenserwartung") }
+    ];
+
+    const markers = [];
+    for (const anchor of anchors) {
+      const existing = markers.find(m => m.value === anchor.value);
+      if (existing) existing.labels.push(anchor.label);
+      else markers.push({ value: anchor.value, labels: [anchor.label] });
+    }
+
+    const span = Math.max(1, max - min);
+    for (const marker of markers) {
+      marker.percent = Math.max(0, Math.min(100, ((marker.value - min) / span) * 100));
+      marker.tooltip = `${marker.labels.join(" / ")} (${marker.value})`;
+    }
+
+    return { min, max, markers };
+  }
+
+  /**
+   * Vorschau der GARANTIERTEN Boni über alle aktiven Bündel -- keine Wahl nötig (choice/
+   * distribute werden erst in _collectDecisions behandelt). Attribut-Start hat keinen Namen
+   * ("ist einfach da") und steht separat, nach Stärke sortiert; Eigenschaften kommen mit
+   * Name+Beschreibung und ihren eigenen (fixed/text) Badges, falls vorhanden.
+   */
   _bonusPreview(bundles) {
-    const chips = [];
+    const attributeTotals = {};
+    for (const key of Object.keys(SCUVANYA.attributes)) attributeTotals[key] = 0;
     for (const bundle of bundles) {
-      for (const eig of bundle?.eigenschaften ?? []) {
-        for (const bonus of eig.boni ?? []) {
-          if (bonus.kind === "fixed" && bonus.path && bonus.amount) {
-            chips.push(buildBadge({ label: this._describePath(bonus.path), bonus: bonus.amount }, true));
-          } else if (bonus.kind === "text" && bonus.text) {
-            chips.push(buildBadge({ label: eig.name || bonus.text, bonus: 0, binaer: true }, true));
-          }
-        }
+      for (const key of Object.keys(SCUVANYA.attributes)) {
+        attributeTotals[key] += bundle?.attributeStart?.[key] ?? 0;
       }
     }
-    return chips;
+    const attributeBadges = Object.entries(SCUVANYA.attributes)
+      .map(([key, cfg]) => ({ label: cfg.abbr, bonus: attributeTotals[key] }))
+      .filter(a => a.bonus !== 0)
+      .sort((a, b) => b.bonus - a.bonus)
+      .map(chip => buildBadge(chip));
+
+    const eigenschaften = [];
+    for (const bundle of bundles) {
+      for (const eig of bundle?.eigenschaften ?? []) {
+        const badges = [];
+        for (const bonus of eig.boni ?? []) {
+          if (bonus.kind === "fixed" && bonus.path && bonus.amount) {
+            badges.push(buildBadge({ label: this._describePath(bonus.path), bonus: bonus.amount }, true));
+          } else if (bonus.kind === "text" && bonus.text) {
+            badges.push(buildBadge({ label: bonus.text, bonus: 0, binaer: true }, true));
+          }
+        }
+        eigenschaften.push({ name: eig.name, description: eig.description, badges });
+      }
+    }
+
+    return { attributeBadges, eigenschaften };
   }
 
   /** Interaktive choice-/distribute-Boni über alle aktiven Bündel, gruppiert nach Eigenschaft. */

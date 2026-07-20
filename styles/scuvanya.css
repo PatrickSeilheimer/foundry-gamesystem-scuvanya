@@ -475,6 +475,56 @@
   accent-color: var(--scv-accent);
 }
 
+.character-creation .age-slider-track {
+  position: relative;
+  padding-top: 0.6rem;
+}
+
+.character-creation .age-milestones {
+  position: absolute;
+  top: 0.6rem;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.character-creation .age-milestone {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--scv-accent);
+  border: 1px solid var(--scv-bg);
+  pointer-events: auto;
+  cursor: default;
+}
+
+.character-creation .age-milestone-tooltip {
+  position: absolute;
+  bottom: 160%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--scv-surface);
+  border: 1px solid var(--scv-accent-border);
+  color: var(--scv-text);
+  font-size: 10px;
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s;
+  z-index: 1;
+}
+
+.character-creation .age-milestone:hover .age-milestone-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 .character-creation .wizard-choice {
   margin-bottom: 0.75rem;
 }
@@ -540,10 +590,51 @@
 }
 
 .character-creation .bonus-preview {
+  margin-bottom: 0.9rem;
+}
+
+.character-creation .bonus-preview-attributes {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--scv-border);
+}
+
+.character-creation .eigenschaft-preview-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.character-creation .eigenschaft-preview-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.character-creation .eigenschaft-preview-text strong {
+  display: block;
+  font-family: 'Cinzel', serif;
+  color: var(--scv-text);
+  font-size: 12px;
+}
+
+.character-creation .eigenschaft-preview-text .hint {
+  margin: 0.15rem 0 0;
+  font-size: 11px;
+}
+
+.character-creation .eigenschaft-preview-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  max-width: 45%;
 }
 
 .character-creation .wizard-footer {

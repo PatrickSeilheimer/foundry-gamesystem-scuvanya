@@ -104,8 +104,9 @@
       "heightMax": "Größe (Max)",
       "weightMin": "Gewicht (Min)",
       "weightMax": "Gewicht (Max)",
-      "ageMin": "Alter (Min)",
-      "ageMax": "Alter (Max)"
+      "muendigkeitsalter": "Mündigkeitsalter",
+      "erwachsenenalter": "Erwachsenenalter",
+      "lebenserwartung": "Lebenserwartung"
     },
 
     "Wizard": {
@@ -181,6 +182,8 @@
       "choiceKey": "Interner Schlüssel",
       "choiceOption": "Option",
       "textTraits": "Besondere Merkmale",
+      "attributeStart": "Start-Attribute",
+      "attributeStartHint": "Feste Attributboni ohne Namen/Beschreibung -- sind bei einem Charakter mit dieser Rasse/diesem Beruf einfach da. Wahlmöglichkeiten, die ein Attribut betreffen, gehören stattdessen zu einer Eigenschaft weiter unten.",
       "eigenschaften": "Eigenschaften",
       "eigenschaftName": "Name",
       "eigenschaftDescription": "Beschreibung",

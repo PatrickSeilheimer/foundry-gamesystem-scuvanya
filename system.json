@@ -70,6 +70,7 @@
       "locked": false
     }
   ],
+  "background": "assets/system/background.webp",
   "grid": {
     "distance": 1,
     "units": "m"

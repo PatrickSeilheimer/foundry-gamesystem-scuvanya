@@ -1,5 +1,26 @@
+{{!-- preview/embers sind Hash-Argumente, keine Block-Parameter -- siehe root-Trick in bonus-bundle.hbs --}}
+{{#with this as |root|}}
 <div class="bonus-preview">
-  {{#each preview as |chip|}}
-  {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=../embers}}
+  {{#if root.preview.attributeBadges.length}}
+  <div class="bonus-preview-attributes">
+    {{#each root.preview.attributeBadges as |chip|}}
+    {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=root.embers}}
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{#each root.preview.eigenschaften as |eig|}}
+  <div class="eigenschaft-preview-row">
+    <div class="eigenschaft-preview-text">
+      <strong>{{eig.name}}</strong>
+      {{#if eig.description}}<p class="hint">{{eig.description}}</p>{{/if}}
+    </div>
+    <div class="eigenschaft-preview-badges">
+      {{#each eig.badges as |chip|}}
+      {{> "systems/scuvanya/templates/apps/parts/badge.hbs" chip=chip embers=root.embers}}
+      {{/each}}
+    </div>
+  </div>
   {{/each}}
 </div>
+{{/with}}

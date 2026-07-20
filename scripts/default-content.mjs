@@ -8,12 +8,14 @@
  * Eintrag zu ändern oder zu ergänzen: hier bearbeiten, dann `npm run build:packs` ausführen
  * und die neu kompilierten packs/races bzw. packs/professions committen.
  *
- * Jede Rasse/jeder Beruf besteht aus "Eigenschaften" (Name + Beschreibung + Boni-Liste, siehe
- * bonusBundleSchema in module/data/item/progression-shared.mjs). Boni-Pfade sind relativ zu
- * system, z.B. "attributes.mag", "talents.koerperlich.klettern", "disziplinen.magie.pyrokinet".
+ * Jedes Bündel hat "attributeStart" (feste Attributboni OHNE Namen/Beschreibung -- die sind
+ * einfach da) und eine Liste "Eigenschaften" (Name + Beschreibung + Boni-Liste, siehe
+ * bonusBundleSchema in module/data/item/progression-shared.mjs). Wahlmöglichkeiten, die
+ * zufällig ein Attribut betreffen (z.B. "wähle ein Kampfattribut"), bleiben trotzdem in
+ * einer Eigenschaft, weil der Wizard dafür einen Namen zum Beschriften braucht. Boni-Pfade
+ * sind relativ zu system, z.B. "attributes.mag", "talents.koerperlich.klettern",
+ * "disziplinen.magie.pyrokinet".
  */
-const ATTRIBUTE_PATHS = ["str", "dex", "con", "spd", "int", "mnd", "mag", "cha"].map(k => `attributes.${k}`);
-
 const MAGIC_DISCIPLINE_PATHS = [
   "pyrokinet", "geomant", "hydrosoph", "aerothurg", "nekromant",
   "polymorph", "beschwoerer", "spiritualist", "schwarzmagier"
@@ -33,35 +35,25 @@ export const DEFAULT_ITEMS = [
     type: "race",
     system: {
       description: "<p>Vielseitig und anpassungsfähig -- ohne ausgeprägte Schwächen, dafür ohne Spezialisierung.</p>",
-      // Platzhalter: dieselbe Spanne für beide Geschlechter, bis echte Werte gepflegt sind
-      // (siehe Item-Sheet -- Körpermaße sind jetzt pro Geschlecht editierbar).
+      // Platzhalterwerte (Körpermaße + die drei Alters-Ankerpunkte Mündigkeit/Erwachsen/
+      // Lebenserwartung), bis echte Werte gepflegt sind -- dieselben für beide Geschlechter.
       body: {
-        maennlich: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, ageMin: 18, ageMax: 80 },
-        weiblich: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, ageMin: 18, ageMax: 80 }
+        maennlich: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, muendigkeitsalter: 14, erwachsenenalter: 18, lebenserwartung: 65 },
+        weiblich: { heightMin: 1.50, heightMax: 2.10, weightMin: 40, weightMax: 150, muendigkeitsalter: 14, erwachsenenalter: 18, lebenserwartung: 65 }
       },
       base: {
+        attributeStart: { str: 1, dex: 1, con: 2, spd: 1, int: 1, mnd: 1, mag: 1, cha: 2 },
         eigenschaften: [
-          {
-            key: "grundwerte",
-            name: "Ausgeglichene Grundwerte",
-            description: "Alle Attribute leicht über dem Durchschnitt, Konstitution und Charisma noch etwas mehr.",
-            boni: [
-              { kind: "fixed", path: "attributes.str", amount: 1 },
-              { kind: "fixed", path: "attributes.dex", amount: 1 },
-              { kind: "fixed", path: "attributes.con", amount: 2 },
-              { kind: "fixed", path: "attributes.spd", amount: 1 },
-              { kind: "fixed", path: "attributes.int", amount: 1 },
-              { kind: "fixed", path: "attributes.mnd", amount: 1 },
-              { kind: "fixed", path: "attributes.mag", amount: 1 },
-              { kind: "fixed", path: "attributes.cha", amount: 2 }
-            ]
-          },
           {
             key: "anpassungsfaehigkeit",
             name: "Anpassungsfähigkeit",
             description: "Verteile 2 Punkte komplett frei auf beliebige Attribute (auch beide auf dasselbe).",
             boni: [
-              { kind: "distribute", key: "menschAnpassung", options: ATTRIBUTE_PATHS, amount: 2, perOptionMax: 0 }
+              {
+                kind: "distribute", key: "menschAnpassung",
+                options: ["str", "dex", "con", "spd", "int", "mnd", "mag", "cha"].map(k => `attributes.${k}`),
+                amount: 2, perOptionMax: 0
+              }
             ]
           }
         ]
@@ -74,26 +66,16 @@ export const DEFAULT_ITEMS = [
     type: "race",
     system: {
       description: "<p>Klein, langlebig und von Kindheit an in Schrift und arkanem Wissen geschult.</p>",
+      // Reifen langsamer als Menschen und werden deutlich älter -- Mündigkeit und
+      // körperliches Erwachsensein fallen hier bewusst auseinander.
       body: {
-        maennlich: { heightMin: 0.90, heightMax: 1.25, weightMin: 40, weightMax: 70, ageMin: 20, ageMax: 90 },
-        weiblich: { heightMin: 0.90, heightMax: 1.25, weightMin: 40, weightMax: 70, ageMin: 20, ageMax: 90 }
+        maennlich: { heightMin: 0.90, heightMax: 1.25, weightMin: 40, weightMax: 70, muendigkeitsalter: 20, erwachsenenalter: 30, lebenserwartung: 90 },
+        weiblich: { heightMin: 0.90, heightMax: 1.25, weightMin: 40, weightMax: 70, muendigkeitsalter: 20, erwachsenenalter: 30, lebenserwartung: 90 }
       },
       base: {
+        // Startattribute 5,6,8,5,10,9,11,6 -- als Bonus relativ zum Standardwert 6 hinterlegt.
+        attributeStart: { str: -1, con: 2, spd: -1, int: 4, mnd: 3, mag: 5 },
         eigenschaften: [
-          {
-            key: "namarischeAbstammung",
-            name: "Namarische Abstammung",
-            // Startattribute 5,6,8,5,10,9,11,6 -- als Bonus relativ zum Standardwert 6 hinterlegt.
-            description: "Zäh und geistig belastbar, dafür körperlich zurückhaltend, mit ausgeprägter Begabung für Magie.",
-            boni: [
-              { kind: "fixed", path: "attributes.str", amount: -1 },
-              { kind: "fixed", path: "attributes.con", amount: 2 },
-              { kind: "fixed", path: "attributes.spd", amount: -1 },
-              { kind: "fixed", path: "attributes.int", amount: 4 },
-              { kind: "fixed", path: "attributes.mnd", amount: 3 },
-              { kind: "fixed", path: "attributes.mag", amount: 5 }
-            ]
-          },
           {
             key: "schriftgelehrt",
             name: "Schriftgelehrt",
@@ -117,17 +99,7 @@ export const DEFAULT_ITEMS = [
       // Beispiel für Geschlechter-Deltas: Frauen sind etwas weniger magiebegabt, dafür
       // etwas belastbarer als der Basiswert -- Männer bleiben unverändert bei der Basis.
       weiblich: {
-        eigenschaften: [
-          {
-            key: "weiblicheAbstammung",
-            name: "Geschlechtstypische Abweichung",
-            description: "Namarische Frauen sind etwas weniger magiebegabt, dafür etwas belastbarer.",
-            boni: [
-              { kind: "fixed", path: "attributes.mag", amount: -1 },
-              { kind: "fixed", path: "attributes.mnd", amount: 1 }
-            ]
-          }
-        ]
+        attributeStart: { mag: -1, mnd: 1 }
       }
     }
   },
@@ -136,13 +108,13 @@ export const DEFAULT_ITEMS = [
     type: "profession",
     system: {
       description: "<p>Ausbildung an Waffen, Erste Hilfe im Feld und die Fähigkeit, Widerstand zu brechen.</p>",
+      attributeStart: { con: 2 },
       eigenschaften: [
         {
           key: "kampfausbildung",
           name: "Kampfausbildung",
-          description: "Drill und Felderfahrung stärken Konstitution, Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
+          description: "Drill und Felderfahrung stärken Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
           boni: [
-            { kind: "fixed", path: "attributes.con", amount: 2 },
             { kind: "fixed", path: "talents.wissenschaften.natur.medizin", amount: 2 },
             { kind: "fixed", path: "talents.sozial.negativ.einschuechtern", amount: 4 }
           ]
@@ -171,14 +143,13 @@ export const DEFAULT_ITEMS = [
     type: "profession",
     system: {
       description: "<p>Systematische Bildung in Naturwissenschaften und methodischem Denken.</p>",
+      attributeStart: { int: 2, mnd: 1 },
       eigenschaften: [
         {
           key: "wissenschaftlicheBildung",
           name: "Wissenschaftliche Bildung",
-          description: "Jahrelange akademische Ausbildung schärft Intellekt, Belastbarkeit und Konzentration.",
+          description: "Jahrelange akademische Ausbildung schärft die Konzentrationsfähigkeit.",
           boni: [
-            { kind: "fixed", path: "attributes.int", amount: 2 },
-            { kind: "fixed", path: "attributes.mnd", amount: 1 },
             { kind: "fixed", path: "talents.sonder.konzentration", amount: 6 }
           ]
         },
