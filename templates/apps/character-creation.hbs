@@ -32,8 +32,8 @@
 
     {{#if subraces.length}}
     <h4>{{localize 'SCUVANYA.Race.subraces'}}</h4>
+    <p class="hint">{{localize 'SCUVANYA.Wizard.SubraceRequiredHint'}}</p>
     <div class="choice-option-grid">
-      <a class="wizard-chip {{#unless subraceKey}}selected{{/unless}}" data-action="selectSubrace" data-key="">{{localize 'SCUVANYA.Wizard.NoSubrace'}}</a>
       {{#each subraces as |subrace|}}
       <a class="wizard-chip {{#if (eq subrace.key ../subraceKey)}}selected{{/if}}" data-action="selectSubrace" data-key="{{subrace.key}}">{{subrace.name}}</a>
       {{/each}}

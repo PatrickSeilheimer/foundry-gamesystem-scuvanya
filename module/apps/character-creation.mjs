@@ -392,6 +392,13 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedRace"));
       return;
     }
+    if (this.step === 1 && this.wizardData.raceId && !this.wizardData.subraceKey) {
+      const race = await this._getSourceItem(this.wizardData.raceId);
+      if (race?.system.subraces?.length) {
+        ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedSubrace"));
+        return;
+      }
+    }
     if (this.step === 2 && !this._decisionsComplete(await this._raceBundles(), this.wizardData.raceChoices)) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
       return;
