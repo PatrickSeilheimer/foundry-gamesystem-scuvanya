@@ -414,8 +414,8 @@
 
 .character-creation .wizard-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.6rem;
   margin-bottom: 0.9rem;
 }
 
@@ -441,8 +441,9 @@
 }
 
 .character-creation .wizard-card img {
-  width: 64px;
-  height: 64px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 3px;
 }
