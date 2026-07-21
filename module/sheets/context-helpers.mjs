@@ -47,14 +47,35 @@ export function mapBooleanSkills(keys, dataSource) {
   }));
 }
 
+// Bild je Disziplin (assets/disciplines/*.png) -- eigene Zuordnung, weil zwei Dateinamen
+// mit Umlaut (schütze/beschwörer) von den ASCII-Schlüsseln (schuetze/beschwoerer) abweichen.
+const DISCIPLINE_IMAGES = {
+  krieger: "krieger.png",
+  gauner: "gauner.png",
+  schuetze: "schütze.png",
+  pyrokinet: "pyrokinet.png",
+  geomant: "geomant.png",
+  hydrosoph: "hydrosoph.png",
+  aerothurg: "aerothurg.png",
+  nekromant: "nekromant.png",
+  polymorph: "polymorph.png",
+  beschwoerer: "beschwörer.png",
+  spiritualist: "spiritualist.png",
+  schwarzmagier: "schwarzmagier.png"
+};
+
 export function mapDisciplines(disciplineConfig, dataSource) {
   return Object.entries(disciplineConfig).map(([key, cfg]) => {
     const shift = dataSource[key].raceBonus ?? 0;
+    const level = dataSource[key].level;
     return {
       key,
       label: game.i18n.localize(cfg.label),
-      level: dataSource[key].level,
+      level,
       raceBonus: shift,
+      // Balkenbreite in Prozent (Skala 0-10, siehe SCUVANYA.disciplineMaxLevel).
+      widthPercent: Math.min(100, level * 10),
+      img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null,
       nextCost: tieredSpentCost(dataSource[key].level + 1, 0, shift) - tieredSpentCost(dataSource[key].level, 0, shift)
     };
   });
@@ -72,6 +93,7 @@ export function mapAttributes(dataSource) {
       value: dataSource[key].value,
       effectiveValue: dataSource[key].effectiveValue ?? dataSource[key].value,
       mod: dataSource[key].mod,
+      modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`,
       raceBonus: shift,
       // Marginalkosten des nächsten Punkts -- dieselbe Formel wie beim tatsächlichen Kauf
       // (character-sheet.mjs #onBuyAttribute), damit Vorschau und abgebuchte Kosten nie auseinanderlaufen.

@@ -21,6 +21,7 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
   static DEFAULT_OPTIONS = {
     classes: ["scuvanya", "sheet", "actor", "character"],
+    position: { width: 900, height: 820 },
     actions: {
       rollAttribute: ScuvanyaCharacterSheet.#onRollAttribute,
       rollSocialSkill: ScuvanyaCharacterSheet.#onRollSocialSkill,
@@ -78,7 +79,24 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       profession: this.actor.items.find(i => i.type === "profession") ?? null
     };
 
+    context.resistanceChips = this._resistanceChips(sys.resistancesEffective);
+
     return context;
+  }
+
+  /** Nur von 0 abweichende Resistenzen/Verwundbarkeiten -- siehe SCUVANYA.resistanceSteps. */
+  _resistanceChips(resistancesEffective) {
+    const chips = [];
+    for (const [key, cfg] of Object.entries(SCUVANYA.damageTypes)) {
+      const value = resistancesEffective[key] ?? 0;
+      if (!value) continue;
+      const typ = value >= 100 ? "immun" : value > 0 ? "resistent" : "verwundbar";
+      const label = typ === "immun"
+        ? game.i18n.localize("SCUVANYA.Resistance.immun")
+        : `${game.i18n.localize(`SCUVANYA.Resistance.${typ}`)} (${Math.abs(value)}%)`;
+      chips.push({ key, name: game.i18n.localize(cfg.label), typ, label });
+    }
+    return chips;
   }
 
   static #onRollAttribute(event, target) {

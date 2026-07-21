@@ -49,12 +49,32 @@
     },
 
     "Tab": {
-      "attribute": "Attribute",
+      "attribute": "Übersicht",
       "talente": "Talente",
       "kampf": "Kampf & Magie",
       "sprachen": "Sprachen",
       "inventar": "Inventar",
       "biografie": "Biografie"
+    },
+
+    "Section": {
+      "attribute": "Attribute",
+      "kampfMagie": "Kampf & Magie",
+      "ruestungResistenz": "Rüstung & Resistenzen",
+      "sonstigeWerte": "Sonstige Werte",
+      "sprachenBekannt": "Sprachen"
+    },
+
+    "Resistance": {
+      "resistent": "Resistent",
+      "verwundbar": "Verwundbar",
+      "immun": "Immun",
+      "none": "Keine besonderen Resistenzen oder Verwundbarkeiten."
+    },
+
+    "System": {
+      "gestuft": "Stufe 0-5 (Würfel)",
+      "wurf": "1W20 + Bonus"
     },
 
     "Category": {
