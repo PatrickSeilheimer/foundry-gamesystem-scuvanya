@@ -80,7 +80,8 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.races = races.map(race => ({
       id: race.id,
       name: race.name,
-      img: this._genderImage(race, this.wizardData.gender)
+      img: this._genderImage(race, this.wizardData.gender),
+      category: race.system.category
     }));
     context.professions = await this._availableProfessions();
     context.selectedRace = this.wizardData.raceId ? await this._getSourceItem(this.wizardData.raceId) : null;

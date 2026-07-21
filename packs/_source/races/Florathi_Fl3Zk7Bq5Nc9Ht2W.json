@@ -1,0 +1,377 @@
+{
+  "_id": "Fl3Zk7Bq5Nc9Ht2W",
+  "_key": "!items!Fl3Zk7Bq5Nc9Ht2W",
+  "name": "Florathi",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/flora_m.png",
+  "system": {
+    "category": "floral",
+    "description": "<p>Florathi sind eine florale Spezies mit pflanzenähnlicher Biologie: Ihre Haut aus faserigem, flexiblem Gewebe zeigt grüne, bräunliche oder rötliche Töne, und aus ihrem Kopf wächst eine Blüte, deren Form und Farbe je nach Familie stark variiert. Diese Blüten drücken familiäre Herkunft und Emotionen zugleich aus, unter anderem über Duftstoffe. Da ihr Körper Sonnenlicht über eine pflanzenähnliche Photosynthese in Energie umwandelt, verbringen Florathi gern längere Zeit ruhend in der Sonne, und über wurzelähnliches Nervengewebe in den Füßen nehmen sie feine Bodenvibrationen in ihrer Umgebung wahr.</p><p>Sie leben bevorzugt in offenen, sonnigen Landschaften und meiden dunkle oder unterirdische Regionen. Ihre Gesellschaft gliedert sich in Blütenfamilien mit eigenen kulturellen Schwerpunkten, von den ästhetisch orientierten Rosenfamilien über die meditativen Lavendelfamilien bis zu den widerstandsfähigen Distelfamilien und den spirituell geprägten Lotusfamilien. Konflikte zwischen den Familien sind selten, da sich alle Florathi als Teil einer gemeinsamen Gemeinschaft verstehen.</p><p>Wissenschaftlich sind sie führend in Pflanzenkunde, Duftstoffen und Parfümherstellung; ihre Parfums gelten als die komplexesten Duftkompositionen der Welt und werden mitunter gezielt eingesetzt, um Emotionen und Erinnerungen zu beeinflussen. Ihre Weltanschauung dreht sich um das Gleichgewicht der Natur und den Kreislauf von Wachstum, Verfall und Erneuerung.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.1,
+        "heightMax": 2.05,
+        "weightMin": 29,
+        "weightMax": 88,
+        "muendigkeitsalter": 12,
+        "erwachsenenalter": 16,
+        "lebenserwartung": 104
+      },
+      "weiblich": {
+        "heightMin": 1.1,
+        "heightMax": 2.05,
+        "weightMin": 29,
+        "weightMax": 88,
+        "muendigkeitsalter": 12,
+        "erwachsenenalter": 16,
+        "lebenserwartung": 101
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/flora_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/flora_w.png",
+    "base": {
+      "attributeStart": {
+        "con": 3,
+        "spd": -2,
+        "int": 3,
+        "mnd": 3,
+        "mag": 4,
+        "cha": 1
+      },
+      "eigenschaften": [
+        {
+          "key": "selbststudiumFlorathi",
+          "name": "Selbststudium",
+          "description": "Pflanzenkunde ist dir buchstäblich in die Wurzeln gelegt, ebenso ein natürliches Gespür für erdverbundene Magie.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.wissenschaften.natur.botanik",
+              "amount": 10
+            },
+            {
+              "kind": "fixed",
+              "path": "disziplinen.magie.geomant",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "verwurzelt",
+          "name": "Verwurzelt",
+          "description": "Bei direktem Bodenkontakt nimmst du im Umkreis von 10 Metern alles wahr, was sich auf dem Boden bewegt. Durch Meditation lässt sich die Reichweite steigern, wobei du währenddessen auf Sehen und Hören verzichtest.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Erspürt Bewegung am Boden im Umkreis von 10m bei Bodenkontakt; per Meditation erweiterbar (verzichtet dabei auf Sehen/Hören)."
+            }
+          ]
+        },
+        {
+          "key": "alternativeSpracheFlorathi",
+          "name": "Alternative Sprache",
+          "description": "Du kannst durch Düfte mit anderen Florathi kommunizieren. Diese Kommunikation ist für andere Spezies praktisch unmöglich zu verstehen.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Eigene, für andere Spezies unverständliche Kommunikation über Düfte."
+            }
+          ]
+        },
+        {
+          "key": "sonneTanken",
+          "name": "Sonne tanken",
+          "description": "Rastest du im direkten Sonnenlicht, erhältst du die dreifache Menge HP, Mana und mentaler Gesundheit zurück.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Rasten in direktem Sonnenlicht heilt HP/Mana/mentale Gesundheit x3."
+            }
+          ]
+        },
+        {
+          "key": "reinigendeMineralien",
+          "name": "Reinigende Mineralien",
+          "description": "Dein Körper reinigt sich beständig selbst und macht dich widerstandsfähiger gegen Gifte.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "resistances.gift",
+              "amount": 50
+            }
+          ]
+        },
+        {
+          "key": "pflanzlicheHerkunft",
+          "name": "Pflanzliche Herkunft",
+          "description": "Wasser nährt dich, Feuer bedroht dich mehr als andere Völker.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "resistances.wasser",
+              "amount": 50
+            },
+            {
+              "kind": "fixed",
+              "path": "resistances.feuer",
+              "amount": -50
+            }
+          ]
+        }
+      ]
+    },
+    "subraces": [
+      {
+        "key": "rosaris",
+        "name": "Rosaris",
+        "bonuses": {
+          "attributeStart": {
+            "str": 1,
+            "int": -1,
+            "mnd": -1,
+            "mag": -2,
+            "cha": 3
+          },
+          "eigenschaften": [
+            {
+              "key": "duftnote",
+              "name": "Duftnote",
+              "description": "Florathi Rosaris tragen eine Rosenblüte am Kopf: Schönheit, Charisma und Eleganz in Person.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.charme",
+                  "amount": 2
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.ueberreden",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "lotaris",
+        "name": "Lotaris",
+        "bonuses": {
+          "attributeStart": {
+            "str": -1,
+            "mag": 1
+          },
+          "eigenschaften": [
+            {
+              "key": "heilerLotaris",
+              "name": "Heiler",
+              "description": "Florathi Lotaris tragen eine Lotusblüte am Kopf: spirituelle Heiler, versiert in Meditation und Magie.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.natur.medizin",
+                  "amount": 5
+                },
+                {
+                  "kind": "fixed",
+                  "path": "disziplinen.magie.spiritualist",
+                  "amount": 3
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "lavaris",
+        "name": "Lavaris",
+        "bonuses": {
+          "attributeStart": {
+            "str": -1,
+            "con": -2,
+            "int": 1,
+            "mnd": 1,
+            "cha": 1
+          },
+          "eigenschaften": [
+            {
+              "key": "beruhigendePraesenz",
+              "name": "Beruhigende Präsenz",
+              "description": "Florathi Lavaris tragen eine Lavendelblüte am Kopf: eine beruhigende Persönlichkeit, oft als Alchemisten und Parfümeure tätig.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.beruhigen",
+                  "amount": 4
+                }
+              ]
+            },
+            {
+              "key": "kraeuterkundiger",
+              "name": "Kräuterkundiger",
+              "description": "Ihr Gespür für Kräuter und Essenzen macht sie zu geschickten Alchemisten.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.handwerk.alchemist",
+                  "amount": 3
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "helioris",
+        "name": "Helioris",
+        "bonuses": {
+          "attributeStart": {
+            "con": 1,
+            "int": -1,
+            "mnd": 1,
+            "mag": -2,
+            "cha": 1
+          },
+          "eigenschaften": [
+            {
+              "key": "optimist",
+              "name": "Optimist",
+              "description": "Florathi Helioris tragen eine Sonnenblume am Kopf: optimistisch und voller Energie.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.anfeuern",
+                  "amount": 2
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.charme",
+                  "amount": 2
+                }
+              ]
+            },
+            {
+              "key": "sonnenanbeter",
+              "name": "Sonnenanbeter",
+              "description": "Ihre Verbundenheit zur Sonne zeigt sich auch in ihrer Magie.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "disziplinen.magie.pyrokinet",
+                  "amount": 3
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "quercaris",
+        "name": "Quercaris",
+        "bonuses": {
+          "attributeStart": {
+            "str": 3,
+            "con": 2,
+            "int": -2,
+            "mnd": -1,
+            "mag": -2
+          },
+          "eigenschaften": [
+            {
+              "key": "rinde",
+              "name": "Rinde",
+              "description": "Florathi Quercaris tragen eine Art verzweigte Baumkrone auf dem Kopf: hart gesotten, stabil und oft groß und breit gebaut.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "armor.physical",
+                  "amount": 2
+                },
+                {
+                  "kind": "fixed",
+                  "path": "armor.magical",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "dionaris",
+        "name": "Dionaris",
+        "bonuses": {
+          "attributeStart": {
+            "str": 3,
+            "dex": 1,
+            "con": 1,
+            "spd": 2,
+            "int": -2,
+            "mnd": -2,
+            "mag": -3
+          },
+          "eigenschaften": [
+            {
+              "key": "furchteinfloessend",
+              "name": "Furchteinflößend",
+              "description": "Florathi Dionaris tragen keine Blüte, sondern Zacken und Zähne an mehreren Körperstellen: die fleischfressende Art der Florathi.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.negativ.einschuechtern",
+                  "amount": 6
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "mycelio",
+        "name": "Mycelio",
+        "bonuses": {
+          "attributeStart": {
+            "con": -1,
+            "mnd": 1,
+            "mag": 1,
+            "cha": -1
+          },
+          "eigenschaften": [
+            {
+              "key": "giftMycelio",
+              "name": "Gift",
+              "description": "Florathi Mycelio tragen weder Blüten noch Blätter, sondern sind pilzartig gewachsen und praktisch immun gegen jedes Toxin.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "resistances.gift",
+                  "amount": 100
+                },
+                {
+                  "kind": "text",
+                  "text": "Immun gegen den Status \"vergiftet\"."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

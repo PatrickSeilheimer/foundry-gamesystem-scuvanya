@@ -1,0 +1,123 @@
+{
+  "_id": "Th8Mp4Vd6Kx2Rw5S",
+  "_key": "!items!Th8Mp4Vd6Kx2Rw5S",
+  "name": "Therari",
+  "type": "race",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "category": "bestial",
+    "description": "<p>Therari sind eine bestiale humanoide Spezies, deren Körperbau größtenteils dem der Menschen ähnelt, ergänzt um deutliche tierische Merkmale: Ohren, Schwänze, Hörner, Fellbereiche, Krallen oder besondere Augenformen, mal einzeln, mal in Kombination. Jeder Therari trägt die Prägung eines bestimmten Tieres in sich, von wolfsähnlichen Individuen mit ausgeprägtem Rudelinstinkt über unabhängige, katzenähnliche Charaktere bis zu ruhigen, bärenähnlichen Handwerkern. Trotz dieser Vielfalt bleiben Therari vollständig humanoid in ihrer Anatomie und nutzen Werkzeuge, Waffen und Kleidung wie jede andere Spezies.</p><p>Eine einheitliche Therari-Gesellschaft existiert kaum, ihre Kultur und Lebensweise ist so vielfältig wie ihre tierischen Abstammungen. Was fast alle verbindet, ist der Stolz auf ihre tierische Herkunft: Ihre Eigenschaften gelten nicht als Makel, sondern als Teil ihrer Identität, und Bemerkungen darüber werden meist als Anerkennung verstanden statt als Beleidigung.</p><p>Da Werte und Boni der Therari je nach Blutlinie stark variieren, sind Körpermaße, Alter und Attribute hier bewusst nicht fest vorgegeben. Die SL legt gemeinsam mit der spielenden Person eine balancierte Ausprägung passend zum gewählten Tier fest; die untenstehenden Werte dienen nur als neutraler Startpunkt.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.2,
+        "heightMax": 2.1,
+        "weightMin": 40,
+        "weightMax": 140,
+        "muendigkeitsalter": 14,
+        "erwachsenenalter": 20,
+        "lebenserwartung": 70
+      },
+      "weiblich": {
+        "heightMin": 1.2,
+        "heightMax": 2.1,
+        "weightMin": 40,
+        "weightMax": 140,
+        "muendigkeitsalter": 14,
+        "erwachsenenalter": 20,
+        "lebenserwartung": 70
+      }
+    },
+    "base": {
+      "eigenschaften": [
+        {
+          "key": "blutlinienVielfalt",
+          "name": "Blutlinien-Vielfalt",
+          "description": "Ohne feste Startattribute gleichen Therari ihre Blutlinie über frei verteilbare Punkte aus. In Absprache mit der SL kann hier abweichend eine passgenauere, auf das gewählte Tier zugeschnittene Verteilung vereinbart werden.",
+          "boni": [
+            {
+              "kind": "distribute",
+              "key": "therariAttribute",
+              "options": [
+                "attributes.str",
+                "attributes.dex",
+                "attributes.con",
+                "attributes.spd",
+                "attributes.int",
+                "attributes.mnd",
+                "attributes.mag",
+                "attributes.cha"
+              ],
+              "amount": 12,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "therariSozial",
+              "options": [
+                "talents.sozial.positiv.anfeuern",
+                "talents.sozial.positiv.beruhigen",
+                "talents.sozial.positiv.charme",
+                "talents.sozial.positiv.feilschen",
+                "talents.sozial.positiv.ueberreden",
+                "talents.sozial.negativ.beleidigen",
+                "talents.sozial.negativ.einschuechtern",
+                "talents.sozial.negativ.luegen",
+                "talents.sozial.negativ.manipulieren",
+                "talents.sozial.negativ.taeuschen"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "therariWissenschaft",
+              "options": [
+                "talents.wissenschaften.sozial.geschichte",
+                "talents.wissenschaften.sozial.gesellschaft",
+                "talents.wissenschaften.sozial.kultur",
+                "talents.wissenschaften.sozial.arkana",
+                "talents.wissenschaften.sozial.theologie",
+                "talents.wissenschaften.natur.botanik",
+                "talents.wissenschaften.natur.geologie",
+                "talents.wissenschaften.natur.mechanik",
+                "talents.wissenschaften.natur.medizin",
+                "talents.wissenschaften.natur.zoologie"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "therariKoerperlich",
+              "options": [
+                "talents.koerperlich.klettern",
+                "talents.koerperlich.laufen",
+                "talents.koerperlich.schwimmen",
+                "talents.koerperlich.springen",
+                "talents.koerperlich.werfen"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

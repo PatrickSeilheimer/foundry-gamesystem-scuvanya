@@ -3,29 +3,32 @@
   "_key": "!items!4gkEd32y88iHPx5C",
   "name": "Mensch",
   "type": "race",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/scuvanya/assets/races/human_m.png",
   "system": {
-    "description": "<p>Vielseitig und anpassungsfähig -- ohne ausgeprägte Schwächen, dafür ohne Spezialisierung.</p>",
+    "category": "humanoid",
+    "description": "<p>Menschen zeichnen sich durch eine bemerkenswerte Vielfalt aus. Sie existieren in allen Größen, Formen und Hautfarben, mit unterschiedlichen Haar- und Augenfarben sowie körperlichen Proportionen. Keine andere Spezies zeigt eine so große Bandbreite an genetischen Merkmalen, was sie als Gruppe schwer einzuordnen macht.</p><p>Sie sind von Natur aus Individualisten, auch wenn sie sich häufig in Familien, Stämmen oder Gemeinschaften organisieren. Kaum eine andere Spezies erschließt so bereitwillig neue Lebensräume oder passt sich fremden Kulturen an, während sie gleichzeitig ihre eigenen Traditionen bewahrt. Im Durchschnitt sind Menschen überall kompetent, aber selten überlegen. Ihnen fehlt die immense Stärke der Brooks, die magische Affinität der Namaren oder die wissenschaftliche Brillanz der Kethari, doch ihre Fähigkeit, in jedem Bereich zumindest mitzuhalten, macht sie zu einer äußerst widerstandsfähigen Spezies.</p><p>In der Wissenschaft sind Menschen die vielseitigsten Forscher und Gelehrten Scuvanyas. Sie integrieren neues Wissen schneller als jede andere Spezies und machen dabei keinen Unterschied, ob es von Kethari, Akmons oder Kayrun stammt. In der Architektur sind sie unübertroffen: ihre Bauwerke reichen von filigranen Kathedralen bis zu massiven Festungen und dienen ebenso der Macht- wie der Glaubensdemonstration.</p>",
     "body": {
       "maennlich": {
-        "heightMin": 1.5,
-        "heightMax": 2.1,
+        "heightMin": 1.4,
+        "heightMax": 2.15,
         "weightMin": 40,
         "weightMax": 150,
         "muendigkeitsalter": 14,
-        "erwachsenenalter": 18,
+        "erwachsenenalter": 21,
         "lebenserwartung": 65
       },
       "weiblich": {
-        "heightMin": 1.5,
-        "heightMax": 2.1,
-        "weightMin": 40,
-        "weightMax": 150,
-        "muendigkeitsalter": 14,
-        "erwachsenenalter": 18,
-        "lebenserwartung": 65
+        "heightMin": 1.3,
+        "heightMax": 2,
+        "weightMin": 35,
+        "weightMax": 140,
+        "muendigkeitsalter": 15,
+        "erwachsenenalter": 20,
+        "lebenserwartung": 68
       }
     },
+    "imageMaennlich": "systems/scuvanya/assets/races/human_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/human_w.png",
     "base": {
       "attributeStart": {
         "str": 1,
@@ -39,13 +42,13 @@
       },
       "eigenschaften": [
         {
-          "key": "anpassungsfaehigkeit",
-          "name": "Anpassungsfähigkeit",
-          "description": "Verteile 2 Punkte komplett frei auf beliebige Attribute (auch beide auf dasselbe).",
+          "key": "alleskoenner",
+          "name": "Alleskönner",
+          "description": "Menschen sind in nichts die Besten, aber in allem brauchbar. Ihre Ausbildung ist breit statt tief, weshalb sie überall ein wenig Boden gutmachen.",
           "boni": [
             {
               "kind": "distribute",
-              "key": "menschAnpassung",
+              "key": "menschAttribute",
               "options": [
                 "attributes.str",
                 "attributes.dex",
@@ -58,6 +61,116 @@
               ],
               "amount": 2,
               "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "menschHandwerk",
+              "options": [
+                "talents.handwerk.grobschmied",
+                "talents.handwerk.feinschmied",
+                "talents.handwerk.plattner",
+                "talents.handwerk.gerber",
+                "talents.handwerk.zimmerer",
+                "talents.handwerk.weber",
+                "talents.handwerk.alchemist",
+                "talents.handwerk.koch",
+                "talents.handwerk.jagen",
+                "talents.handwerk.fischen",
+                "talents.handwerk.verzaubern"
+              ],
+              "amount": 2,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "choice",
+              "key": "menschKampfMagie",
+              "options": [
+                "disziplinen.kampf.krieger",
+                "disziplinen.kampf.gauner",
+                "disziplinen.kampf.schuetze",
+                "disziplinen.magie.pyrokinet",
+                "disziplinen.magie.geomant",
+                "disziplinen.magie.hydrosoph",
+                "disziplinen.magie.aerothurg",
+                "disziplinen.magie.nekromant",
+                "disziplinen.magie.polymorph",
+                "disziplinen.magie.beschwoerer",
+                "disziplinen.magie.spiritualist",
+                "disziplinen.magie.schwarzmagier"
+              ],
+              "amount": 3
+            },
+            {
+              "kind": "distribute",
+              "key": "menschSozial",
+              "options": [
+                "talents.sozial.positiv.anfeuern",
+                "talents.sozial.positiv.beruhigen",
+                "talents.sozial.positiv.charme",
+                "talents.sozial.positiv.feilschen",
+                "talents.sozial.positiv.ueberreden",
+                "talents.sozial.negativ.beleidigen",
+                "talents.sozial.negativ.einschuechtern",
+                "talents.sozial.negativ.luegen",
+                "talents.sozial.negativ.manipulieren",
+                "talents.sozial.negativ.taeuschen"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "menschWissenschaft",
+              "options": [
+                "talents.wissenschaften.sozial.geschichte",
+                "talents.wissenschaften.sozial.gesellschaft",
+                "talents.wissenschaften.sozial.kultur",
+                "talents.wissenschaften.sozial.arkana",
+                "talents.wissenschaften.sozial.theologie",
+                "talents.wissenschaften.natur.botanik",
+                "talents.wissenschaften.natur.geologie",
+                "talents.wissenschaften.natur.mechanik",
+                "talents.wissenschaften.natur.medizin",
+                "talents.wissenschaften.natur.zoologie"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "menschKoerperlich",
+              "options": [
+                "talents.koerperlich.klettern",
+                "talents.koerperlich.laufen",
+                "talents.koerperlich.schwimmen",
+                "talents.koerperlich.springen",
+                "talents.koerperlich.werfen"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "distribute",
+              "key": "menschSonstige",
+              "options": [
+                "talents.sonder.fingerfertigkeit",
+                "talents.sonder.taschendiebstahl",
+                "talents.sonder.schloesserKnacken",
+                "talents.sonder.schleichen",
+                "talents.sonder.spurenLesen",
+                "talents.sonder.ueberlebenstechniken",
+                "talents.sonder.orientierung",
+                "talents.sonder.selbstvertrauen",
+                "talents.sonder.konzentration",
+                "talents.sonder.magischesGespuer",
+                "talents.sonder.durchschauen"
+              ],
+              "amount": 4,
+              "perOptionMax": 0
+            },
+            {
+              "kind": "text",
+              "text": "Wähle eine zusätzliche Sprache deiner Wahl auf Stufe 2 (manuell im Sprachen-Bereich eintragen)."
             }
           ]
         }

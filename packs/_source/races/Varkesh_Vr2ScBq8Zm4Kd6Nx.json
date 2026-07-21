@@ -1,0 +1,310 @@
+{
+  "_id": "Vr2ScBq8Zm4Kd6Nx",
+  "_key": "!items!Vr2ScBq8Zm4Kd6Nx",
+  "name": "Varkesh",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/varkesh_m.png",
+  "system": {
+    "category": "infernal",
+    "description": "<p>Varkesh sind eine infernale humanoide Spezies, deren Erscheinung unweigerlich an Dämonen alter Legenden erinnert: rötliche bis dunkelrote Haut, Hörner in unterschiedlichsten Formen und ein langer, beweglicher Schwanz, den viele instinktiv zum Greifen oder zur Betonung ihrer Körpersprache nutzen. Trotz dieses Erscheinungsbilds sind Varkesh biologisch vollständig sterblich und besitzen keine tatsächliche Verbindung zu infernalen Mächten.</p><p>Aufgrund historischer Verfolgung gründen Varkesh nur selten eigene Siedlungen und leben stattdessen meist innerhalb fremder Städte, wo sie sich geschickt in bestehende soziale Strukturen einfügen. Ihre Gemeinschaften bestehen aus losen, über mehrere Städte verstreuten Familiennetzwerken, die auf persönlichen Beziehungen und Loyalität beruhen. Viele bevorzugen Berufe als Händler, Vermittler oder Informanten, was ihnen den nicht immer gerechtfertigten Ruf notorischer Kriminalität einbringt.</p><p>Kulturell ist die Rhetorik zentral: Wortgefechte, Verhandlungen und subtile Manipulation gelten als Ausdruck von Intelligenz. Ihre religiösen Ansichten reichen von der Verehrung alter Dämonengötter bis zur strikten Ablehnung jeder Verbindung zu infernalen Mächten.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.5,
+        "heightMax": 1.9,
+        "weightMin": 49,
+        "weightMax": 98,
+        "muendigkeitsalter": 15,
+        "erwachsenenalter": 23,
+        "lebenserwartung": 150
+      },
+      "weiblich": {
+        "heightMin": 1.48,
+        "heightMax": 1.88,
+        "weightMin": 49,
+        "weightMax": 84,
+        "muendigkeitsalter": 16,
+        "erwachsenenalter": 24,
+        "lebenserwartung": 150
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/varkesh_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/varkesh_w.png",
+    "base": {
+      "attributeStart": {
+        "dex": 3,
+        "con": -1,
+        "int": 2,
+        "mnd": 2,
+        "mag": 2,
+        "cha": 4
+      },
+      "eigenschaften": [
+        {
+          "key": "daemonischePraesenz",
+          "name": "Dämonische Präsenz",
+          "description": "Dein Auftreten wirkt gleichermaßen einschüchternd wie faszinierend.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.negativ.einschuechtern",
+              "amount": 3
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.charme",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "key": "heissbluetig",
+          "name": "Heißblüter",
+          "description": "Deine erhöhte Körpertemperatur dämpft sowohl sengende Hitze als auch beißende Kälte.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "resistances.feuer",
+              "amount": 25
+            },
+            {
+              "kind": "fixed",
+              "path": "resistances.eis",
+              "amount": 25
+            }
+          ]
+        },
+        {
+          "key": "teufelAufDerSchulter",
+          "name": "Teufel auf der Schulter",
+          "description": "Du weißt genau, welchen Knopf du bei wem drücken musst.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.negativ.manipulieren",
+              "amount": 2
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.ueberreden",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "bewandertImUntergrund",
+          "name": "Bewandert im Untergrund",
+          "description": "Die Grauzonen der Gesellschaft sind dir vertrauter als den meisten lieb wäre.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.wissenschaften.sozial.gesellschaft",
+              "amount": 2
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.sonder.taschendiebstahl",
+              "amount": 4
+            }
+          ]
+        },
+        {
+          "key": "schweif",
+          "name": "Schweif",
+          "description": "Dein beweglicher Schweif kann selbst dann noch greifen und werfen, wenn beide Hände bereits ausgerüstet sind.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Kann Gegenstände greifen/werfen, auch wenn beide Hände ausgerüstet sind."
+            }
+          ]
+        },
+        {
+          "key": "scharfsinnigVarkesh",
+          "name": "Scharfsinnig",
+          "description": "Kaum eine Lüge entgeht deinem geschulten Blick.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sonder.durchschauen",
+              "amount": 4
+            }
+          ]
+        }
+      ]
+    },
+    "subraces": [
+      {
+        "key": "ashkari",
+        "name": "Ashkari",
+        "bonuses": {
+          "attributeStart": {
+            "dex": -1,
+            "con": 2,
+            "mag": 1,
+            "cha": -2
+          },
+          "eigenschaften": [
+            {
+              "key": "flammengeboren",
+              "name": "Flammengeboren",
+              "description": "Ascheblütige Varkesh, in Wüsten und Vulkanregionen entwickelt: Feuer ist für dich fast ein Zuhause, Kälte trifft dich dafür härter.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "resistances.feuer",
+                  "amount": 75
+                },
+                {
+                  "kind": "fixed",
+                  "path": "resistances.eis",
+                  "amount": -25
+                }
+              ]
+            },
+            {
+              "key": "pyromane",
+              "name": "Pyromane",
+              "description": "Die Flamme gehorcht dir wie ein zweites Werkzeug.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "disziplinen.magie.pyrokinet",
+                  "amount": 4
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "umbrari",
+        "name": "Umbrari",
+        "bonuses": {
+          "attributeStart": {
+            "dex": 1,
+            "spd": 3,
+            "mag": -1,
+            "cha": -3
+          },
+          "eigenschaften": [
+            {
+              "key": "schattengeboren",
+              "name": "Schattengeboren",
+              "description": "Schattenblütige Varkesh, über Generationen im Untergrund dicht besiedelter Städte geformt.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "disziplinen.kampf.gauner",
+                  "amount": 4
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.schleichen",
+                  "amount": 6
+                }
+              ]
+            },
+            {
+              "key": "beschaffer",
+              "name": "Beschaffer",
+              "description": "Verschlossene Türen sind für dich eher eine Einladung als ein Hindernis.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.taschendiebstahl",
+                  "amount": 2
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.schloesserKnacken",
+                  "amount": 4
+                }
+              ]
+            },
+            {
+              "key": "trickbetrueger",
+              "name": "Trickbetrüger",
+              "description": "Mit flinken Fingern und einer noch flinkeren Zunge kommst du meist unbemerkt davon.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.fingerfertigkeit",
+                  "amount": 6
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.negativ.taeuschen",
+                  "amount": 4
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "oratori",
+        "name": "Oratori",
+        "bonuses": {
+          "attributeStart": {
+            "dex": -2,
+            "int": 1,
+            "mnd": 1,
+            "mag": -1,
+            "cha": 1
+          },
+          "eigenschaften": [
+            {
+              "key": "teufelOderEngel",
+              "name": "Teufel oder Engel",
+              "description": "Silberzungen, die ihr volles Potential aus der Kommunikation schöpfen und je nach Ziel zu den besten oder den schlechtesten Beratern werden. Wähle wahlweise einen Bonus auf Überreden oder Manipulieren.",
+              "boni": [
+                {
+                  "kind": "choice",
+                  "key": "oratoriTeufelOderEngel",
+                  "options": [
+                    "talents.sozial.positiv.ueberreden",
+                    "talents.sozial.negativ.manipulieren"
+                  ],
+                  "amount": 6
+                }
+              ]
+            },
+            {
+              "key": "augeFuersDetail",
+              "name": "Auge fürs Detail",
+              "description": "Kein Zögern, kein Blinzeln entgeht dir.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.spezial.sehen",
+                  "amount": 1
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.durchschauen",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

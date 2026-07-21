@@ -1,0 +1,96 @@
+{
+  "_id": "Lm4Qw8Nx2Vt6Zk9R",
+  "_key": "!items!Lm4Qw8Nx2Vt6Zk9R",
+  "name": "Lumithar",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/lumi_m.png",
+  "system": {
+    "category": "insectoid",
+    "description": "<p>Lumithar sind eine insectoide Spezies mit schlankem Körperbau und einem leichteren, flexibleren Exoskelett als andere Insektenvölker, was ihnen eine geschmeidige und präzise Bewegung ermöglicht. Ihr markantestes Merkmal ist die Biolumineszenz: Entlang Armen, Rücken und Gesicht besitzen sie lichtemittierende Organe, die in Kombination mit kräftigen Kieferklauen eine komplexe, für andere Spezies kaum entzifferbare Sprache aus Lichtmustern und Klicklauten ergeben.</p><p>Lumithar fühlen sich vor allem in großen Gemeinschaften wohl. Ihre Städte bestehen nicht aus einzelnen Gebäuden, sondern wachsen organisch zu einem zusammenhängenden Netzwerk aus Kammern, Tunneln und offenen Bereichen zusammen, sowohl unterirdisch als auch an Bäumen und natürlichen Formationen der Oberfläche. Loyalität gegenüber der eigenen Kolonie steht bei ihnen über individuellen Interessen, auch wenn jeder Lumithar seine eigene Persönlichkeit behält.</p><p>Ihre größte Stärke liegt weniger in theoretischer Forschung als in praktischer, gemeinschaftlicher Problemlösung, besonders im Verständnis für strukturelle Stabilität und Holzverarbeitung. Bei Festen erzeugen Gruppen von Lumithar synchronisierte Lichtmuster, die wie lebendige Lichtwellen wirken, ein sichtbarer Ausdruck ihres Glaubens an das große Ganze, dem jede Gemeinschaft angehört.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1,
+        "heightMax": 1.62,
+        "weightMin": 35,
+        "weightMax": 66,
+        "muendigkeitsalter": 4,
+        "erwachsenenalter": 4,
+        "lebenserwartung": 28
+      },
+      "weiblich": {
+        "heightMin": 1,
+        "heightMax": 1.62,
+        "weightMin": 35,
+        "weightMax": 66,
+        "muendigkeitsalter": 4,
+        "erwachsenenalter": 4,
+        "lebenserwartung": 28
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/lumi_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/lumi_w.png",
+    "base": {
+      "attributeStart": {
+        "str": 3,
+        "dex": 3,
+        "con": 3,
+        "spd": -1,
+        "mnd": 3,
+        "mag": 3,
+        "cha": -2
+      },
+      "eigenschaften": [
+        {
+          "key": "exoskelettLumithar",
+          "name": "Exoskelett",
+          "description": "Auch dein leichteres Exoskelett bietet spürbaren Schutz vor Treffern.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "armor.physical",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "alternativeSpracheLumithar",
+          "name": "Alternative Sprache",
+          "description": "Durch Lichtmuster und Klicklaute kannst du mit anderen Lumithar kommunizieren. Diese Kommunikation ist für andere Spezies praktisch unmöglich zu verstehen.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Eigene, für andere Spezies unverständliche Kommunikation via Licht/Klicklaute (optional als Sprache \"Lumithar\" führbar)."
+            }
+          ]
+        },
+        {
+          "key": "schwarmgeist",
+          "name": "Schwarmgeist",
+          "description": "Im Verbund mit anderen agierst du spürbar sicherer.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "+2 auf Proben, die eine Zusammenarbeit mit einem Verbündeten beinhalten."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

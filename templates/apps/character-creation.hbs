@@ -25,6 +25,7 @@
       <div class="wizard-card {{#if (eq race.id ../selectedRace.id)}}selected{{/if}}" data-action="pickRace" data-id="{{race.id}}">
         <img src="{{race.img}}">
         <span class="wizard-card-name">{{race.name}}</span>
+        {{#if race.category}}<span class="wizard-card-category">{{race.category}}</span>{{/if}}
       </div>
       {{/each}}
     </div>

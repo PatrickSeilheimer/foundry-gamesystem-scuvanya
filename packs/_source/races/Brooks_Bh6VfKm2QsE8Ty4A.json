@@ -1,0 +1,106 @@
+{
+  "_id": "Bh6VfKm2QsE8Ty4A",
+  "_key": "!items!Bh6VfKm2QsE8Ty4A",
+  "name": "Brooks",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/brooks_m.png",
+  "system": {
+    "category": "humanoid",
+    "description": "<p>Brooks sind eine beeindruckend große und stämmige Spezies mit außergewöhnlicher Körperkraft und Widerstandsfähigkeit. Ihre Gliedmaßen sind dicker und muskulöser als die anderer humanoider Rassen, ergänzt durch einen kurzen, kräftigen Hals und breite Schultern. Ihre kurzen Beine machen sie langsam, doch ihre Ausdauer ist außergewöhnlich: Brooks können stunden- oder gar nächtelang arbeiten, ohne zu ermüden.</p><p>Ihr auffälligstes Merkmal ist ein Wachstum, das praktisch nie endet. Nach dem 30. Lebensjahr verlangsamt es sich zwar, hört aber bis ins hohe Alter nie ganz auf, weshalb ein Brooks streng genommen nie vollständig ausgewachsen ist. Damit einher geht eine bemerkenswerte Regenerationsfähigkeit: Brooks heilen schnell, und selbst schwere Wunden hinterlassen selten Narben.</p><p>Ihre Gesellschaft kennt keine festen Hierarchien und betont Zusammenarbeit sowie die Gleichwertigkeit aller Berufe, auch wenn Brooks von anderen Völkern oft vorschnell auf die Rolle des Lastenträgers reduziert werden. Tatsächlich zeigt sich ihr Talent ebenso in stiller, filigraner Kunst wie in beeindruckender Medizin: Ihr Ziel ist es, die Grenzen der Sterblichkeit zu verschieben, nicht aus Angst vor dem Tod, sondern aus dem Wunsch, Wissen über Generationen hinweg weiterzugeben.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.9,
+        "heightMax": 2.35,
+        "weightMin": 140,
+        "weightMax": 220,
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 100,
+        "lebenserwartung": 100
+      },
+      "weiblich": {
+        "heightMin": 1.92,
+        "heightMax": 2.4,
+        "weightMin": 140,
+        "weightMax": 240,
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 100,
+        "lebenserwartung": 100
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/brooks_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/brooks_w.png",
+    "base": {
+      "attributeStart": {
+        "str": 4,
+        "dex": -1,
+        "con": 5,
+        "spd": -1,
+        "int": 2,
+        "mnd": 3
+      },
+      "eigenschaften": [
+        {
+          "key": "hyperaktiveZellregeneration",
+          "name": "Hyperaktive Zellregeneration",
+          "description": "Dein Körper heilt mit außergewöhnlicher Geschwindigkeit: Heilung durch Rasten wirkt bei dir dreifach. Dein extremer Stoffwechsel verlangt dafür 2 Rationen Nahrung pro Tag statt einer.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Heilung durch Rasten x3, benötigt 2 Rationen Nahrung/Tag."
+            }
+          ]
+        },
+        {
+          "key": "lebenderRammbock",
+          "name": "Lebender Rammbock",
+          "description": "Wenn du dich mit voller Wucht in Bewegung setzt, ist es schwer, dich aufzuhalten. Läufst du vor einem physischen Angriff mindestens 3 Felder auf dein Ziel zu, verursacht dein Angriff 1W6 Bonusschaden.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Anlauf von mind. 3 Feldern vor einem physischen Angriff: +1W6 Bonusschaden."
+            }
+          ]
+        },
+        {
+          "key": "schwerfaellig",
+          "name": "Schwerfällig",
+          "description": "Deine enorme Masse setzt deinen Körper nur langsam in Bewegung.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "initiative",
+              "amount": -3
+            }
+          ]
+        },
+        {
+          "key": "standhafteVitalitaet",
+          "name": "Standhafte Vitalität",
+          "description": "Deine körperliche Widerstandskraft schützt dich vor schwächenden Effekten.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "+2 auf Konstitutionswürfe gegen Statuseffekte."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

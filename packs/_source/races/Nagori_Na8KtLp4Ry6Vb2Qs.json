@@ -1,0 +1,178 @@
+{
+  "_id": "Na8KtLp4Ry6Vb2Qs",
+  "_key": "!items!Na8KtLp4Ry6Vb2Qs",
+  "name": "Nagori",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/nagori_m.png",
+  "system": {
+    "category": "amphibian",
+    "description": "<p>Nagori sind humanoide Wesen mit einer ausgeprägten Vier-Augen-Struktur: ein großes und ein kleines Augenpaar. Die kleinen, seitlich sitzenden Augen bieten ein breites Sichtfeld zur Bewegungserkennung, die großen zentralen Augen ermöglichen scharfe Detailsicht und exzellentes Sehen bei Dunkelheit. Ihr amphibisches Erbe zeigt sich in flachen Nasen, flossenartigen Ohren und fehlender Körperbehaarung; durch erhöhte Blutzirkulation können sie zudem nach Belieben Schwimmhäute ausbilden. Magische Begabung ist unter ihnen selten.</p><p>Sie siedeln bevorzugt an Flussufern, Sümpfen und Küsten und leben von Fisch, Meeresfrüchten sowie Ackerbau. Ihre Gesellschaft basiert auf flachen Hierarchien und einer Konsensdemokratie: Jede Stimme zählt gleich, und Entscheidungen werden in offenen Versammlungen getroffen. Diese respektvolle, inklusive Grundhaltung prägt auch ihren Umgang mit anderen Völkern.</p><p>Ihre Forschung konzentriert sich auf die Unterwasserwelt sowie Alchemie und Heilkunde. Kulturell sind Wettkämpfe und Feste zentral, allen voran das jährliche Erntefest. Die Nagori sind zudem ein zutiefst gläubiges, polytheistisches Volk: Beinahe jede Alltagshandlung ist einer eigenen Gottheit gewidmet.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.45,
+        "heightMax": 1.9,
+        "weightMin": 56,
+        "weightMax": 90,
+        "muendigkeitsalter": 9,
+        "erwachsenenalter": 9,
+        "lebenserwartung": 40
+      },
+      "weiblich": {
+        "heightMin": 1.45,
+        "heightMax": 1.88,
+        "weightMin": 49,
+        "weightMax": 84,
+        "muendigkeitsalter": 9,
+        "erwachsenenalter": 9,
+        "lebenserwartung": 42
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/nagori_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/nagori_w.png",
+    "base": {
+      "attributeStart": {
+        "str": 1,
+        "dex": 4,
+        "con": 1,
+        "spd": 3,
+        "mnd": 5,
+        "mag": -1,
+        "cha": -1
+      },
+      "eigenschaften": [
+        {
+          "key": "vieraeugig",
+          "name": "Vieräugig",
+          "description": "Dein zweites Augenpaar liefert dir eine Rundumwahrnehmung, die kaum eine Bewegung übersieht.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.spezial.sehen",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "key": "schwimmhaeute",
+          "name": "Schwimmhäute",
+          "description": "Auf Kommando bilden sich zwischen deinen Fingern und Zehen feine Schwimmhäute.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.schwimmen",
+              "amount": 4
+            }
+          ]
+        },
+        {
+          "key": "wasserfilm",
+          "name": "Wasserfilm",
+          "description": "Ein feiner, natürlicher Schleimfilm schützt deine Haut vor Wasserschaden.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "resistances.wasser",
+              "amount": 50
+            }
+          ]
+        }
+      ]
+    },
+    "subraces": [
+      {
+        "key": "pelagori",
+        "name": "Pelagori",
+        "bonuses": {
+          "attributeStart": {
+            "spd": 1,
+            "mag": -1
+          },
+          "eigenschaften": [
+            {
+              "key": "wassernatur",
+              "name": "Wassernatur",
+              "description": "Diese Linie lebt überwiegend an Küsten, Flussdeltas und auf Inseln im offenen Meer und bewegt sich im Wasser so mühelos wie an Land.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.koerperlich.schwimmen",
+                  "amount": 4
+                },
+                {
+                  "kind": "text",
+                  "text": "Kein Bewegungsmalus im Wasser."
+                }
+              ]
+            },
+            {
+              "key": "apexPredatorPelagori",
+              "name": "Apex Predator",
+              "description": "Die See ist deine Speisekammer.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.handwerk.fischen",
+                  "amount": 4
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "saurori",
+        "name": "Saurori",
+        "bonuses": {
+          "attributeStart": {
+            "str": 2,
+            "dex": -1,
+            "con": 1,
+            "spd": -2
+          },
+          "eigenschaften": [
+            {
+              "key": "schuppenhaut",
+              "name": "Schuppenhaut",
+              "description": "Diese im Landesinneren und in warmen Sümpfen entwickelte Unterart trägt einen kräftigeren, robusteren Körper mit verhärteter Haut.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "armor.physical",
+                  "amount": 1
+                }
+              ]
+            },
+            {
+              "key": "apexPredatorSaurori",
+              "name": "Apex Predator",
+              "description": "Im dichten Unterholz der Sümpfe bist du der geborene Jäger.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.handwerk.jagen",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

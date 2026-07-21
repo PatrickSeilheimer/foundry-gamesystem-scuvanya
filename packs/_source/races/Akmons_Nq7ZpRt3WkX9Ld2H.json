@@ -1,0 +1,144 @@
+{
+  "_id": "Nq7ZpRt3WkX9Ld2H",
+  "_key": "!items!Nq7ZpRt3WkX9Ld2H",
+  "name": "Akmons",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/akmon_m.png",
+  "system": {
+    "category": "humanoid",
+    "description": "<p>Akmons sind eine Rasse von außergewöhnlicher Anmut. Ihre makellose Haut schimmert in goldbraunen oder bronzenen Tönen, während ihre Augen in lebendigem Grün oder Blau leuchten. Athletisch gebaut und perfekt proportioniert, bewegen sie sich mit einer Selbstverständlichkeit, die sie in jeder Menge hervorstechen lässt.</p><p>Körperpflege, Fitness und Mode sind zentrale Bestandteile ihres Alltags, denn Akmons betrachten ihre äußere Erscheinung sowohl als Ausdruck ihrer Individualität als auch als Zeichen des Respekts gegenüber anderen. Ihre Gesellschaft bemisst soziale Stellung weniger nach Geburt als nach Ausstrahlung, Kreativität und Schönheit; die charismatischsten Akmons übernehmen meist repräsentative statt herrschende Rollen.</p><p>Kulturell gelten sie als Meister der Mode, Schmuckherstellung, Schauspielkunst und Poesie. Ihre Wissenschaft konzentriert sich folgerichtig auf Ästhetik, Kosmetik und magische Transformation. Für Akmons ist Schönheit keine Oberflächlichkeit, sondern ein Ausdruck innerer Balance und Stärke.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.75,
+        "heightMax": 2,
+        "weightMin": 70,
+        "weightMax": 110,
+        "muendigkeitsalter": 18,
+        "erwachsenenalter": 20,
+        "lebenserwartung": 80
+      },
+      "weiblich": {
+        "heightMin": 1.65,
+        "heightMax": 1.8,
+        "weightMin": 68,
+        "weightMax": 100,
+        "muendigkeitsalter": 18,
+        "erwachsenenalter": 20,
+        "lebenserwartung": 80
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/akmon_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/akmon_w.png",
+    "base": {
+      "attributeStart": {
+        "str": 2,
+        "dex": 2,
+        "con": -1,
+        "spd": 1,
+        "int": -1,
+        "mnd": 2,
+        "mag": 2,
+        "cha": 5
+      },
+      "eigenschaften": [
+        {
+          "key": "attraktiv",
+          "name": "Attraktiv",
+          "description": "Deine Ausstrahlung wirkt, bevor du ein Wort gesagt hast.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.charme",
+              "amount": 6
+            }
+          ]
+        },
+        {
+          "key": "perfekteGenetik",
+          "name": "Perfekte Genetik",
+          "description": "Dein athletischer, makelloser Körperbau macht dir nahezu jede körperliche Übung leichter als anderen.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.klettern",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.laufen",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.schwimmen",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.springen",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.koerperlich.werfen",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "key": "eleganterAuftritt",
+          "name": "Eleganter Auftritt",
+          "description": "Dein Auftreten wirkt selbst in fremden Gesellschaften einnehmend und geschliffen.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.ueberreden",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "key": "redner",
+          "name": "Redner",
+          "description": "Rhetorik und gesellschaftliches Gespür wurden dir praktisch in die Wiege gelegt. Verteile 8 Punkte auf soziale Talente (maximal 4 pro Talent).",
+          "boni": [
+            {
+              "kind": "distribute",
+              "key": "akmonRedner",
+              "options": [
+                "talents.sozial.positiv.anfeuern",
+                "talents.sozial.positiv.beruhigen",
+                "talents.sozial.positiv.charme",
+                "talents.sozial.positiv.feilschen",
+                "talents.sozial.positiv.ueberreden",
+                "talents.sozial.negativ.beleidigen",
+                "talents.sozial.negativ.einschuechtern",
+                "talents.sozial.negativ.luegen",
+                "talents.sozial.negativ.manipulieren",
+                "talents.sozial.negativ.taeuschen"
+              ],
+              "amount": 8,
+              "perOptionMax": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

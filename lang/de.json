@@ -142,6 +142,8 @@
     },
 
     "Race": {
+      "category": "Kategorie",
+      "categoryHint": "z.B. humanoid, floral, insectoid ...",
       "base": "Basis (beide Geschlechter)",
       "maennlich": "Männlich (zusätzlich zur Basis)",
       "weiblich": "Weiblich (zusätzlich zur Basis)",

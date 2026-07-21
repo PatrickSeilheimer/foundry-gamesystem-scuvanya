@@ -45,6 +45,10 @@ export default class RaceData extends foundry.abstract.TypeDataModel {
       imageMaennlich: new fields.FilePathField({ categories: ["IMAGE"], required: false, initial: PLACEHOLDER_IMAGE }),
       imageWeiblich: new fields.FilePathField({ categories: ["IMAGE"], required: false, initial: PLACEHOLDER_IMAGE }),
 
+      // Rein kosmetische Einordnung (humanoid, floral, insectoid, ...) -- hat keinerlei
+      // mechanischen Effekt, wird nur im Item-Sheet und im Wizard als Untertitel angezeigt.
+      category: new fields.StringField({ required: false, blank: true, initial: "" }),
+
       body: new fields.SchemaField({
         maennlich: bodyRangeSchema(),
         weiblich: bodyRangeSchema()

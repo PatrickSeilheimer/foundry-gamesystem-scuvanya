@@ -1,0 +1,239 @@
+{
+  "_id": "Ae7Tb3Km9Ws5Hd2Q",
+  "_key": "!items!Ae7Tb3Km9Ws5Hd2Q",
+  "name": "Aerathi",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/aerathi_m.png",
+  "system": {
+    "category": "avian",
+    "description": "<p>Aerathi sind eine aviane Spezies mit leichtem Körperbau und hohlen Knochen, die ihnen bemerkenswerte Beweglichkeit und Ausdauer verleihen. Ihr teilweise gefiederter Körper variiert stark in Menge und Farbe des Gefieders, von schlichten Braun- und Grautönen bis zu seltenen, farbenprächtigen Federkleidern. Verlängerte Federstrukturen an den Armen erlauben ihnen, kurze Strecken zu gleiten und Stürze fast folgenlos abzufangen, echter Flug bleibt ihnen jedoch verwehrt.</p><p>Als nomadisches Volk errichten Aerathi selten dauerhafte Städte. Stattdessen ziehen sie in Karawanen über große Distanzen, manchmal zwischen Kontinenten, und schlagen unterwegs temporäre Lager auf oder wohnen zeitweise in den Städten anderer Völker. Als vielseitige Händler, Boten und Informationsvermittler verfügen sie über ein außergewöhnlich dichtes Netzwerk an Kontakten, wodurch sie oft besser über Weltgeschehen informiert sind als viele sesshafte Völker.</p><p>Ihre Kultur lebt von Geschichten, Musik und dem Austausch von Eindrücken aus aller Welt. Viele Aerathi betrachten das Reisen selbst als spirituelle Erfahrung, bei der jede Begegnung und jede neue Landschaft Teil eines größeren Lebenswegs ist.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.24,
+        "heightMax": 1.92,
+        "weightMin": 48,
+        "weightMax": 90,
+        "muendigkeitsalter": 12,
+        "erwachsenenalter": 16,
+        "lebenserwartung": 104
+      },
+      "weiblich": {
+        "heightMin": 1.21,
+        "heightMax": 1.85,
+        "weightMin": 44,
+        "weightMax": 84,
+        "muendigkeitsalter": 12,
+        "erwachsenenalter": 16,
+        "lebenserwartung": 101
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/aerathi_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/aerathi_w.png",
+    "base": {
+      "attributeStart": {
+        "str": -1,
+        "dex": 2,
+        "con": 3,
+        "spd": 5,
+        "mag": -1,
+        "cha": 4
+      },
+      "eigenschaften": [
+        {
+          "key": "gleitfluegelAerathi",
+          "name": "Gleitflügel",
+          "description": "Deine Federn und deine leichte Körperstruktur bremsen jeden Fall ab: Du erleidest keinen Fallschaden und kannst sehr kurze Strecken gleiten.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Kein Fallschaden, kann sehr kurze Strecken gleiten."
+            }
+          ]
+        },
+        {
+          "key": "ausgepraegtesNetzwerk",
+          "name": "Ausgeprägtes Netzwerk",
+          "description": "Dein weitreichendes Netzwerk an Kontakten öffnet dir Türen und Preise, die anderen verschlossen bleiben.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.ueberreden",
+              "amount": 2
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.sozial.positiv.feilschen",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "weltenbummlerAerathi",
+          "name": "Weltenbummler",
+          "description": "Ein Leben auf Reisen hat dir ein untrügliches Gespür für Wege, Kulturen und Karten vermittelt.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sonder.orientierung",
+              "amount": 6
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.wissenschaften.sozial.kultur",
+              "amount": 3
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.extra.kartenLesen",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "subraces": [
+      {
+        "key": "karavathi",
+        "name": "Karavathi",
+        "bonuses": {
+          "attributeStart": {
+            "str": 2,
+            "con": 2,
+            "spd": -3,
+            "cha": -1
+          },
+          "eigenschaften": [
+            {
+              "key": "allesSchonGesehen",
+              "name": "Alles schon gesehen",
+              "description": "Ewig reisende Nomaden, denen kaum ein Ort oder eine Sitte noch fremd ist.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.orientierung",
+                  "amount": 4
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.sozial.gesellschaft",
+                  "amount": 4
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.sozial.kultur",
+                  "amount": 3
+                }
+              ]
+            },
+            {
+              "key": "weltbewandert",
+              "name": "Weltbewandert",
+              "description": "Auf ihren endlosen Reisen sammeln die Karavathi Wissen aus jedem Winkel der Welt.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.sozial.theologie",
+                  "amount": 4
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.sozial.arkana",
+                  "amount": 4
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.wissenschaften.sozial.geschichte",
+                  "amount": 4
+                }
+              ]
+            },
+            {
+              "key": "wildnisbewohnerKaravathi",
+              "name": "Wildnisbewohner",
+              "description": "Das Leben abseits fester Städte hat sie überlebenstüchtig und handwerklich vielseitig gemacht.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sonder.ueberlebenstechniken",
+                  "amount": 3
+                },
+                {
+                  "kind": "choice",
+                  "key": "karavathiHandwerk",
+                  "options": [
+                    "talents.handwerk.grobschmied",
+                    "talents.handwerk.feinschmied",
+                    "talents.handwerk.plattner",
+                    "talents.handwerk.gerber",
+                    "talents.handwerk.zimmerer",
+                    "talents.handwerk.weber",
+                    "talents.handwerk.alchemist",
+                    "talents.handwerk.koch",
+                    "talents.handwerk.jagen",
+                    "talents.handwerk.fischen",
+                    "talents.handwerk.verzaubern"
+                  ],
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "mercadia",
+        "name": "Mercadia",
+        "bonuses": {
+          "attributeStart": {},
+          "eigenschaften": [
+            {
+              "key": "sonderpreise",
+              "name": "Sonderpreise",
+              "description": "Händler und Kuriere, die aus jedem Handel das Beste herausholen.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.sozial.positiv.feilschen",
+                  "amount": 4
+                }
+              ]
+            },
+            {
+              "key": "schnellreise",
+              "name": "Schnellreise",
+              "description": "Reittiere und Kutschen sind für Mercadia-Händler Alltagswerkzeug.",
+              "boni": [
+                {
+                  "kind": "fixed",
+                  "path": "talents.extra.reiten",
+                  "amount": 1
+                },
+                {
+                  "kind": "fixed",
+                  "path": "talents.extra.kutscheFahren",
+                  "amount": 1
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

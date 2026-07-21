@@ -16,6 +16,18 @@ const ROOT = path.resolve(__dirname, "..");
 const FIXED_IDS = {
   Mensch: "4gkEd32y88iHPx5C",
   Namaren: "VFDuccfmUD873qd5",
+  Akmons: "Nq7ZpRt3WkX9Ld2H",
+  Brooks: "Bh6VfKm2QsE8Ty4A",
+  Gremnak: "Gd3RxNw7Uc5Pm1Jz",
+  Nagori: "Na8KtLp4Ry6Vb2Qs",
+  Kayrun: "Ky9WmXd3Ft7Hn5Lc",
+  Varkesh: "Vr2ScBq8Zm4Kd6Nx",
+  Kethari: "Kt5Hj3Wp9Rc7Fb1M",
+  Lumithar: "Lm4Qw8Nx2Vt6Zk9R",
+  Aerathi: "Ae7Tb3Km9Ws5Hd2Q",
+  Corveth: "Cv6Rn2Xf8Lt4Pm9K",
+  Florathi: "Fl3Zk7Bq5Nc9Ht2W",
+  Therari: "Th8Mp4Vd6Kx2Rw5S",
   "Militär": "XbApaOOVVm7HJhKP",
   Wissenschaftler: "UkeLTpYDIpctUwS8"
 };

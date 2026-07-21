@@ -3,29 +3,32 @@
   "_key": "!items!VFDuccfmUD873qd5",
   "name": "Namaren",
   "type": "race",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/scuvanya/assets/races/namaren_m.png",
   "system": {
-    "description": "<p>Klein, langlebig und von Kindheit an in Schrift und arkanem Wissen geschult.</p>",
+    "category": "humanoid",
+    "description": "<p>Namaren sind die kleinste humanoide Spezies. Ihr rundlicher Körperbau entwickelt sich erst nach dem 18. Lebensjahr, wenn kurze Beine und ein gedrungener Körper ihr charakteristisches, oft unterschätztes Erscheinungsbild prägen. Hinter diesem Äußeren steckt eine immense magische Kraft, denn ihrem Glauben nach liegt das Zentrum magischer Energie im Bauch. Ein wohlgenährter Namar gilt deshalb nicht nur als wohlhabend, sondern auch als magisch besonders begabt.</p><p>Namaren führen ein gemeinschaftlich orientiertes, von Neugier und Gastfreundschaft geprägtes Leben. Ihre Gesellschaft ist eine Meritokratie: Respekt wird durch Wissen und magisches Talent erworben, und ihre Städte gelten als lebendige Zentren der Lehre. Dieser Fokus auf Wissen bringt ihnen mitunter den Ruf ein, hochnäsig zu sein, doch bleiben sie pragmatisch genug, um Diplomatie und Zusammenarbeit zu schätzen.</p><p>In Wissenschaft und Magie sind Namaren unbestrittene Vorreiter. Ihre \"Arkanatoren\", Geräte zur Speicherung magischer Energie, sind weltberühmt, ebenso ihre monumentalen Bibliotheken. Die meisten Namaren sind nicht gläubig und betrachten Religion als wenig greifbar, begegnen den Glaubenspraktiken anderer Völker aber respektvoll.</p>",
     "body": {
       "maennlich": {
         "heightMin": 0.9,
         "heightMax": 1.25,
         "weightMin": 40,
-        "weightMax": 70,
-        "muendigkeitsalter": 20,
-        "erwachsenenalter": 30,
+        "weightMax": 80,
+        "muendigkeitsalter": 19,
+        "erwachsenenalter": 25,
         "lebenserwartung": 90
       },
       "weiblich": {
-        "heightMin": 0.9,
-        "heightMax": 1.25,
-        "weightMin": 40,
+        "heightMin": 0.88,
+        "heightMax": 1.2,
+        "weightMin": 35,
         "weightMax": 70,
-        "muendigkeitsalter": 20,
-        "erwachsenenalter": 30,
+        "muendigkeitsalter": 15,
+        "erwachsenenalter": 23,
         "lebenserwartung": 90
       }
     },
+    "imageMaennlich": "systems/scuvanya/assets/races/namaren_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/namaren_w.png",
     "base": {
       "attributeStart": {
         "str": -1,
@@ -37,9 +40,9 @@
       },
       "eigenschaften": [
         {
-          "key": "schriftgelehrt",
-          "name": "Schriftgelehrt",
-          "description": "Von Kindheit an in Lesen und Schreiben unterrichtet.",
+          "key": "gelehrter",
+          "name": "Gelehrter",
+          "description": "Von Kindheit an in Lesen und Schreiben unterrichtet -- Bildung ist bei den Namaren keine Frage des Standes, sondern der Erziehung.",
           "boni": [
             {
               "kind": "fixed",
@@ -50,22 +53,28 @@
               "kind": "fixed",
               "path": "talents.extra.schreiben",
               "amount": 1
-            },
-            {
-              "kind": "fixed",
-              "path": "talents.wissenschaften.sozial.arkana",
-              "amount": 3
             }
           ]
         },
         {
-          "key": "arkaneBegabung",
-          "name": "Arkane Begabung",
-          "description": "Wähle eine Magiedisziplin, in der du bereits Stufe 3 beherrschst.",
+          "key": "gefaehrlicherHexer",
+          "name": "Gefährlicher Hexer",
+          "description": "Ein Blick, ein Wort, und die eigene Magie wird spürbar bedrohlich. Du erhältst einen zusätzlichen Bonus auf Einschüchtern in Höhe deines aktiven MAG-Modifiers (inklusive aller temporären und permanenten Effekte, minimal 0).",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Bonus auf Einschüchtern = aktueller MAG-Modifier (nie negativ)."
+            }
+          ]
+        },
+        {
+          "key": "magierAkademieAbschluss",
+          "name": "Magier Akademie Abschluss",
+          "description": "Du hast den Standardabschluss einer hochangesehenen Namaren-Magie-Akademie und bist sehr versiert in einer Magiedisziplin deiner Wahl.",
           "boni": [
             {
               "kind": "choice",
-              "key": "magieDisziplin",
+              "key": "namarenMagieDisziplin",
               "options": [
                 "disziplinen.magie.pyrokinet",
                 "disziplinen.magie.geomant",
@@ -82,12 +91,6 @@
           ]
         }
       ]
-    },
-    "weiblich": {
-      "attributeStart": {
-        "mag": -1,
-        "mnd": 1
-      }
     }
   },
   "effects": [],

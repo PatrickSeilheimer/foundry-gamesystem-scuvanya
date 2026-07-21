@@ -1,0 +1,113 @@
+{
+  "_id": "Kt5Hj3Wp9Rc7Fb1M",
+  "_key": "!items!Kt5Hj3Wp9Rc7Fb1M",
+  "name": "Kethari",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/kethari_m.png",
+  "system": {
+    "category": "insectoid",
+    "description": "<p>Kethari sind eine insectoide Spezies mit einem widerstandsfähigen, chitinartigen Exoskelett, das sie vor Verletzungen und Umwelteinflüssen schützt. Trotz dieser robusten Hülle sind sie überraschend leicht und beweglich. Ihr auffälligstes Merkmal sind individuell geformte Knochenplatten auf dem Kopf, die innerhalb ihrer Kultur als Ausdruck der Identität gelten. Ihre großen, facettenartigen Augen und ihr außergewöhnliches Nervensystem verleihen ihnen ein nahezu perfektes Gedächtnis: Durch meditative Techniken können sie vergangene Erlebnisse mit erstaunlicher Genauigkeit erneut durchleben, was sie zu außergewöhnlichen Historikern und Chronisten macht.</p><p>Ihr Leben ist ruhig, strukturiert und von Disziplin, Wissen und Handwerkskunst geprägt. Die Webkunst nimmt darin eine zentrale Rolle ein: Ihre Textilien gehören zu den feinsten der bekannten Welt und dienen zugleich als kulturelle Archive, deren Muster Geschichten oder mathematische Prinzipien symbolisieren. Kethari sind grundsätzlich friedliebend, vermeiden Konflikte und gelten in Mathematik, Physik und Astronomie als bedeutende Denker.</p><p>Ihr rund 140-jähriges Leben verläuft in klar definierten Phasen, vom sorglosen Kindesalter über das Erwachen und das Studium bis zum jahrzehntelangen Aufstieg im gewählten Beruf, gefolgt von Besinnung und schließlich der Weisheit, in der sie als Berater und Lehrer wirken.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.28,
+        "heightMax": 1.8,
+        "weightMin": 40,
+        "weightMax": 66,
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 14,
+        "lebenserwartung": 140
+      },
+      "weiblich": {
+        "heightMin": 1.28,
+        "heightMax": 1.8,
+        "weightMin": 40,
+        "weightMax": 66,
+        "muendigkeitsalter": 20,
+        "erwachsenenalter": 14,
+        "lebenserwartung": 140
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/kethari_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/kethari_w.png",
+    "base": {
+      "attributeStart": {
+        "str": 1,
+        "dex": 2,
+        "con": 3,
+        "int": 5,
+        "mnd": 2,
+        "cha": -1
+      },
+      "eigenschaften": [
+        {
+          "key": "fotografischesGedaechtnis",
+          "name": "Fotografisches Gedächtnis",
+          "description": "Durch Meditation kannst du eine beliebige Erinnerung erneut in nahezu hundertprozentiger Präzision durchleben. Rein erzählerische, RP-lastige Eigenschaft ohne Zahlenwert.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Kann jede eigene Erinnerung meditativ in voller Präzision durchleben (rein narrativ)."
+            }
+          ]
+        },
+        {
+          "key": "exoskelettKethari",
+          "name": "Exoskelett",
+          "description": "Dein hartes Exoskelett bedeckt den gesamten Körper und wehrt Treffer ab, die andere verletzen würden.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "armor.physical",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "key": "weberKultur",
+          "name": "Weber Kultur",
+          "description": "Das Weben ist dir seit Kindheitstagen vertraut, feine Fasern zu komplexen, langlebigen Geweben zu verarbeiten.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.handwerk.weber",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "key": "gelehrterKethari",
+          "name": "Gelehrter",
+          "description": "Bildung ist für Kethari selbstverständlich, Lesen und Schreiben gehören zu ihrer frühesten Erziehung.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.extra.lesen",
+              "amount": 1
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.extra.schreiben",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

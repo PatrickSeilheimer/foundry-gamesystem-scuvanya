@@ -82,6 +82,11 @@
     {{/if}}
 
     {{#if (eq item.type "race")}}
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Race.category'}}</label>
+      <input type="text" name="system.category" value="{{system.category}}" placeholder="{{localize 'SCUVANYA.Race.categoryHint'}}">
+    </div>
+
     <h3>{{localize 'SCUVANYA.Race.genderImages'}}</h3>
     <div class="gender-image-grid">
       <div class="gender-image-group">

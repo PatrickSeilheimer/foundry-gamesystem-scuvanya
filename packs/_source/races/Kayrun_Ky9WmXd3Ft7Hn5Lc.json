@@ -1,0 +1,96 @@
+{
+  "_id": "Ky9WmXd3Ft7Hn5Lc",
+  "_key": "!items!Ky9WmXd3Ft7Hn5Lc",
+  "name": "Kayrun",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/kayrun_m.png",
+  "system": {
+    "category": "celestial",
+    "description": "<p>Kayrun sind eine kleinwüchsige Spezies, bei der es kaum äußerliche Unterschiede zwischen den Geschlechtern gibt: Männer und Frauen sind gleich stark, gleich magisch begabt und einander in der Körperform ähnlich, selbst die Fähigkeit zu säugen besitzen beide. Ihre Fortpflanzung ist einzigartig, denn aus Verbindungen reiner Kayrun-Paare entstehen stets Zwillinge, ein Junge und ein Mädchen, die magisch miteinander verbunden sind und ihre Kräfte im gemeinsamen Einsatz erheblich verstärken.</p><p>Ihre Gesellschaft ist stark familienorientiert und kennt keine Geschlechterrollen; Aufgaben werden allein nach individuellen Stärken und Vorlieben verteilt. Wissenschaftlich sind Kayrun in Medizin und Magie weit vorangeschritten und teilen ihre Erkenntnisse bereitwillig mit anderen Völkern, was ihnen hohes Ansehen als Forschungspartner einbringt.</p><p>Kulturell gelten Kayrun als herausragende Astronomen und Astrologen. Schon jungen Kayrun wird beigebracht, Sternbilder zu deuten, deren duale Bedeutung sie tief mit der Vorstellung der eigenen Zwillingsnatur verknüpfen. In der Kunst gelten sie eher als durchschnittlich; ihre Stärke liegt in Wissenschaft und sozialem Zusammenhalt.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.15,
+        "heightMax": 1.78,
+        "weightMin": 42,
+        "weightMax": 80,
+        "muendigkeitsalter": 16,
+        "erwachsenenalter": 19,
+        "lebenserwartung": 110
+      },
+      "weiblich": {
+        "heightMin": 1.13,
+        "heightMax": 1.74,
+        "weightMin": 42,
+        "weightMax": 80,
+        "muendigkeitsalter": 16,
+        "erwachsenenalter": 19,
+        "lebenserwartung": 112
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/kayrun_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/kayrun_w.png",
+    "base": {
+      "attributeStart": {
+        "str": -1,
+        "dex": 2,
+        "spd": 2,
+        "int": 2,
+        "mnd": 3,
+        "mag": 5,
+        "cha": -1
+      },
+      "eigenschaften": [
+        {
+          "key": "gabeDerVerbundenheit",
+          "name": "Gabe der Verbundenheit",
+          "description": "Durch die Zeit mit deinem Zwilling habt ihr gelernt, magische Kraft aufeinander zu übertragen. Du erlernst die Aktion \"Mana übertragen\" ohne die sonst dafür nötige Freischaltbedingung (Aktionen folgen in einem späteren Ausbau).",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "Schaltet die Aktion \"Mana übertragen\" ohne die übliche Voraussetzung frei."
+            }
+          ]
+        },
+        {
+          "key": "sternenkarte",
+          "name": "Sternenkarte",
+          "description": "Sterne sind für dich lesbar wie eine Landkarte.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "talents.sonder.orientierung",
+              "amount": 6
+            }
+          ]
+        },
+        {
+          "key": "kooperativ",
+          "name": "Kooperativ",
+          "description": "Gemeinsam seid ihr mehr als die Summe eurer Teile: Gruppenproben, an denen mehr als nur dieser Charakter beteiligt ist (inklusive Gruppenangriffe oder gemeinschaftliche Zauber), erhalten +2.",
+          "boni": [
+            {
+              "kind": "text",
+              "text": "+2 auf Gruppenproben (Gruppenangriffe, gemeinschaftliche Zauber etc.)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

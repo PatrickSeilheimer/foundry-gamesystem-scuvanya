@@ -1,0 +1,130 @@
+{
+  "_id": "Gd3RxNw7Uc5Pm1Jz",
+  "_key": "!items!Gd3RxNw7Uc5Pm1Jz",
+  "name": "Gremnak",
+  "type": "race",
+  "img": "systems/scuvanya/assets/races/gremnak_m.png",
+  "system": {
+    "category": "reptilian",
+    "description": "<p>Gremnak gelten als das Drachenvolk und weisen den größten Geschlechterunterschied aller Völker Scuvanyas auf. Männer sind groß, kräftig und überdurchschnittlich schuppenbedeckt, mit langem Hals und animalischen Gesichtszügen. Frauen sind deutlich kleiner, schmächtiger und humaner, dafür aber intelligenter und magisch begabter als ihre männlichen Artgenossen. Ihre schuppige Haut schützt beide Geschlechter vor physischem Schaden und Witterungseinflüssen.</p><p>Ihr Leben folgt strengen, von Tradition geprägten Ritualen. Männer übernehmen körperliche Arbeit und Verteidigung, Frauen die Pflege der Magie und die Kindererziehung. Ihre Gesellschaft ist hierarchisch, doch die Hierarchie gründet ebenso auf Wissen wie auf Stärke: An der Spitze jeder Gemeinde steht ein Anführer, beraten von den weisesten Frauen und stärksten Männern.</p><p>Ihre Entstehung ist ein dunkles Kapitel: Gremnak gehen auf das Kaelth&#39;mari-Fusionsritual des Magiers Xaelthar zurück, der Menschen und gefangene Drachen zu einer neuen, mächtigeren Spezies verschmelzen wollte, um sich eine Armee zu schaffen. Die Verschmolzenen rebellierten gegen ihren Schöpfer und flohen in die Wildnis. Über Jahrhunderte formte die Isolation die Gremnak zu einem eigenständigen Volk, das die Erinnerung an seine Erschaffung bewusst verschweigt, aus Furcht vor dem Fluch ihres Ursprungs.</p>",
+    "body": {
+      "maennlich": {
+        "heightMin": 1.85,
+        "heightMax": 2.2,
+        "weightMin": 110,
+        "weightMax": 200,
+        "muendigkeitsalter": 13,
+        "erwachsenenalter": 16,
+        "lebenserwartung": 58
+      },
+      "weiblich": {
+        "heightMin": 1.45,
+        "heightMax": 1.68,
+        "weightMin": 45,
+        "weightMax": 64,
+        "muendigkeitsalter": 13,
+        "erwachsenenalter": 13,
+        "lebenserwartung": 65
+      }
+    },
+    "imageMaennlich": "systems/scuvanya/assets/races/gremnak_m.png",
+    "imageWeiblich": "systems/scuvanya/assets/races/gremnak_w.png",
+    "base": {
+      "eigenschaften": [
+        {
+          "key": "schuetzendeSchuppen",
+          "name": "Schützende Schuppen",
+          "description": "Robuste Hautschuppen bedecken Teile deines Körpers, gleich welchen Geschlechts.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "armor.physical",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "maennlich": {
+      "attributeStart": {
+        "str": 5,
+        "dex": 2,
+        "con": 3,
+        "spd": 2,
+        "mag": 2,
+        "cha": -2
+      },
+      "eigenschaften": [
+        {
+          "key": "zumKriegerErzogen",
+          "name": "Zum Krieger erzogen",
+          "description": "Männliche Gremnak werden von früher Kindheit an auf den Krieg vorbereitet.",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "disziplinen.kampf.krieger",
+              "amount": 4
+            },
+            {
+              "kind": "choice",
+              "key": "gremnakKriegerMagie",
+              "options": [
+                "disziplinen.magie.pyrokinet",
+                "disziplinen.magie.geomant",
+                "disziplinen.magie.aerothurg"
+              ],
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    },
+    "weiblich": {
+      "attributeStart": {
+        "str": -1,
+        "dex": 2,
+        "con": -1,
+        "spd": 1,
+        "int": 2,
+        "mnd": 4,
+        "mag": 4,
+        "cha": 1
+      },
+      "eigenschaften": [
+        {
+          "key": "heilendeHaende",
+          "name": "Heilende Hände",
+          "description": "Die natürliche Begabung weiblicher Gremnak erlaubt es dir, heilende Lichtmagie zu kanalisieren (abgebildet über die Disziplin Spiritualist).",
+          "boni": [
+            {
+              "kind": "fixed",
+              "path": "disziplinen.magie.spiritualist",
+              "amount": 3
+            },
+            {
+              "kind": "fixed",
+              "path": "talents.wissenschaften.natur.medizin",
+              "amount": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

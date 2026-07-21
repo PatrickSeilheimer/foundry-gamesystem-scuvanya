@@ -70,7 +70,7 @@
       "locked": false
     }
   ],
-  "background": "assets/system/background.webp",
+  "background": "assets/system/scuvanya_fantasy_landscape_background_2x.png",
   "grid": {
     "distance": 1,
     "units": "m"
