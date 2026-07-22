@@ -203,6 +203,7 @@
       "Koerperlich": "Gemeinsamer Bonus = Durchschnitt aller investierten Punkte (abgerundet)",
       "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final",
       "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden",
+      "RequiresSkill": "benötigt {skill}",
       "ItemBonusIncluded": "Enthält einen Bonus durch ausgerüstete/getragene Ausrüstung",
       "EditInCreator": "Attribute, Talente und Disziplinen werden aktuell im Charaktererstellungs-Wizard verteilt (Klick auf \"Edit\")."
     },

@@ -71,6 +71,17 @@ SCUVANYA.extraSkills = [
   "lesen", "schreiben", "lippenLesen", "reiten", "kutscheFahren", "booteSteuern", "kartenLesen"
 ];
 
+// Voraussetzungen zwischen Extra-Fähigkeiten (siehe character.mjs _prepareExtraSkillDependencies):
+// eine Fähigkeit mit Eintrag hier ist nur "aktiv" (zählt für Würfe/Anzeige/Skillpunkt-Kosten),
+// wenn die geforderte Fähigkeit selbst aktiv ist (bekannt ODER per Rasse/Beruf gewährt) -- ein
+// Rassen-/Berufsbonus, der eine Fähigkeit DIREKT gewährt, umgeht die Voraussetzung dagegen
+// (siehe "granted" -- Rassen-/Berufsboni sind die neue Norm, keine Voraussetzung greift dort).
+SCUVANYA.extraSkillDependencies = {
+  schreiben: "lesen",
+  lippenLesen: "lesen",
+  kutscheFahren: "reiten"
+};
+
 // Sprachen: Stufe 0-4. Gemeinsprache ist bei jedem PC fix auf Stufe 4.
 SCUVANYA.languageMinLevel = 0;
 SCUVANYA.languageMaxLevel = 4;

@@ -1,0 +1,64 @@
+{
+  "_id": "Pr5RlGs3Nc7Wt4Kb",
+  "_key": "!items!Pr5RlGs3Nc7Wt4Kb",
+  "name": "Religiös",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Priester, Prophet oder Mönch. Der Glaube ist dein Beruf.</p>",
+    "attributeStart": {
+      "mnd": 2
+    },
+    "eigenschaften": [
+      {
+        "key": "glaubensfestigkeit",
+        "name": "Glaubensfestigkeit",
+        "description": "Wähle ein Attribut, das dein geistliches Wirken besonders prägt.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "religioesAttribut",
+            "options": [
+              "attributes.cha",
+              "attributes.mag"
+            ],
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "theologischeBildung",
+        "name": "Theologische Bildung",
+        "description": "Tiefes Wissen über die Glaubenslehre, ergänzt um ein Grundverständnis arkaner Zusammenhänge.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.theologie",
+            "amount": 8
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.arkana",
+            "amount": 4
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

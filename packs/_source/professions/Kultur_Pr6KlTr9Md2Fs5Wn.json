@@ -1,0 +1,87 @@
+{
+  "_id": "Pr6KlTr9Md2Fs5Wn",
+  "_key": "!items!Pr6KlTr9Md2Fs5Wn",
+  "name": "Kultur",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Künstler, Schauspieler oder sonst ein Performer -- die Bühne ist dein Zuhause.</p>",
+    "attributeStart": {
+      "cha": 2
+    },
+    "eigenschaften": [
+      {
+        "key": "buehnenpraesenz",
+        "name": "Bühnenpräsenz",
+        "description": "Wähle ein Attribut, das deinen Auftritt prägt.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "kulturAttribut",
+            "options": [
+              "attributes.dex",
+              "attributes.mnd",
+              "attributes.int"
+            ],
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "kuenstlerischeAusdruckskraft",
+        "name": "Künstlerische Ausdruckskraft",
+        "description": "Verteile Punkte auf Singen und Tanzen.",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "kulturDarbietung",
+            "options": [
+              "talents.spezial.singen",
+              "talents.spezial.tanzen"
+            ],
+            "amount": 4,
+            "perOptionMax": 0
+          }
+        ]
+      },
+      {
+        "key": "publikumsliebling",
+        "name": "Publikumsliebling",
+        "description": "Ein geübter Performer weiß zu täuschen und zu bezaubern -- und kennt die kulturelle Bühne, auf der er auftritt.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.sozial.negativ.taeuschen",
+            "amount": 4
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.sozial.positiv.charme",
+            "amount": 4
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.kultur",
+            "amount": 6
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "_id": "Pr1ArWk4Tm8Nc2Rs",
+  "_key": "!items!Pr1ArWk4Tm8Nc2Rs",
+  "name": "Arbeiter",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist auf einer Farm oder Ranch aufgewachsen und verdienst dein Geld mit einem anderen harten, schweißtreibenden Beruf -- oder ziehst als Nomade bzw. Tagelöhner von Ort zu Ort.</p>",
+    "attributeStart": {
+      "con": 2,
+      "str": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "harteArbeit",
+        "name": "Harte Arbeit",
+        "description": "Jahre voller körperlicher Anstrengung haben Ausdauer und Kraft gestählt.",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "arbeiterKoerperlich",
+            "options": [
+              "talents.koerperlich.klettern",
+              "talents.koerperlich.laufen",
+              "talents.koerperlich.schwimmen",
+              "talents.koerperlich.springen",
+              "talents.koerperlich.werfen"
+            ],
+            "amount": 10,
+            "perOptionMax": 4
+          }
+        ]
+      },
+      {
+        "key": "vielseitigeErfahrung",
+        "name": "Vielseitige Erfahrung",
+        "description": "Wähle drei Handwerke, die du im Laufe der Jahre nebenbei aufgeschnappt hast.",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "arbeiterHandwerke",
+            "options": [
+              "talents.handwerk.grobschmied",
+              "talents.handwerk.feinschmied",
+              "talents.handwerk.plattner",
+              "talents.handwerk.gerber",
+              "talents.handwerk.zimmerer",
+              "talents.handwerk.weber",
+              "talents.handwerk.alchemist",
+              "talents.handwerk.koch",
+              "talents.handwerk.jagen",
+              "talents.handwerk.fischen",
+              "talents.handwerk.verzaubern"
+            ],
+            "amount": 3,
+            "perOptionMax": 1
+          }
+        ]
+      },
+      {
+        "key": "ueberlebensinstinkt",
+        "name": "Überlebensinstinkt",
+        "description": "Das Leben auf dem Land oder auf Wanderschaft schärft den Überlebensinstinkt.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.sonder.ueberlebenstechniken",
+            "amount": 3
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

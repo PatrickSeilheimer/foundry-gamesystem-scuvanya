@@ -1,0 +1,108 @@
+{
+  "_id": "Pr7KrMl4Vt8Nc3Rd",
+  "_key": "!items!Pr7KrMl4Vt8Nc3Rd",
+  "name": "Krimineller",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Trickbetrüger, Dieb oder sonstiger Abschaum -- das Gesetz ist für andere gedacht.</p>",
+    "attributeStart": {
+      "dex": 1,
+      "int": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "kaltesKalkuel",
+        "name": "Kaltes Kalkül",
+        "description": "Wähle ein Attribut, das deine kriminelle Ader unterstützt.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "kriminellerAttribut",
+            "options": [
+              "attributes.mnd",
+              "attributes.cha"
+            ],
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "schlechterRuf",
+        "name": "Schlechter Ruf",
+        "description": "Verteile Punkte frei auf die negativen sozialen Talente.",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "kriminellerSozialNegativ",
+            "options": [
+              "talents.sozial.negativ.beleidigen",
+              "talents.sozial.negativ.einschuechtern",
+              "talents.sozial.negativ.luegen",
+              "talents.sozial.negativ.manipulieren",
+              "talents.sozial.negativ.taeuschen"
+            ],
+            "amount": 10,
+            "perOptionMax": 5
+          }
+        ]
+      },
+      {
+        "key": "gassenwissen",
+        "name": "Gassenwissen",
+        "description": "Ein wachsames Auge und Kontakte in der Unterwelt gehören zum Handwerk.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.spezial.sehen",
+            "amount": 1
+          },
+          {
+            "kind": "fixed",
+            "path": "disziplinen.kampf.gauner",
+            "amount": 1
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.gesellschaft",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "key": "diebeshandwerk",
+        "name": "Diebeshandwerk",
+        "description": "Verteile Punkte auf Fingerfertigkeit, Schlösser knacken und Schleichen.",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "kriminellerDiebeshandwerk",
+            "options": [
+              "talents.sonder.fingerfertigkeit",
+              "talents.sonder.schloesserKnacken",
+              "talents.sonder.schleichen"
+            ],
+            "amount": 10,
+            "perOptionMax": 5
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

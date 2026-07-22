@@ -1,0 +1,84 @@
+{
+  "_id": "Pr4ArTz8Km2Vd6Ns",
+  "_key": "!items!Pr4ArTz8Km2Vd6Ns",
+  "name": "Arzt",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Arzt, Feldscher oder Heilkundiger -- Leben zu retten ist dein Handwerk.</p>",
+    "attributeStart": {
+      "int": 1,
+      "mnd": 1,
+      "mag": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "heilkunde",
+        "name": "Heilkunde",
+        "description": "Fundierte medizinische Ausbildung, ergänzt um botanisches und alchemistisches Wissen.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.natur.medizin",
+            "amount": 8
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.natur.botanik",
+            "amount": 4
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.handwerk.alchemist",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "key": "heilendeHand",
+        "name": "Heilende Hand",
+        "description": "Manche Ärzte verstehen es, spirituelle Energie zur Heilung einzusetzen.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "disziplinen.magie.spiritualist",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "key": "fachliteratur",
+        "name": "Fachliteratur",
+        "description": "Ohne Lesen und Schreiben keine Medizin.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.extra.lesen",
+            "amount": 1
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.extra.schreiben",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "_id": "Pr9LdSt3Nm7Vk5Ft",
+  "_key": "!items!Pr9LdSt3Nm7Vk5Ft",
+  "name": "Landstreicher",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du hast keine Ausbildung genossen oder noch nie richtig gearbeitet -- das Leben auf der Straße war dein einziger Lehrmeister.</p>",
+    "attributeStart": {
+      "con": 1,
+      "mnd": 1,
+      "spd": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "ueberlebenAmRand",
+        "name": "Überleben am Rand",
+        "description": "Wer nichts hat, lernt schnell, mit wenig auszukommen.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.sonder.ueberlebenstechniken",
+            "amount": 8
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.gesellschaft",
+            "amount": 3
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.sonder.durchschauen",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "key": "notversorgung",
+        "name": "Notversorgung",
+        "description": "Man weiß, wie man sich selbst versorgt, wenn niemand sonst es tut.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.handwerk.jagen",
+            "amount": 1
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.handwerk.koch",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

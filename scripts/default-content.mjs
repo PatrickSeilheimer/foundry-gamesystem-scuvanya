@@ -1139,61 +1139,342 @@ export const DEFAULT_ITEMS = [
     }
   },
   {
-    name: "Militär",
+    name: "Arbeiter",
     type: "profession",
     system: {
-      description: "<p>Ausbildung an Waffen, Erste Hilfe im Feld und die Fähigkeit, Widerstand zu brechen.</p>",
-      attributeStart: { con: 2 },
+      description: "<p>Du bist auf einer Farm oder Ranch aufgewachsen und verdienst dein Geld mit einem anderen harten, schweißtreibenden Beruf -- oder ziehst als Nomade bzw. Tagelöhner von Ort zu Ort.</p>",
+      attributeStart: { con: 2, str: 1 },
       eigenschaften: [
         {
-          key: "kampfausbildung",
-          name: "Kampfausbildung",
-          description: "Drill und Felderfahrung stärken Erste-Hilfe-Kenntnisse und Durchsetzungsvermögen.",
+          key: "harteArbeit",
+          name: "Harte Arbeit",
+          description: "Jahre voller körperlicher Anstrengung haben Ausdauer und Kraft gestählt.",
           boni: [
-            { kind: "fixed", path: "talents.wissenschaften.natur.medizin", amount: 2 },
-            { kind: "fixed", path: "talents.sozial.negativ.einschuechtern", amount: 4 }
+            { kind: "distribute", key: "arbeiterKoerperlich", options: PHYSICAL_SKILL_PATHS, amount: 10, perOptionMax: 4 }
           ]
         },
         {
-          key: "kampfschwerpunkt",
-          name: "Kampfschwerpunkt",
-          description: "Wähle ein Kampfattribut, das durch die Ausbildung geschärft wurde.",
+          key: "vielseitigeErfahrung",
+          name: "Vielseitige Erfahrung",
+          description: "Wähle drei Handwerke, die du im Laufe der Jahre nebenbei aufgeschnappt hast.",
           boni: [
-            { kind: "choice", key: "kampfattribut", options: ["attributes.str", "attributes.dex", "attributes.mag"], amount: 1 }
+            { kind: "distribute", key: "arbeiterHandwerke", options: CRAFT_PATHS, amount: 3, perOptionMax: 1 }
           ]
         },
         {
-          key: "koerperlicheEignung",
-          name: "Körperliche Eignung",
-          description: "Wähle ein körperliches Talent, das im Dienst besonders trainiert wurde.",
+          key: "ueberlebensinstinkt",
+          name: "Überlebensinstinkt",
+          description: "Das Leben auf dem Land oder auf Wanderschaft schärft den Überlebensinstinkt.",
           boni: [
-            { kind: "choice", key: "koerperlichesTalent", options: PHYSICAL_SKILL_PATHS, amount: 5 }
+            { kind: "fixed", path: "talents.sonder.ueberlebenstechniken", amount: 3 }
           ]
         }
       ]
     }
   },
   {
-    name: "Wissenschaftler",
+    name: "Handwerker",
     type: "profession",
     system: {
-      description: "<p>Systematische Bildung in Naturwissenschaften und methodischem Denken.</p>",
-      attributeStart: { int: 2, mnd: 1 },
+      description: "<p>Du bist Handwerker -- deine Hände kennen ihr Werkzeug so gut wie dein Kopf die Theorie dahinter.</p>",
+      attributeStart: { cha: 1, dex: 1 },
       eigenschaften: [
         {
-          key: "wissenschaftlicheBildung",
-          name: "Wissenschaftliche Bildung",
-          description: "Jahrelange akademische Ausbildung schärft die Konzentrationsfähigkeit.",
+          key: "geschickteHaende",
+          name: "Geschickte Hände",
+          description: "Wähle ein Attribut, das dein Handwerk besonders geprägt hat.",
           boni: [
-            { kind: "fixed", path: "talents.sonder.konzentration", amount: 6 }
+            { kind: "choice", key: "handwerkerAttribut", options: ["attributes.str", "attributes.int", "attributes.mag"], amount: 1 }
           ]
         },
         {
+          key: "meisterhandwerk",
+          name: "Meisterhandwerk",
+          description: "Wähle dein Handwerk sowie ein dazu passendes Wissenstalent.",
+          boni: [
+            { kind: "choice", key: "handwerkerHandwerk", options: CRAFT_PATHS, amount: 3 },
+            { kind: "choice", key: "handwerkerWissen", options: SCIENCE_ALL_PATHS, amount: 6 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Militär",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Soldat, Wache oder Leibgarde und verdienst dein Geld damit, zu kämpfen.</p>",
+      attributeStart: { con: 2 },
+      eigenschaften: [
+        {
+          key: "kampfschwerpunkt",
+          name: "Kampfschwerpunkt",
+          description: "Wähle ein Attribut, das durch die Ausbildung geschärft wurde, sowie eine Kampf- oder Magiedisziplin als Schwerpunkt.",
+          boni: [
+            { kind: "choice", key: "militaerAttribut", options: ["attributes.str", "attributes.dex", "attributes.mag"], amount: 1 },
+            { kind: "choice", key: "militaerDisziplin", options: COMBAT_OR_MAGIC_PATHS, amount: 4 }
+          ]
+        },
+        {
+          key: "reitausbildung",
+          name: "Reitausbildung",
+          description: "Jeder Soldat lernt, ein Reittier zu führen.",
+          boni: [
+            { kind: "fixed", path: "talents.extra.reiten", amount: 1 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Akademisch",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Lehrer, Professor oder Forscher -- dein Leben dreht sich um Wissen und dessen Vermittlung.</p>",
+      attributeStart: { int: 2, mnd: 1 },
+      eigenschaften: [
+        {
           key: "fachgebiet",
           name: "Fachgebiet",
-          description: "Wähle ein Naturwissenschaftstalent als Spezialgebiet.",
+          description: "Wähle ein Wissenschaftstalent als dein Spezialgebiet.",
           boni: [
-            { kind: "choice", key: "naturwissenschaft", options: NATURE_SCIENCE_PATHS, amount: 8 }
+            { kind: "choice", key: "akademischFachgebiet", options: SCIENCE_ALL_PATHS, amount: 8 }
+          ]
+        },
+        {
+          key: "breiteBildung",
+          name: "Breite Bildung",
+          description: "Verteile Punkte frei auf weitere Wissenschaftstalente (außer dem gewählten Fachgebiet).",
+          boni: [
+            { kind: "distribute", key: "akademischBreite", options: SCIENCE_ALL_PATHS, amount: 10, perOptionMax: 5 }
+          ]
+        },
+        {
+          key: "belesenheit",
+          name: "Belesenheit",
+          description: "Lesen und Schreiben gehören zum akademischen Alltag.",
+          boni: [
+            { kind: "fixed", path: "talents.extra.lesen", amount: 1 },
+            { kind: "fixed", path: "talents.extra.schreiben", amount: 1 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Arzt",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Arzt, Feldscher oder Heilkundiger -- Leben zu retten ist dein Handwerk.</p>",
+      attributeStart: { int: 1, mnd: 1, mag: 1 },
+      eigenschaften: [
+        {
+          key: "heilkunde",
+          name: "Heilkunde",
+          description: "Fundierte medizinische Ausbildung, ergänzt um botanisches und alchemistisches Wissen.",
+          boni: [
+            { kind: "fixed", path: "talents.wissenschaften.natur.medizin", amount: 8 },
+            { kind: "fixed", path: "talents.wissenschaften.natur.botanik", amount: 4 },
+            { kind: "fixed", path: "talents.handwerk.alchemist", amount: 2 }
+          ]
+        },
+        {
+          key: "heilendeHand",
+          name: "Heilende Hand",
+          description: "Manche Ärzte verstehen es, spirituelle Energie zur Heilung einzusetzen.",
+          boni: [
+            { kind: "fixed", path: "disziplinen.magie.spiritualist", amount: 3 }
+          ]
+        },
+        {
+          key: "fachliteratur",
+          name: "Fachliteratur",
+          description: "Ohne Lesen und Schreiben keine Medizin.",
+          boni: [
+            { kind: "fixed", path: "talents.extra.lesen", amount: 1 },
+            { kind: "fixed", path: "talents.extra.schreiben", amount: 1 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Religiös",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Priester, Prophet oder Mönch. Der Glaube ist dein Beruf.</p>",
+      attributeStart: { mnd: 2 },
+      eigenschaften: [
+        {
+          key: "glaubensfestigkeit",
+          name: "Glaubensfestigkeit",
+          description: "Wähle ein Attribut, das dein geistliches Wirken besonders prägt.",
+          boni: [
+            { kind: "choice", key: "religioesAttribut", options: ["attributes.cha", "attributes.mag"], amount: 1 }
+          ]
+        },
+        {
+          key: "theologischeBildung",
+          name: "Theologische Bildung",
+          description: "Tiefes Wissen über die Glaubenslehre, ergänzt um ein Grundverständnis arkaner Zusammenhänge.",
+          boni: [
+            { kind: "fixed", path: "talents.wissenschaften.sozial.theologie", amount: 8 },
+            { kind: "fixed", path: "talents.wissenschaften.sozial.arkana", amount: 4 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Kultur",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Künstler, Schauspieler oder sonst ein Performer -- die Bühne ist dein Zuhause.</p>",
+      attributeStart: { cha: 2 },
+      eigenschaften: [
+        {
+          key: "buehnenpraesenz",
+          name: "Bühnenpräsenz",
+          description: "Wähle ein Attribut, das deinen Auftritt prägt.",
+          boni: [
+            { kind: "choice", key: "kulturAttribut", options: ["attributes.dex", "attributes.mnd", "attributes.int"], amount: 1 }
+          ]
+        },
+        {
+          key: "kuenstlerischeAusdruckskraft",
+          name: "Künstlerische Ausdruckskraft",
+          description: "Verteile Punkte auf Singen und Tanzen.",
+          boni: [
+            { kind: "distribute", key: "kulturDarbietung", options: ["talents.spezial.singen", "talents.spezial.tanzen"], amount: 4, perOptionMax: 0 }
+          ]
+        },
+        {
+          key: "publikumsliebling",
+          name: "Publikumsliebling",
+          description: "Ein geübter Performer weiß zu täuschen und zu bezaubern -- und kennt die kulturelle Bühne, auf der er auftritt.",
+          boni: [
+            { kind: "fixed", path: "talents.sozial.negativ.taeuschen", amount: 4 },
+            { kind: "fixed", path: "talents.sozial.positiv.charme", amount: 4 },
+            { kind: "fixed", path: "talents.wissenschaften.sozial.kultur", amount: 6 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Krimineller",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Trickbetrüger, Dieb oder sonstiger Abschaum -- das Gesetz ist für andere gedacht.</p>",
+      attributeStart: { dex: 1, int: 1 },
+      eigenschaften: [
+        {
+          key: "kaltesKalkuel",
+          name: "Kaltes Kalkül",
+          description: "Wähle ein Attribut, das deine kriminelle Ader unterstützt.",
+          boni: [
+            { kind: "choice", key: "kriminellerAttribut", options: ["attributes.mnd", "attributes.cha"], amount: 1 }
+          ]
+        },
+        {
+          key: "schlechterRuf",
+          name: "Schlechter Ruf",
+          description: "Verteile Punkte frei auf die negativen sozialen Talente.",
+          boni: [
+            {
+              kind: "distribute",
+              key: "kriminellerSozialNegativ",
+              options: [
+                "talents.sozial.negativ.beleidigen",
+                "talents.sozial.negativ.einschuechtern",
+                "talents.sozial.negativ.luegen",
+                "talents.sozial.negativ.manipulieren",
+                "talents.sozial.negativ.taeuschen"
+              ],
+              amount: 10,
+              perOptionMax: 5
+            }
+          ]
+        },
+        {
+          key: "gassenwissen",
+          name: "Gassenwissen",
+          description: "Ein wachsames Auge und Kontakte in der Unterwelt gehören zum Handwerk.",
+          boni: [
+            { kind: "fixed", path: "talents.spezial.sehen", amount: 1 },
+            { kind: "fixed", path: "disziplinen.kampf.gauner", amount: 1 },
+            { kind: "fixed", path: "talents.wissenschaften.sozial.gesellschaft", amount: 3 }
+          ]
+        },
+        {
+          key: "diebeshandwerk",
+          name: "Diebeshandwerk",
+          description: "Verteile Punkte auf Fingerfertigkeit, Schlösser knacken und Schleichen.",
+          boni: [
+            {
+              kind: "distribute",
+              key: "kriminellerDiebeshandwerk",
+              options: ["talents.sonder.fingerfertigkeit", "talents.sonder.schloesserKnacken", "talents.sonder.schleichen"],
+              amount: 10,
+              perOptionMax: 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Gesellschaftlich",
+    type: "profession",
+    system: {
+      description: "<p>Du bist Diplomat, Händler oder Politiker -- dein Kapital sind Worte und Kontakte.</p>",
+      attributeStart: { cha: 2, mnd: 1 },
+      eigenschaften: [
+        {
+          key: "gesellschaftlichesGespuer",
+          name: "Gesellschaftliches Gespür",
+          description: "Ein geschultes Auge für Status, Etikette und die wahren Absichten anderer.",
+          boni: [
+            { kind: "fixed", path: "talents.wissenschaften.sozial.gesellschaft", amount: 6 },
+            { kind: "fixed", path: "talents.sonder.durchschauen", amount: 4 },
+            { kind: "fixed", path: "talents.extra.lesen", amount: 1 }
+          ]
+        },
+        {
+          key: "ueberzeugungskraft",
+          name: "Überzeugungskraft",
+          description: "Wähle die Art, wie du Menschen für dich gewinnst.",
+          boni: [
+            { kind: "choice", key: "gesellschaftlichUeberzeugung", options: ["talents.sozial.positiv.charme", "talents.sozial.positiv.ueberreden", "talents.sozial.positiv.feilschen"], amount: 5 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    name: "Landstreicher",
+    type: "profession",
+    system: {
+      description: "<p>Du hast keine Ausbildung genossen oder noch nie richtig gearbeitet -- das Leben auf der Straße war dein einziger Lehrmeister.</p>",
+      attributeStart: { con: 1, mnd: 1, spd: 1 },
+      eigenschaften: [
+        {
+          key: "ueberlebenAmRand",
+          name: "Überleben am Rand",
+          description: "Wer nichts hat, lernt schnell, mit wenig auszukommen.",
+          boni: [
+            { kind: "fixed", path: "talents.sonder.ueberlebenstechniken", amount: 8 },
+            { kind: "fixed", path: "talents.wissenschaften.sozial.gesellschaft", amount: 3 },
+            { kind: "fixed", path: "talents.sonder.durchschauen", amount: 3 }
+          ]
+        },
+        {
+          key: "notversorgung",
+          name: "Notversorgung",
+          description: "Man weiß, wie man sich selbst versorgt, wenn niemand sonst es tut.",
+          boni: [
+            { kind: "fixed", path: "talents.handwerk.jagen", amount: 1 },
+            { kind: "fixed", path: "talents.handwerk.koch", amount: 1 }
           ]
         }
       ]

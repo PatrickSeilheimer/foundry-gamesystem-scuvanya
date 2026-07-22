@@ -210,8 +210,11 @@
               <div class="cc-category__body">
                 {{#each extra as |skill|}}
                 <div class="talent-row talent-row--extra">
-                  <span class="talent-row__name">{{skill.label}}</span>
-                  <span class="talent-row__stat">{{#if skill.known}}✓{{else}}—{{/if}}</span>
+                  <span class="talent-row__name">
+                    {{skill.label}}
+                    {{#if skill.hintText}}<span class="talent-row__hint">({{skill.hintText}})</span>{{/if}}
+                  </span>
+                  <span class="talent-row__stat">{{#if skill.active}}✓{{else}}—{{/if}}</span>
                 </div>
                 {{/each}}
               </div>

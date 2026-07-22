@@ -1,0 +1,91 @@
+{
+  "_id": "Pr2HdWk7Vm3Fc9Lt",
+  "_key": "!items!Pr2HdWk7Vm3Fc9Lt",
+  "name": "Handwerker",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Handwerker -- deine Hände kennen ihr Werkzeug so gut wie dein Kopf die Theorie dahinter.</p>",
+    "attributeStart": {
+      "cha": 1,
+      "dex": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "geschickteHaende",
+        "name": "Geschickte Hände",
+        "description": "Wähle ein Attribut, das dein Handwerk besonders geprägt hat.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "handwerkerAttribut",
+            "options": [
+              "attributes.str",
+              "attributes.int",
+              "attributes.mag"
+            ],
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "meisterhandwerk",
+        "name": "Meisterhandwerk",
+        "description": "Wähle dein Handwerk sowie ein dazu passendes Wissenstalent.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "handwerkerHandwerk",
+            "options": [
+              "talents.handwerk.grobschmied",
+              "talents.handwerk.feinschmied",
+              "talents.handwerk.plattner",
+              "talents.handwerk.gerber",
+              "talents.handwerk.zimmerer",
+              "talents.handwerk.weber",
+              "talents.handwerk.alchemist",
+              "talents.handwerk.koch",
+              "talents.handwerk.jagen",
+              "talents.handwerk.fischen",
+              "talents.handwerk.verzaubern"
+            ],
+            "amount": 3
+          },
+          {
+            "kind": "choice",
+            "key": "handwerkerWissen",
+            "options": [
+              "talents.wissenschaften.sozial.geschichte",
+              "talents.wissenschaften.sozial.gesellschaft",
+              "talents.wissenschaften.sozial.kultur",
+              "talents.wissenschaften.sozial.arkana",
+              "talents.wissenschaften.sozial.theologie",
+              "talents.wissenschaften.natur.botanik",
+              "talents.wissenschaften.natur.geologie",
+              "talents.wissenschaften.natur.mechanik",
+              "talents.wissenschaften.natur.medizin",
+              "talents.wissenschaften.natur.zoologie"
+            ],
+            "amount": 6
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

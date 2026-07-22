@@ -1,0 +1,98 @@
+{
+  "_id": "Pr3AkDm5Rt9Wc2Hn",
+  "_key": "!items!Pr3AkDm5Rt9Wc2Hn",
+  "name": "Akademisch",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Lehrer, Professor oder Forscher -- dein Leben dreht sich um Wissen und dessen Vermittlung.</p>",
+    "attributeStart": {
+      "int": 2,
+      "mnd": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "fachgebiet",
+        "name": "Fachgebiet",
+        "description": "Wähle ein Wissenschaftstalent als dein Spezialgebiet.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "akademischFachgebiet",
+            "options": [
+              "talents.wissenschaften.sozial.geschichte",
+              "talents.wissenschaften.sozial.gesellschaft",
+              "talents.wissenschaften.sozial.kultur",
+              "talents.wissenschaften.sozial.arkana",
+              "talents.wissenschaften.sozial.theologie",
+              "talents.wissenschaften.natur.botanik",
+              "talents.wissenschaften.natur.geologie",
+              "talents.wissenschaften.natur.mechanik",
+              "talents.wissenschaften.natur.medizin",
+              "talents.wissenschaften.natur.zoologie"
+            ],
+            "amount": 8
+          }
+        ]
+      },
+      {
+        "key": "breiteBildung",
+        "name": "Breite Bildung",
+        "description": "Verteile Punkte frei auf weitere Wissenschaftstalente (außer dem gewählten Fachgebiet).",
+        "boni": [
+          {
+            "kind": "distribute",
+            "key": "akademischBreite",
+            "options": [
+              "talents.wissenschaften.sozial.geschichte",
+              "talents.wissenschaften.sozial.gesellschaft",
+              "talents.wissenschaften.sozial.kultur",
+              "talents.wissenschaften.sozial.arkana",
+              "talents.wissenschaften.sozial.theologie",
+              "talents.wissenschaften.natur.botanik",
+              "talents.wissenschaften.natur.geologie",
+              "talents.wissenschaften.natur.mechanik",
+              "talents.wissenschaften.natur.medizin",
+              "talents.wissenschaften.natur.zoologie"
+            ],
+            "amount": 10,
+            "perOptionMax": 5
+          }
+        ]
+      },
+      {
+        "key": "belesenheit",
+        "name": "Belesenheit",
+        "description": "Lesen und Schreiben gehören zum akademischen Alltag.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.extra.lesen",
+            "amount": 1
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.extra.schreiben",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -147,7 +147,40 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this._prepareResources();
     this._prepareArmorAndAc();
     this._preparePhysicalSkillBonus();
+    this._prepareExtraSkillDependencies();
     this._computeSkillPoints();
+  }
+
+  /**
+   * Voraussetzungen zwischen Extra-Fähigkeiten (siehe SCUVANYA.extraSkillDependencies, z.B.
+   * "Schreiben" benötigt "Lesen"): eine Fähigkeit mit Voraussetzung ist nur "aktiv", wenn die
+   * geforderte Fähigkeit ihrerseits aktiv ist -- rekursiv aufgelöst, falls Voraussetzungen
+   * jemals verkettet werden sollten. Ein per Rasse/Beruf GEWÄHRTER Eintrag (granted) umgeht die
+   * Voraussetzung immer (siehe applyPathBonuses talents.extra-Zweig): Rassen-/Berufsboni sind
+   * die neue Norm, keine Voraussetzung greift dort, siehe Konversation.
+   *
+   * Muss NACH applyPathBonuses laufen (setzt "granted"), aber VOR _computeSkillPoints (das
+   * "dependencyMet" nutzt, um eine mangels Voraussetzung inaktive, aber bezahlte Fähigkeit
+   * nicht doppelt/fälschlich zu bepreisen -- siehe dort).
+   */
+  _prepareExtraSkillDependencies() {
+    const extra = this.talents.extra;
+
+    const resolveActive = key => {
+      const skill = extra[key];
+      if (!skill) return false;
+      if (skill.granted) return true;
+      const requiredKey = SCUVANYA.extraSkillDependencies[key];
+      if (requiredKey && !resolveActive(requiredKey)) return false;
+      return skill.known;
+    };
+
+    for (const [key, skill] of Object.entries(extra)) {
+      const requiredKey = SCUVANYA.extraSkillDependencies[key] ?? null;
+      skill.requiredKey = requiredKey;
+      skill.dependencyMet = !requiredKey || resolveActive(requiredKey);
+      skill.active = skill.granted || (skill.known && skill.dependencyMet);
+    }
   }
 
   /**
@@ -277,7 +310,10 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       spent += specialtySpentCost(skill.level, SCUVANYA.specialtyStartingLevel, skill.raceBonus ?? 0);
     }
     for (const skill of Object.values(this.talents.extra)) {
-      if (skill.known) spent += EXTRA_TALENT_COST;
+      // Ohne erfüllte Voraussetzung (siehe _prepareExtraSkillDependencies) zählt ein gekaufter,
+      // aber inaktiver Eintrag NICHT als Ausgabe -- man zahlt nicht für eine Fähigkeit, die man
+      // mangels Voraussetzung gerade nicht nutzen kann.
+      if (skill.known && skill.dependencyMet) spent += EXTRA_TALENT_COST;
     }
 
     for (const discipline of Object.values(this.disziplinen.kampf)) {

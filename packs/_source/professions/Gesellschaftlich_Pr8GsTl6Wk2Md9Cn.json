@@ -1,0 +1,71 @@
+{
+  "_id": "Pr8GsTl6Wk2Md9Cn",
+  "_key": "!items!Pr8GsTl6Wk2Md9Cn",
+  "name": "Gesellschaftlich",
+  "type": "profession",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Du bist Diplomat, Händler oder Politiker -- dein Kapital sind Worte und Kontakte.</p>",
+    "attributeStart": {
+      "cha": 2,
+      "mnd": 1
+    },
+    "eigenschaften": [
+      {
+        "key": "gesellschaftlichesGespuer",
+        "name": "Gesellschaftliches Gespür",
+        "description": "Ein geschultes Auge für Status, Etikette und die wahren Absichten anderer.",
+        "boni": [
+          {
+            "kind": "fixed",
+            "path": "talents.wissenschaften.sozial.gesellschaft",
+            "amount": 6
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.sonder.durchschauen",
+            "amount": 4
+          },
+          {
+            "kind": "fixed",
+            "path": "talents.extra.lesen",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "key": "ueberzeugungskraft",
+        "name": "Überzeugungskraft",
+        "description": "Wähle die Art, wie du Menschen für dich gewinnst.",
+        "boni": [
+          {
+            "kind": "choice",
+            "key": "gesellschaftlichUeberzeugung",
+            "options": [
+              "talents.sozial.positiv.charme",
+              "talents.sozial.positiv.ueberreden",
+              "talents.sozial.positiv.feilschen"
+            ],
+            "amount": 5
+          }
+        ]
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

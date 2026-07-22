@@ -72,13 +72,29 @@ export function mapTieredSkills(keys, dataSource) {
   });
 }
 
+/**
+ * "active" ist der tatsächlich wirksame Zustand (siehe character.mjs
+ * _prepareExtraSkillDependencies): bekannt/gewährt UND -- falls vorhanden -- die Voraussetzung
+ * erfüllt (z.B. "Schreiben" ohne "Lesen" ist gekauft, aber inaktiv). "hintText" erklärt eine
+ * fehlende Voraussetzung direkt auf der Kachel, damit nicht rätselhaft ist, warum ein bereits
+ * gekaufter Eintrag als "—" statt "✓" erscheint.
+ */
 export function mapBooleanSkills(keys, dataSource) {
-  return keys.map(key => ({
-    key,
-    label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
-    known: dataSource[key].known,
-    granted: dataSource[key].granted ?? false
-  }));
+  return keys.map(key => {
+    const skill = dataSource[key];
+    const requiredKey = skill.requiredKey ?? null;
+    const dependencyMet = skill.dependencyMet ?? true;
+    return {
+      key,
+      label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
+      known: skill.known,
+      granted: skill.granted ?? false,
+      active: skill.active ?? Boolean(skill.known || skill.granted),
+      hintText: requiredKey && !dependencyMet
+        ? game.i18n.format("SCUVANYA.Hint.RequiresSkill", { skill: game.i18n.localize(`SCUVANYA.Skill.${requiredKey}`) })
+        : null
+    };
+  });
 }
 
 // Bild je Disziplin (assets/disciplines/*.png) -- eigene Zuordnung, weil zwei Dateinamen
