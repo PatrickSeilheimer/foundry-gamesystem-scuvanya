@@ -1864,7 +1864,7 @@
    wird per JS positioniert und mit vorgerendertem Inhalt gefüllt,
    siehe character-sheet.mjs _wireTooltips.
    ══════════════════════════════════════════════════════════════════ */
-.character-sheet .scv-tooltip {
+.scv-tooltip {
   position: fixed;
   z-index: 100;
   min-width: 190px;
@@ -1883,38 +1883,38 @@
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-.character-sheet .scv-tooltip--visible { opacity: 1; transform: translateY(0) scale(1); }
+.scv-tooltip--visible { opacity: 1; transform: translateY(0) scale(1); }
 
-.character-sheet .scv-tooltip .tooltip-title {
+.scv-tooltip .tooltip-title {
   font-family: 'Cinzel', serif;
   color: var(--scv-accent);
   font-size: 0.9rem;
   margin-bottom: 0.15rem;
 }
 
-.character-sheet .scv-tooltip .tooltip-subtitle {
+.scv-tooltip .tooltip-subtitle {
   color: var(--scv-text-muted);
   font-size: 0.72rem;
   font-style: italic;
   margin-bottom: 0.5rem;
 }
 
-.character-sheet .scv-tooltip .tooltip-flags {
+.scv-tooltip .tooltip-flags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
   margin-bottom: 0.5rem;
 }
 
-.character-sheet .scv-tooltip .tooltip-description {
+.scv-tooltip .tooltip-description {
   margin-bottom: 0.5rem;
   color: var(--scv-text);
 }
 
-.character-sheet .scv-tooltip .tooltip-description p:first-child { margin-top: 0; }
-.character-sheet .scv-tooltip .tooltip-description p:last-child { margin-bottom: 0; }
+.scv-tooltip .tooltip-description p:first-child { margin-top: 0; }
+.scv-tooltip .tooltip-description p:last-child { margin-bottom: 0; }
 
-.character-sheet .scv-tooltip .tooltip-section-title {
+.scv-tooltip .tooltip-section-title {
   font-family: 'Cinzel', serif;
   font-size: 0.68rem;
   text-transform: uppercase;
@@ -1923,41 +1923,41 @@
   margin: 0.5rem 0 0.2rem;
 }
 
-.character-sheet .scv-tooltip .tooltip-condition-list,
-.character-sheet .scv-tooltip .tooltip-effect-list {
+.scv-tooltip .tooltip-condition-list,
+.scv-tooltip .tooltip-effect-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.character-sheet .scv-tooltip .tooltip-condition-list li { color: #4a9d6e; }
-.character-sheet .scv-tooltip .tooltip-condition-list li.unmet { color: #e0645f; }
-.character-sheet .scv-tooltip .tooltip-effect-list li.inactive { color: var(--scv-text-muted); opacity: 0.75; }
+.scv-tooltip .tooltip-condition-list li { color: #4a9d6e; }
+.scv-tooltip .tooltip-condition-list li.unmet { color: #e0645f; }
+.scv-tooltip .tooltip-effect-list li.inactive { color: var(--scv-text-muted); opacity: 0.75; }
 
-.character-sheet .scv-tooltip .tooltip-effect-condition {
+.scv-tooltip .tooltip-effect-condition {
   font-size: 0.7rem;
   font-style: italic;
   opacity: 0.8;
 }
 
 /* Rechen-Tooltip: rechtsbündige Zahlenspalte, "Gesamt" optisch per Trennlinie abgesetzt. */
-.character-sheet .scv-tooltip .breakdown-table { width: 100%; border-collapse: collapse; }
+.scv-tooltip .breakdown-table { width: 100%; border-collapse: collapse; }
 
-.character-sheet .scv-tooltip .breakdown-label {
+.scv-tooltip .breakdown-label {
   text-align: left;
   padding: 0.1rem 0.6rem 0.1rem 0;
   white-space: nowrap;
 }
 
-.character-sheet .scv-tooltip .breakdown-amount {
+.scv-tooltip .breakdown-amount {
   text-align: right;
   font-family: 'Cinzel', serif;
   font-variant-numeric: tabular-nums;
   padding: 0.1rem 0;
 }
 
-.character-sheet .scv-tooltip .breakdown-total-row .breakdown-label,
-.character-sheet .scv-tooltip .breakdown-total-row .breakdown-amount {
+.scv-tooltip .breakdown-total-row .breakdown-label,
+.scv-tooltip .breakdown-total-row .breakdown-amount {
   border-top: 1px solid var(--scv-border);
   padding-top: 0.3rem;
   margin-top: 0.2rem;

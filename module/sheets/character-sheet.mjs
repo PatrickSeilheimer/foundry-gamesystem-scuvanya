@@ -372,6 +372,11 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
    */
   _wireTooltips() {
     if (this.#outsideClickHandler) document.removeEventListener("click", this.#outsideClickHandler);
+    // this.element (der Application-Rahmen) überlebt Re-Renders unverändert -- nur der
+    // Inhalt von .window-content wird ersetzt. Ohne dieses Aufräumen würde bei JEDEM Render
+    // (z.B. nach dem Ausrüsten eines Items) ein weiteres .scv-tooltip-Element angehängt, das
+    // nie wieder entfernt wird und sich unten im Fenster als sichtbarer Block stapelt.
+    this.#tooltipEl?.remove();
 
     const tooltip = document.createElement("div");
     tooltip.className = "scv-tooltip";
