@@ -1,0 +1,38 @@
+{
+  "_id": "AcAGeEs6Rm3Ht9Lp",
+  "_key": "!items!AcAGeEs6Rm3Ht9Lp",
+  "name": "Gesundheit einschätzen",
+  "type": "action",
+  "img": "icons/magic/life/heart-cross-strong-flame-green.webp",
+  "system": {
+    "key": "gesundheitEinschaetzen",
+    "description": "<p>Ein kurzer, fachkundiger Blick verrät dir den ungefähren Gesundheitszustand einer Person.</p>",
+    "category": "talenteinsatz",
+    "tags": [],
+    "rollSource": "skill",
+    "rollPath": "talents.wissenschaften.natur.medizin",
+    "costAp": 1,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [],
+    "unlockConditions": {}
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

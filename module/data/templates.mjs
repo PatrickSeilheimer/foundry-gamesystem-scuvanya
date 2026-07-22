@@ -34,6 +34,13 @@ export function resourcesSchema() {
     }),
     mentalHealth: new fields.SchemaField({
       value: new fields.NumberField({ required: true, integer: true, initial: 10, min: 0 })
+    }),
+    // Aktionspunkte: kein von Attributen abgeleitetes Maximum wie HP/Mana/MG, sondern ein fester
+    // Wert (SCUVANYA.turnStartAP), auf den zu Rundenbeginn zurückgesetzt wird (siehe scuvanya.mjs
+    // Hooks.on("combatTurn")) -- verbraucht wird der Wert beim Einsatz einer Aktion, siehe
+    // documents/actor.mjs useAction.
+    ap: new fields.SchemaField({
+      value: new fields.NumberField({ required: true, integer: true, initial: 5, min: 0 })
     })
   });
 }

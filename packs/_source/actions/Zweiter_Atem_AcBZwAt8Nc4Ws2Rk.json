@@ -1,0 +1,45 @@
+{
+  "_id": "AcBZwAt8Nc4Ws2Rk",
+  "_key": "!items!AcBZwAt8Nc4Ws2Rk",
+  "name": "Zweiter Atem",
+  "type": "action",
+  "img": "icons/magic/life/heart-cross-strong-blue.webp",
+  "system": {
+    "key": "zweiterAtem",
+    "description": "<p>Du sammelst deinen Willen und schöpfst neue Kraft aus schierer Entschlossenheit.</p>",
+    "category": "talenteinsatz",
+    "tags": [],
+    "rollSource": "skill",
+    "rollPath": "talents.sonder.selbstvertrauen",
+    "costAp": 2,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Bei Erfolg: heile 1W6 HP."
+    ],
+    "unlockConditions": {
+      "type": "compare",
+      "path": "talents.sonder.selbstvertrauen",
+      "operator": "gte",
+      "value": 2
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

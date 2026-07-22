@@ -1,0 +1,45 @@
+{
+  "_id": "Ac5WpHt2Bx9Rf4Ln",
+  "_key": "!items!Ac5WpHt2Bx9Rf4Ln",
+  "name": "Wasserpeitsche",
+  "type": "action",
+  "img": "icons/magic/water/pillar-water-blue.webp",
+  "system": {
+    "key": "wasserpeitsche",
+    "description": "<p>Eine peitschende Woge aus geformtem Wasser schlägt auf dein Ziel ein.</p>",
+    "category": "zauber",
+    "tags": [
+      "wasser"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.hydrosoph",
+    "costAp": 1,
+    "costMana": 2,
+    "damageFormula": "1d8",
+    "damageType": "wasser",
+    "damageFromWeapon": false,
+    "effects": [],
+    "unlockConditions": {
+      "type": "compare",
+      "path": "disziplinen.magie.hydrosoph",
+      "operator": "gte",
+      "value": 2
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

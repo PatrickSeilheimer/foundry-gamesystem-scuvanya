@@ -38,7 +38,8 @@
       "consumable": {},
       "equipment": {},
       "race": {},
-      "profession": {}
+      "profession": {},
+      "action": {}
     }
   },
   "packs": [
@@ -64,6 +65,15 @@
       "name": "items",
       "label": "Items",
       "path": "packs/items",
+      "type": "Item",
+      "system": "scuvanya",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" },
+      "locked": false
+    },
+    {
+      "name": "actions",
+      "label": "Aktionen",
+      "path": "packs/actions",
       "type": "Item",
       "system": "scuvanya",
       "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" },

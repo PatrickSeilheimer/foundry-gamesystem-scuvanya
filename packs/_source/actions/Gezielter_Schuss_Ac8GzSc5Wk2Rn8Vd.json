@@ -1,0 +1,55 @@
+{
+  "_id": "Ac8GzSc5Wk2Rn8Vd",
+  "_key": "!items!Ac8GzSc5Wk2Rn8Vd",
+  "name": "Gezielter Schuss",
+  "type": "action",
+  "img": "icons/skills/ranged/arrow-flying-explosion-purple.webp",
+  "system": {
+    "key": "gezielterSchuss",
+    "description": "<p>Du nimmst dir einen Moment, um einen Fernkampfangriff mit äußerster Präzision zu setzen.</p>",
+    "category": "attacke",
+    "tags": [
+      "fernkampf"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.kampf.schuetze",
+    "costAp": 3,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": true,
+    "effects": [
+      "Bei Erfolg zählt der Treffer als kritisch: Schaden wird verdoppelt."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.kampf.schuetze",
+          "operator": "gte",
+          "value": 4
+        },
+        {
+          "type": "hasEquippedWeapon"
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

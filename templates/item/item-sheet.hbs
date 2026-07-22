@@ -77,6 +77,75 @@
     {{> "systems/scuvanya/templates/item/parts/equipment-fields.hbs" system=system config=config equipable=true}}
     {{/if}}
 
+    {{#if (eq item.type "action")}}
+    <p class="hint">{{localize 'SCUVANYA.Action.SheetHint'}}</p>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.key'}}</label>
+      <input type="text" name="system.key" value="{{system.key}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.category'}}</label>
+      <select name="system.category">
+        {{#each config.actionCategories as |cfg key|}}
+        <option value="{{key}}" {{#if (eq key ../system.category)}}selected{{/if}}>{{localize cfg.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.rollSource'}}</label>
+      <select name="system.rollSource">
+        {{#each config.actionRollSources as |key|}}
+        <option value="{{key}}" {{#if (eq key system.rollSource)}}selected{{/if}}>{{key}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.rollPath'}}</label>
+      <input type="text" name="system.rollPath" value="{{system.rollPath}}" placeholder="z.B. disziplinen.magie.pyrokinet">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.costAp'}}</label>
+      <input type="number" name="system.costAp" value="{{system.costAp}}" min="0">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Action.costMana'}}</label>
+      <input type="number" name="system.costMana" value="{{system.costMana}}" min="0">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Weapon.damageFormula'}}</label>
+      <input type="text" name="system.damageFormula" value="{{system.damageFormula}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize 'SCUVANYA.Weapon.damageType'}}</label>
+      <select name="system.damageType">
+        <option value=""></option>
+        {{#each config.damageTypes as |cfg key|}}
+        <option value="{{key}}" {{#if (eq key system.damageType)}}selected{{/if}}>{{localize cfg.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" name="system.damageFromWeapon" {{#if system.damageFromWeapon}}checked{{/if}}> {{localize 'SCUVANYA.Action.damageFromWeapon'}}</label>
+    </div>
+
+    <h3>{{localize 'SCUVANYA.Action.tags'}}</h3>
+    {{#if system.tags.length}}
+    <p class="hint">{{#each system.tags as |tag|}}<span class="flag-badge">{{tag}}</span>{{/each}}</p>
+    {{else}}
+    <p class="hint">{{localize 'SCUVANYA.Action.NoTags'}}</p>
+    {{/if}}
+
+    <h3>{{localize 'SCUVANYA.Action.effects'}}</h3>
+    {{#if system.effects.length}}
+    <ul>{{#each system.effects as |effect|}}<li>{{effect}}</li>{{/each}}</ul>
+    {{else}}
+    <p class="hint">{{localize 'SCUVANYA.Item.NoEffects'}}</p>
+    {{/if}}
+
+    <h3>{{localize 'SCUVANYA.Action.unlockConditions'}}</h3>
+    <p class="hint">{{#if unlockConditionsText}}{{unlockConditionsText}}{{else}}{{localize 'SCUVANYA.Item.NoConditions'}}{{/if}}</p>
+    {{/if}}
+
     {{#if (eq item.type "profession")}}
     {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix="system" bundle=system config=config}}
     {{/if}}

@@ -12,17 +12,29 @@ import { SCUVANYA } from "../config.mjs";
  *
  * "breakdown" liefert die Rechnung für den Hover-Tooltip (siehe character-sheet.mjs
  * _wireTooltips): eine "Basis"-Zeile (Grundwert INKLUSIVE Rassen-/Berufsbonus, da der ja per
- * Definition schon Teil der neuen Norm ist) plus je eine Zeile pro Item, das einen Effekt auf
- * diesen Pfad hat (siehe path-resolve.mjs resolveItemEffects), und die Gesamtsumme.
+ * Definition schon Teil der neuen Norm ist), optional eine Zeile für den geteilten
+ * Attribut-/Kategoriebonus (z.B. "Bonus Charisma" bei sozialen Talenten -- der tatsächlich mit
+ * gewürfelt wird, siehe documents/actor.mjs _socialSkillFormula), plus je eine Zeile pro Item,
+ * das einen Effekt auf diesen Pfad hat (siehe path-resolve.mjs resolveItemEffects), und die
+ * Gesamtsumme -- die exakt dem tatsächlichen Wurf-Bonus entsprechen muss (siehe Konversation:
+ * Beispiel "Lügen" mit "Bonus Charisma: 2" als eigene Zeile).
  */
-function buildBreakdown(base, itemBreakdown) {
+function buildBreakdown(base, itemBreakdown, categoryBonus) {
   const rows = [{ label: game.i18n.localize("SCUVANYA.Base"), amount: base }];
+  if (categoryBonus?.amount) rows.push({ label: categoryBonus.label, amount: categoryBonus.amount });
   for (const entry of itemBreakdown ?? []) rows.push({ label: entry.name, amount: entry.amount });
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
   return { rows, total };
 }
 
-export function mapLeveledSkills(keys, dataSource) {
+/**
+ * @param {(key: string) => {label: string, amount: number}|null} [categoryBonusFn] Liefert den
+ * geteilten Bonus, der beim Würfeln dieses Talents zusätzlich zum Basiswert einfließt (z.B.
+ * CHA-Mod bei sozialen Talenten, siehe documents/actor.mjs _socialSkillFormula/_scienceSkillFormula/
+ * _sonderSkillFormula) -- fließt NICHT in "level" (den auf der Kachel angezeigten Wert) ein,
+ * nur in die Tooltip-Rechnung, weil die Kachel traditionell den reinen Talentwert zeigt.
+ */
+export function mapLeveledSkills(keys, dataSource, categoryBonusFn) {
   return keys.map(key => {
     const raceBonus = dataSource[key].raceBonus ?? 0;
     const itemBonus = dataSource[key].itemBonus ?? 0;
@@ -32,7 +44,11 @@ export function mapLeveledSkills(keys, dataSource) {
       level: dataSource[key].level + raceBonus + itemBonus,
       bonus: dataSource[key].bonus,
       hasItemBonus: itemBonus !== 0,
-      breakdown: buildBreakdown(dataSource[key].level + raceBonus, dataSource[key].itemBreakdown)
+      breakdown: buildBreakdown(
+        dataSource[key].level + raceBonus,
+        dataSource[key].itemBreakdown,
+        categoryBonusFn?.(key)
+      )
     };
   });
 }

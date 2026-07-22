@@ -1,0 +1,16 @@
+{{#with this as |root|}}
+<a class="action-tile" data-action="useAction" data-action-uuid="{{root.action.uuid}}" data-item-tooltip="hover" title="{{root.action.name}}">
+  <img class="action-tile__img" src="{{root.action.img}}">
+  <div class="action-tile__body">
+    <span class="action-tile__name">{{root.action.name}}</span>
+    {{#if root.action.rollLabel}}<span class="action-tile__roll">{{root.action.rollLabel}}</span>{{/if}}
+  </div>
+  <div class="action-tile__costs">
+    {{#if root.action.costAp}}<span class="action-tile__cost action-tile__cost--ap">{{root.action.costAp}} {{localize 'SCUVANYA.Action.CostApShort'}}</span>{{/if}}
+    {{#if root.action.costMana}}<span class="action-tile__cost action-tile__cost--mana">{{root.action.costMana}} {{localize 'SCUVANYA.Action.CostManaShort'}}</span>{{/if}}
+  </div>
+  <div class="tooltip-content" hidden>
+    {{> "systems/scuvanya/templates/actor/parts/action-tooltip.hbs" action=root.action}}
+  </div>
+</a>
+{{/with}}

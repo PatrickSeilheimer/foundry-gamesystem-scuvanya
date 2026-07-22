@@ -1,0 +1,59 @@
+{
+  "_id": "Ac3FeBs6Xm2Rd8Tk",
+  "_key": "!items!Ac3FeBs6Xm2Rd8Tk",
+  "name": "Feuerelementar beschwören",
+  "type": "action",
+  "img": "icons/creatures/magical/spirit-fire-orange.webp",
+  "system": {
+    "key": "feuerelementarBeschwoeren",
+    "description": "<p>Du reißt einen Riss zur Elementarebene des Feuers auf und bindest einen Elementar an deinen Willen.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "beschwoerung"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.beschwoerer",
+    "costAp": 3,
+    "costMana": 6,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Beschwört einen Feuerelementar, der für die Dauer der Szene an deiner Seite kämpft."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.beschwoerer",
+          "operator": "gte",
+          "value": 3
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 5
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

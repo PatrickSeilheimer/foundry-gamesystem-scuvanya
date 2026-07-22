@@ -171,11 +171,66 @@ export const DEFAULT_EQUIPMENT = [
       ranged: false,
       discipline: "krieger",
       equipped: false,
-      flags: ["waffe", "nahkampf", "test"],
+      flags: ["waffe", "nahkampf", "stärkewaffe", "test"],
       slot: "hauptHand",
       conditions: [],
       effects: [
         { key: "schwertKrieger", kind: "fixed", path: "disziplinen.kampf.krieger", amount: 1, condition: "equipped" }
+      ]
+    }
+  },
+  {
+    name: "[TEST] Dolch der Gauner",
+    type: "weapon",
+    flags: TEST_FLAGS,
+    system: {
+      description: "<p>Eine schmale, leichte Klinge -- unauffällig zu tragen und schneller gezogen als jedes Langschwert.</p>",
+      damageFormula: "1d4",
+      damageType: "stich",
+      ranged: false,
+      discipline: "gauner",
+      equipped: false,
+      flags: ["waffe", "nahkampf", "geschickwaffe", "test"],
+      slot: "hauptHand",
+      conditions: [],
+      effects: [
+        { key: "dolchGauner", kind: "fixed", path: "disziplinen.kampf.gauner", amount: 1, condition: "equipped" }
+      ]
+    }
+  },
+  {
+    name: "[TEST] Kurzbogen",
+    type: "weapon",
+    flags: TEST_FLAGS,
+    system: {
+      description: "<p>Ein handlicher Bogen aus Eibenholz, wie ihn Jäger und Kundschafter gleichermaßen verwenden.</p>",
+      damageFormula: "1d6",
+      damageType: "stich",
+      ranged: true,
+      discipline: "schuetze",
+      equipped: false,
+      flags: ["waffe", "fernkampf", "geschickwaffe", "test"],
+      slot: "hauptHand",
+      conditions: [],
+      effects: [
+        { key: "kurzbogenSchuetze", kind: "fixed", path: "disziplinen.kampf.schuetze", amount: 1, condition: "equipped" }
+      ]
+    }
+  },
+  {
+    name: "[TEST] Umhang des Pyromanen",
+    type: "equipment",
+    flags: TEST_FLAGS,
+    system: {
+      description: "<p>Ein Umhang aus rußgeschwärztem Stoff, der nie ganz aufhört, nach Rauch zu riechen. Wer ihn trägt, spürt Feuermagie williger auf ihn übergehen -- selbst ohne die eigentlich nötige Übung.</p>",
+      quantity: 1,
+      weight: 0,
+      flags: ["ruestung", "magisch", "test"],
+      slot: "brust",
+      conditions: [],
+      effects: [
+        { key: "umhangFeuerball", kind: "unlockAction", path: "feuerball", condition: "equipped" },
+        { key: "umhangManakosten", kind: "fixed", path: "actions.manaCost.pyro", amount: -1, condition: "equipped" }
       ]
     }
   },
@@ -207,7 +262,7 @@ export const DEFAULT_EQUIPMENT = [
       ranged: false,
       discipline: "krieger",
       equipped: false,
-      flags: ["waffe", "zweihaendig", "schwer", "test"],
+      flags: ["waffe", "zweihaendig", "schwer", "stärkewaffe", "test"],
       slot: "beidhaendig",
       conditions: [
         { path: "attributes.str", operator: "gte", value: 12 }

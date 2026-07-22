@@ -1,0 +1,43 @@
+{
+  "_id": "Ac9GaMr4Xt7Ns2Kw",
+  "_key": "!items!Ac9GaMr4Xt7Ns2Kw",
+  "name": "Gegner analysieren – magische Resistenzen",
+  "type": "action",
+  "img": "icons/magic/perception/eye-ringed-glow-angry-large-red.webp",
+  "system": {
+    "key": "gegnerAnalysierenResistenzen",
+    "description": "<p>Ein geschulter Blick verrät dir, gegen welche Magie dein Gegenüber besonders empfindlich oder gefeit ist.</p>",
+    "category": "talenteinsatz",
+    "tags": [],
+    "rollSource": "skill",
+    "rollPath": "talents.wissenschaften.sozial.mythologie",
+    "costAp": 1,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [],
+    "unlockConditions": {
+      "type": "compare",
+      "path": "talents.wissenschaften.sozial.mythologie",
+      "operator": "gte",
+      "value": 3
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "_id": "Eq6KzBg8Nx4Ld2Hs",
+  "_key": "!items!Eq6KzBg8Nx4Ld2Hs",
+  "name": "[TEST] Kurzbogen",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein handlicher Bogen aus Eibenholz, wie ihn Jäger und Kundschafter gleichermaßen verwenden.</p>",
+    "damageFormula": "1d6",
+    "damageType": "stich",
+    "ranged": true,
+    "discipline": "schuetze",
+    "equipped": false,
+    "flags": [
+      "waffe",
+      "fernkampf",
+      "geschickwaffe",
+      "test"
+    ],
+    "slot": "hauptHand",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "kurzbogenSchuetze",
+        "kind": "fixed",
+        "path": "disziplinen.kampf.schuetze",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

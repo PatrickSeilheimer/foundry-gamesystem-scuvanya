@@ -35,18 +35,27 @@ export function conditionsField() {
 
 /**
  * Ein Effekt eines Items -- "fixed" wirkt auf einen Pfad (siehe path-resolve.mjs für gültige
- * Pfade), "text" ist reiner RP-Text ohne Zahlenwert. "condition" bestimmt, WANN der Effekt
- * zählt: "equipped" (Standard, Item muss in einem Slot stecken) oder "carried" (zählt bereits,
- * wenn das Item nur im Besitz ist, ohne ausgerüstet zu sein).
+ * Pfade, u.a. auch "actions.apCost.<tag>"/"actions.manaCost.<tag>" für Aktions-Kostenmodifikatoren),
+ * "text" ist reiner RP-Text ohne Zahlenwert, "unlockAction" schaltet unabhängig von deren
+ * eigenen Voraussetzungen eine Aktion frei (path = Ziel-Aktion.system.key, siehe action.mjs und
+ * documents/actor.mjs isActionAvailable) -- z.B. "Umhang des Pyromanen" gewährt "Feuerball".
+ * "condition" bestimmt, WANN der Effekt zählt: "equipped" (Standard, Item muss in einem Slot
+ * stecken) oder "carried" (zählt bereits, wenn das Item nur im Besitz ist, ohne ausgerüstet
+ * zu sein).
+ *
+ * "duration" ist ein Platzhalter für künftige temporäre Buffs/Debuffs (siehe Konversation:
+ * "ein Effekt besitzt ... optional Bedingungen und eine Dauer") -- aktuell nicht ausgewertet,
+ * jeder Effekt gilt als dauerhaft, solange seine "condition" erfüllt ist. Leer = dauerhaft.
  */
 export function effectSchema() {
   return new fields.SchemaField({
     key: new fields.StringField({ required: true, blank: true }),
-    kind: new fields.StringField({ required: true, choices: ["fixed", "text"], initial: "fixed" }),
+    kind: new fields.StringField({ required: true, choices: ["fixed", "text", "unlockAction"], initial: "fixed" }),
     path: new fields.StringField({ required: true, blank: true }),
     amount: new fields.NumberField({ required: true, integer: true, initial: 0 }),
     text: new fields.StringField({ required: true, blank: true }),
-    condition: new fields.StringField({ required: true, choices: SCUVANYA.effectConditions, initial: "equipped" })
+    condition: new fields.StringField({ required: true, choices: SCUVANYA.effectConditions, initial: "equipped" }),
+    duration: new fields.StringField({ required: false, blank: true, initial: "" })
   });
 }
 

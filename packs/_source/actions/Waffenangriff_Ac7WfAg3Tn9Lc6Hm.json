@@ -1,0 +1,40 @@
+{
+  "_id": "Ac7WfAg3Tn9Lc6Hm",
+  "_key": "!items!Ac7WfAg3Tn9Lc6Hm",
+  "name": "Waffenangriff",
+  "type": "action",
+  "img": "icons/skills/melee/strike-sword-slashing-red.webp",
+  "system": {
+    "key": "waffenangriff",
+    "description": "<p>Ein Angriff mit deiner ausgerüsteten Waffe.</p>",
+    "category": "attacke",
+    "tags": [],
+    "rollSource": "weaponCategory",
+    "rollPath": "",
+    "costAp": 2,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": true,
+    "effects": [],
+    "unlockConditions": {
+      "type": "hasEquippedWeapon"
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

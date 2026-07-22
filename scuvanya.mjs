@@ -10,6 +10,7 @@ import ConsumableData from "./module/data/item/consumable.mjs";
 import EquipmentData from "./module/data/item/equipment.mjs";
 import RaceData from "./module/data/item/race.mjs";
 import ProfessionData from "./module/data/item/profession.mjs";
+import ActionData from "./module/data/item/action.mjs";
 
 import ScuvanyaActor from "./module/documents/actor.mjs";
 import ScuvanyaItem from "./module/documents/item.mjs";
@@ -34,6 +35,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.equipment = EquipmentData;
   CONFIG.Item.dataModels.race = RaceData;
   CONFIG.Item.dataModels.profession = ProfessionData;
+  CONFIG.Item.dataModels.action = ActionData;
 
   // Initiative: bestätigt W12 + flacher SPD-Wert (kein Mod).
   CONFIG.Combat.initiative = { formula: "1d12 + @attributes.spd.value + @initiativeBonus", decimals: 2 };
@@ -70,6 +72,18 @@ Hooks.once("init", () => {
     "systems/scuvanya/templates/actor/parts/tiered-category.hbs",
     "systems/scuvanya/templates/actor/parts/slot-chip.hbs",
     "systems/scuvanya/templates/actor/parts/item-tooltip.hbs",
-    "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs"
+    "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs",
+    "systems/scuvanya/templates/actor/parts/action-tile.hbs",
+    "systems/scuvanya/templates/actor/parts/action-tooltip.hbs"
   ]);
+});
+
+/**
+ * Aktionspunkte-Reset zu Rundenbeginn (siehe Konversation: "Zu Anfang eines Zuges erhält der
+ * Charakter 5 AP", SCUVANYA.turnStartAP). Bewusst minimal -- kein Übertrag, keine Sonderregeln,
+ * nur ein einfacher Reset auf den vollen Wert für den Actor, der gerade am Zug ist.
+ */
+Hooks.on("combatTurn", (combat) => {
+  const actor = combat.combatant?.actor;
+  if (actor?.type === "character") actor.update({ "system.resources.ap.value": SCUVANYA.turnStartAP });
 });

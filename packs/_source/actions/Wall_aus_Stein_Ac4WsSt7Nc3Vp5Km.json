@@ -1,0 +1,47 @@
+{
+  "_id": "Ac4WsSt7Nc3Vp5Km",
+  "_key": "!items!Ac4WsSt7Nc3Vp5Km",
+  "name": "Wall aus Stein",
+  "type": "action",
+  "img": "icons/magic/earth/barrier-wall-stone-gray.webp",
+  "system": {
+    "key": "wallAusStein",
+    "description": "<p>Der Boden erhebt sich auf deinen Befehl zu einer massiven Mauer aus Fels.</p>",
+    "category": "zauber",
+    "tags": [
+      "erde"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.geomant",
+    "costAp": 2,
+    "costMana": 5,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Erschafft eine 3m breite, 2m hohe Steinwand für die Dauer des Kampfes."
+    ],
+    "unlockConditions": {
+      "type": "compare",
+      "path": "disziplinen.magie.geomant",
+      "operator": "gte",
+      "value": 3
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

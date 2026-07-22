@@ -1,0 +1,52 @@
+{
+  "_id": "Eq5DcGn3Rw7Kt9Mp",
+  "_key": "!items!Eq5DcGn3Rw7Kt9Mp",
+  "name": "[TEST] Dolch der Gauner",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Eine schmale, leichte Klinge -- unauffällig zu tragen und schneller gezogen als jedes Langschwert.</p>",
+    "damageFormula": "1d4",
+    "damageType": "stich",
+    "ranged": false,
+    "discipline": "gauner",
+    "equipped": false,
+    "flags": [
+      "waffe",
+      "nahkampf",
+      "geschickwaffe",
+      "test"
+    ],
+    "slot": "hauptHand",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "dolchGauner",
+        "kind": "fixed",
+        "path": "disziplinen.kampf.gauner",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

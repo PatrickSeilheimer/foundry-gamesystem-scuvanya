@@ -72,9 +72,25 @@ export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus
   character._armorBonus ??= { physical: 0, magical: 0 };
   character._acBonus ??= 0;
   character._initiativeBonus ??= 0;
+  character._actionRaceCostMods ??= { apCost: {}, manaCost: {} };
+  character._actionItemCostMods ??= { apCost: {}, manaCost: {} };
+  character._actionItemCostModBreakdown ??= { apCost: {}, manaCost: {} };
 
   const attachBreakdown = (target, path) => {
     if (breakdown[path]) target.itemBreakdown = breakdown[path];
+  };
+
+  // Aktions-Kostenmodifikatoren ("actions.apCost.<tag>"/"actions.manaCost.<tag>") folgen
+  // demselben Rassen-/Item-Overlay-Prinzip wie Attribute/Talente: ein Rassenbonus verschiebt
+  // die "Basis" (keine eigene Zeile im Kosten-Tooltip), ein Item-Effekt bekommt eine eigene,
+  // benannte Zeile (siehe documents/actor.mjs effectiveActionCostBreakdown). "all" als Tag
+  // wirkt auf jede Aktion, siehe _actionTags.
+  const applyActionCostMod = (resourceKey, tag, path, amount) => {
+    const bucket = overlayKey === "itemBonus" ? character._actionItemCostMods : character._actionRaceCostMods;
+    bucket[resourceKey][tag] = (bucket[resourceKey][tag] ?? 0) + amount;
+    if (overlayKey === "itemBonus" && breakdown[path]) {
+      character._actionItemCostModBreakdown[resourceKey][tag] = breakdown[path];
+    }
   };
 
   for (const [path, amount] of Object.entries(pathBonuses)) {
@@ -112,6 +128,10 @@ export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus
       character._acBonus += amount;
     } else if (path === "initiative") {
       character._initiativeBonus += amount;
+    } else if (path.startsWith("actions.apCost.")) {
+      applyActionCostMod("apCost", path.slice("actions.apCost.".length), path, amount);
+    } else if (path.startsWith("actions.manaCost.")) {
+      applyActionCostMod("manaCost", path.slice("actions.manaCost.".length), path, amount);
     } else {
       // Generischer Fallback für Pfade außerhalb der bekannten Namensräume oben: wird direkt
       // auf die ABGELEITETEN Daten angewendet -- sicher, weil prepareDerivedData bei jedem
@@ -137,11 +157,15 @@ export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus
  * "breakdown" gruppiert dieselben Beträge zusätzlich PRO ITEM (nicht pro Effekt) unter
  * { [path]: [{name, amount}] } -- trägt ein Item mehrere Effekte auf denselben Pfad bei, zählt
  * das als EINE Zeile mit der Summe, siehe Rechen-Tooltip auf dem Bogen.
+ *
+ * "unlocks" sammelt "unlockAction"-Effekte separat (kein Zahlenwert, kein Pfad-Ziel im
+ * pathBonuses-Sinn) als { key, itemName }-Liste -- siehe documents/actor.mjs isActionAvailable.
  */
 export function resolveItemEffects(items, equippedItemIds) {
   const pathBonuses = {};
   const texts = [];
   const breakdown = {};
+  const unlocks = [];
 
   const add = (path, amount, itemName) => {
     if (!path || !amount) return;
@@ -160,8 +184,9 @@ export function resolveItemEffects(items, equippedItemIds) {
       if (!applies) continue;
       if (effect.kind === "fixed") add(effect.path, effect.amount, item.name);
       else if (effect.kind === "text" && effect.text) texts.push({ name: item.name, text: effect.text });
+      else if (effect.kind === "unlockAction" && effect.path) unlocks.push({ key: effect.path, itemName: item.name });
     }
   }
 
-  return { pathBonuses, texts, breakdown };
+  return { pathBonuses, texts, breakdown, unlocks };
 }

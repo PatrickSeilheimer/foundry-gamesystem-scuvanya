@@ -1,0 +1,76 @@
+{
+  "_id": "Ac6GeEw8Md5Ks3Rt",
+  "_key": "!items!Ac6GeEw8Md5Ks3Rt",
+  "name": "Gegner entwaffnen",
+  "type": "action",
+  "img": "icons/skills/melee/strike-slashes-red.webp",
+  "system": {
+    "key": "gegnerEntwaffnen",
+    "description": "<p>Ein gezielter Schlag oder Griff lässt dem Gegner die Waffe aus der Hand fliegen.</p>",
+    "category": "attacke",
+    "tags": [
+      "nahkampf"
+    ],
+    "rollSource": "weaponCategory",
+    "rollPath": "",
+    "costAp": 4,
+    "costMana": 0,
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Bei Erfolg verliert das Ziel seine ausgerüstete Waffe -- sie landet 1W3 Meter entfernt am Boden."
+    ],
+    "unlockConditions": {
+      "type": "or",
+      "children": [
+        {
+          "type": "and",
+          "children": [
+            {
+              "type": "compare",
+              "path": "disziplinen.kampf.gauner",
+              "operator": "gte",
+              "value": 6
+            },
+            {
+              "type": "hasEquippedWeaponFlag",
+              "flag": "geschickwaffe"
+            }
+          ]
+        },
+        {
+          "type": "and",
+          "children": [
+            {
+              "type": "compare",
+              "path": "disziplinen.kampf.krieger",
+              "operator": "gte",
+              "value": 8
+            },
+            {
+              "type": "hasEquippedWeaponFlag",
+              "flag": "stärkewaffe"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

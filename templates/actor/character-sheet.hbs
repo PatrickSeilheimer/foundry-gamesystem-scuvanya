@@ -44,6 +44,19 @@
           <span class="sheet-res__num sheet-res__num--max">{{system.resources.mentalHealth.max}}</span>
         </span>
       </div>
+
+      <div class="sheet-res sheet-res--ap" title="{{localize 'SCUVANYA.Resource.ap'}}">
+        <svg class="sheet-res__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13,2 4,14 11,14 9,22 20,9 13,9"/>
+        </svg>
+        <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.apShort'}}</span>
+        <div class="sheet-res__bar"><div class="sheet-res__fill sheet-res__fill--ap" style="width: {{percent system.resources.ap.value system.resources.ap.max}}%"></div></div>
+        <span class="sheet-res__value">
+          <span class="sheet-res__num">{{system.resources.ap.value}}</span>
+          <span class="sheet-res__slash">/</span>
+          <span class="sheet-res__num sheet-res__num--max">{{system.resources.ap.max}}</span>
+        </span>
+      </div>
     </div>
 
     <div class="sheet-topbar__col sheet-topbar__armor">
@@ -247,7 +260,21 @@
       {{!-- AKTIONEN --}}
       <div class="tab aktionen-tab {{#if (eq activeTab 'aktionen')}}active{{/if}}">
         <h1 class="sheet-title">{{localize 'SCUVANYA.Tab.aktionen'}}</h1>
-        <p class="cc-hint">{{localize 'SCUVANYA.Hint.AktionenComingSoon'}}</p>
+
+        {{#each actionGroups as |group|}}
+        <section class="sheet-section">
+          <h2 class="cc-section__title">{{group.label}}</h2>
+          {{#if group.actions.length}}
+          <div class="action-grid">
+            {{#each group.actions as |action|}}
+            {{> "systems/scuvanya/templates/actor/parts/action-tile.hbs" action=action}}
+            {{/each}}
+          </div>
+          {{else}}
+          <p class="cc-hint">{{localize 'SCUVANYA.Action.Empty'}}</p>
+          {{/if}}
+        </section>
+        {{/each}}
       </div>
 
       {{!-- INVENTAR --}}

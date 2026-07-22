@@ -125,13 +125,22 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this._armorBonus = { physical: 0, magical: 0 };
     this._acBonus = 0;
     this._initiativeBonus = 0;
+    // Aktions-Kostenmodifikatoren (siehe path-resolve.mjs applyPathBonuses "actions.apCost."/
+    // "actions.manaCost.") -- Rassen-/Berufsboni verschieben die Basis, Item-Effekte bekommen
+    // eine eigene Tooltip-Zeile, siehe documents/actor.mjs effectiveActionCostBreakdown.
+    this._actionRaceCostMods = { apCost: {}, manaCost: {} };
+    this._actionItemCostMods = { apCost: {}, manaCost: {} };
+    this._actionItemCostModBreakdown = { apCost: {}, manaCost: {} };
 
     const { pathBonuses, texts } = this._computeProgressionBonus();
     this.progressionTexts = texts;
     applyPathBonuses(this, pathBonuses, "raceBonus");
 
-    const { pathBonuses: itemPathBonuses, texts: itemTexts, breakdown: itemBreakdown } = this._computeItemBonus();
+    const { pathBonuses: itemPathBonuses, texts: itemTexts, breakdown: itemBreakdown, unlocks } = this._computeItemBonus();
     this.itemTexts = itemTexts;
+    // Aktionen, die unabhängig von ihren eigenen Voraussetzungen durch einen Item-Effekt
+    // (kind "unlockAction") gewährt werden, siehe documents/actor.mjs isActionAvailable.
+    this.unlockedActions = unlocks;
     applyPathBonuses(this, itemPathBonuses, "itemBonus", itemBreakdown);
 
     this._prepareAttributes();
@@ -198,6 +207,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this.resources.hp.max = 4 * attr.con.effectiveValue + attr.str.effectiveValue;
     this.resources.mana.max = 2 * attr.mnd.effectiveValue + 2 * attr.mag.effectiveValue + attr.con.effectiveValue;
     this.resources.mentalHealth.max = 3 * attr.mnd.effectiveValue + attr.int.effectiveValue + attr.con.effectiveValue;
+    this.resources.ap.max = SCUVANYA.turnStartAP;
   }
 
   /**

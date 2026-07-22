@@ -1,0 +1,54 @@
+{
+  "_id": "Eq7UmPy5Tc9Wr3Fn",
+  "_key": "!items!Eq7UmPy5Tc9Wr3Fn",
+  "name": "[TEST] Umhang des Pyromanen",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein Umhang aus rußgeschwärztem Stoff, der nie ganz aufhört, nach Rauch zu riechen. Wer ihn trägt, spürt Feuermagie williger auf ihn übergehen -- selbst ohne die eigentlich nötige Übung.</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "ruestung",
+      "magisch",
+      "test"
+    ],
+    "slot": "brust",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "umhangFeuerball",
+        "kind": "unlockAction",
+        "path": "feuerball",
+        "condition": "equipped"
+      },
+      {
+        "key": "umhangManakosten",
+        "kind": "fixed",
+        "path": "actions.manaCost.pyro",
+        "amount": -1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

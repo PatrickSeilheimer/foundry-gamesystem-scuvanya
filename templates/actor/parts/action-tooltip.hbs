@@ -1,0 +1,39 @@
+{{#with this as |root|}}
+<div class="tooltip-title">{{root.action.name}}</div>
+
+<div class="tooltip-description">
+  {{#if root.action.tooltip.description}}{{{root.action.tooltip.description}}}{{else}}<p>{{localize 'SCUVANYA.Item.NoDescription'}}</p>{{/if}}
+</div>
+
+{{#if root.action.tooltip.apBreakdown}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Action.CostAp'}}</div>
+{{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=(localize 'SCUVANYA.Action.CostAp') breakdown=root.action.tooltip.apBreakdown}}
+{{/if}}
+
+{{#if root.action.tooltip.manaBreakdown}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Action.CostMana'}}</div>
+{{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=(localize 'SCUVANYA.Action.CostMana') breakdown=root.action.tooltip.manaBreakdown}}
+{{/if}}
+
+{{#if root.action.tooltip.damageFormula}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Action.DamageRoll'}}</div>
+<p class="tooltip-description">{{root.action.tooltip.damageFormula}}</p>
+{{/if}}
+
+{{#if root.action.tooltip.effects.length}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Equipment.effects'}}</div>
+<ul class="tooltip-effect-list">
+  {{#each root.action.tooltip.effects as |effect|}}
+  <li>{{effect}}</li>
+  {{/each}}
+</ul>
+{{/if}}
+
+{{#if root.action.tooltip.unlockedByText}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Action.Unlock'}}</div>
+<p class="tooltip-description">{{root.action.tooltip.unlockedByText}}</p>
+{{else if root.action.tooltip.conditionsText}}
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Action.Unlock'}}</div>
+<p class="tooltip-description">{{root.action.tooltip.conditionsText}}</p>
+{{/if}}
+{{/with}}

@@ -26,7 +26,7 @@ SCUVANYA.socialSkills = {
 
 // Wissenschaftstalente: sozial und natur, beide skalieren mit INT-Mod.
 SCUVANYA.scienceSkills = {
-  sozial: ["geschichte", "gesellschaft", "kultur", "arkana", "theologie"],
+  sozial: ["geschichte", "gesellschaft", "kultur", "arkana", "theologie", "mythologie"],
   natur: ["botanik", "geologie", "mechanik", "medizin", "zoologie"]
 };
 
@@ -179,3 +179,34 @@ SCUVANYA.effectConditions = ["equipped", "carried"];
 // "distribute": verteile amount Punkte frei auf options (max. perOptionMax pro Ziel, 0 = unbegrenzt).
 // "text": reiner Beschreibungstext ohne Zahlenwert (RP-relevant, z.B. "Nachtsicht").
 SCUVANYA.bonusKinds = ["fixed", "choice", "distribute", "text"];
+
+/**
+ * Aktionen/Zauber (siehe module/data/item/action.mjs, module/actions/catalog.mjs). Werden NICHT
+ * als eingebettete Items pro Charakter geführt, sondern zentral im Compendium-Pack "actions"
+ * gepflegt (wie eine Zauber-/Fähigkeitenliste) -- der Charakterbogen zeigt daraus gefiltert nur
+ * die Aktionen, deren Freischaltbedingungen (system.unlockConditions) der Charakter erfüllt,
+ * oder die er über einen Item-Effekt vom Typ "unlockAction" geschenkt bekommt (siehe
+ * equipment-shared.mjs effectSchema und documents/actor.mjs isActionAvailable).
+ */
+SCUVANYA.actionCategories = {
+  talenteinsatz: { label: "SCUVANYA.ActionCategory.talenteinsatz" },
+  attacke: { label: "SCUVANYA.ActionCategory.attacke" },
+  zauber: { label: "SCUVANYA.ActionCategory.zauber" }
+};
+
+// Woher der Würfelwurf einer Aktion kommt (siehe documents/actor.mjs _buildActionRollFormula):
+// "discipline"/"skill"/"attribute": fester Pfad (system.rollPath) wird gewürfelt.
+// "weaponCategory": Ziel ergibt sich dynamisch aus der Disziplin der aktuell ausgerüsteten Waffe
+// (Haupt- vor Nebenhand) -- z.B. "Waffenangriff" würfelt Krieger/Gauner/Schütze je nach Waffe.
+// "none": kein Würfelwurf (reine Ressourcen-Aktion).
+SCUVANYA.actionRollSources = ["discipline", "skill", "attribute", "weaponCategory", "none"];
+
+// AP, die ein Charakter zu Beginn seines Zuges im Kampf erhält (siehe scuvanya.mjs Hooks.on("combatTurn")).
+SCUVANYA.turnStartAP = 5;
+
+// Knotentypen eines Freischaltbedingungs-Baums (siehe module/rules/conditions.mjs):
+// "and"/"or": Gruppenknoten mit "children" (beliebig tief verschachtelbar).
+// "compare": Blattknoten, vergleicht einen Pfad (Attribut/Talent/Disziplin) via operator/value.
+// "hasEquippedWeaponFlag": Blattknoten, prüft ob eine ausgerüstete Waffe ein bestimmtes Flag trägt.
+// "hasEquippedWeapon": Blattknoten, prüft ob überhaupt eine Waffe ausgerüstet ist.
+SCUVANYA.conditionNodeTypes = ["and", "or", "compare", "hasEquippedWeaponFlag", "hasEquippedWeapon"];

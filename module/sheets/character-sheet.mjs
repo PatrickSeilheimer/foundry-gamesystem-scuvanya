@@ -10,6 +10,8 @@ import {
 import CharacterCreationWizard from "../apps/character-creation.mjs";
 import EquipPickerApp from "../apps/equip-picker.mjs";
 import { describePath } from "../path-labels.mjs";
+import { describeConditionNode } from "../rules/conditions.mjs";
+import { getActionCatalog } from "../actions/catalog.mjs";
 
 const signed = n => `${n >= 0 ? "+" : ""}${n}`;
 
@@ -36,7 +38,8 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       rollSpezialSkill: ScuvanyaCharacterSheet.#onRollSpezialSkill,
       rollDiscipline: ScuvanyaCharacterSheet.#onRollDiscipline,
       openCreationWizard: ScuvanyaCharacterSheet.#onOpenCreationWizard,
-      openSlot: ScuvanyaCharacterSheet.#onOpenSlot
+      openSlot: ScuvanyaCharacterSheet.#onOpenSlot,
+      useAction: ScuvanyaCharacterSheet.#onUseAction
     }
   };
 
@@ -64,12 +67,31 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     context.body = sys.body;
     context.attributes = mapAttributes(sys.attributes);
 
-    context.sozialPositiv = mapLeveledSkills(SCUVANYA.socialSkills.positive, sys.talents.sozial.positiv);
-    context.sozialNegativ = mapLeveledSkills(SCUVANYA.socialSkills.negative, sys.talents.sozial.negativ);
-    context.wissenschaftenSozial = mapLeveledSkills(SCUVANYA.scienceSkills.sozial, sys.talents.wissenschaften.sozial);
-    context.wissenschaftenNatur = mapLeveledSkills(SCUVANYA.scienceSkills.natur, sys.talents.wissenschaften.natur);
-    context.koerperlich = mapLeveledSkills(SCUVANYA.physicalSkills, sys.talents.koerperlich);
-    context.sonder = mapLeveledSkills(Object.keys(SCUVANYA.sonderSkills), sys.talents.sonder);
+    // Geteilter Attribut-/Kategoriebonus als eigene Tooltip-Zeile (z.B. "Bonus Charisma: 2"),
+    // siehe context-helpers.mjs mapLeveledSkills -- fließt in den Wurf ein (siehe
+    // documents/actor.mjs _socialSkillFormula etc.), aber NICHT in den auf der Kachel gezeigten
+    // Talentwert, der bleibt der reine Talentwert.
+    const attrBonusRow = attrKey => {
+      const mod = sys.attributes[attrKey].mod;
+      const label = `${game.i18n.localize("SCUVANYA.Bonus")} ${game.i18n.localize(SCUVANYA.attributes[attrKey].label)}`;
+      return () => ({ label, amount: mod });
+    };
+    const koerperlichBonusRow = key => {
+      const amount = sys.talents.koerperlich[key]?.bonus ?? 0;
+      const label = `${game.i18n.localize("SCUVANYA.Bonus")} (${game.i18n.localize("SCUVANYA.Category.bonusAverage")})`;
+      return { label, amount };
+    };
+    const sonderBonusRow = key => {
+      const attrKey = SCUVANYA.sonderSkills[key] ?? "mag";
+      return attrBonusRow(attrKey)();
+    };
+
+    context.sozialPositiv = mapLeveledSkills(SCUVANYA.socialSkills.positive, sys.talents.sozial.positiv, attrBonusRow("cha"));
+    context.sozialNegativ = mapLeveledSkills(SCUVANYA.socialSkills.negative, sys.talents.sozial.negativ, attrBonusRow("cha"));
+    context.wissenschaftenSozial = mapLeveledSkills(SCUVANYA.scienceSkills.sozial, sys.talents.wissenschaften.sozial, attrBonusRow("int"));
+    context.wissenschaftenNatur = mapLeveledSkills(SCUVANYA.scienceSkills.natur, sys.talents.wissenschaften.natur, attrBonusRow("int"));
+    context.koerperlich = mapLeveledSkills(SCUVANYA.physicalSkills, sys.talents.koerperlich, koerperlichBonusRow);
+    context.sonder = mapLeveledSkills(Object.keys(SCUVANYA.sonderSkills), sys.talents.sonder, sonderBonusRow);
     context.handwerk = mapTieredSkills(SCUVANYA.craftSkills, sys.talents.handwerk);
     context.spezial = mapTieredSkills(SCUVANYA.spezialSkills, sys.talents.spezial);
     context.extra = mapBooleanSkills(SCUVANYA.extraSkills, sys.talents.extra);
@@ -110,8 +132,81 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       : null;
 
     this._prepareEquipmentContext(context, sys);
+    await this._prepareActionsContext(context);
 
     return context;
+  }
+
+  /**
+   * Baut die gruppierte "Seite für verfügbare Aktionen" (siehe Konversation): lädt den
+   * zentralen Aktionskatalog (siehe module/actions/catalog.mjs) und behält NUR die Aktionen,
+   * die dieser Charakter aktuell nutzen kann (siehe actor.isActionAvailable) -- gesperrte
+   * Aktionen werden gar nicht erst angezeigt, es gibt keinen "ausgegraut"-Zustand.
+   */
+  async _prepareActionsContext(context) {
+    const catalog = await getActionCatalog();
+    const byCategory = { talenteinsatz: [], attacke: [], zauber: [] };
+
+    for (const action of catalog) {
+      const availability = this.actor.isActionAvailable(action);
+      if (!availability.unlocked) continue;
+      byCategory[action.system.category]?.push(this._buildActionTileData(action, availability));
+    }
+
+    context.actionGroups = Object.entries(SCUVANYA.actionCategories).map(([key, cfg]) => ({
+      key,
+      label: game.i18n.localize(cfg.label),
+      actions: byCategory[key] ?? []
+    }));
+  }
+
+  /**
+   * Aufbereitung EINER Aktion für Kachel + Tooltip: die Kachel zeigt nur die bereits
+   * verschmolzenen, effektiven AP-/Mana-Kosten (siehe Konversation: "Die Beschriftung in der UI
+   * zeigt aber immer den vollständigen Bonus an"); die itemisierte Rechnung (Basis + je
+   * Modifikator-Quelle + Gesamt) liefert der Tooltip über dieselbe breakdown-tooltip.hbs wie
+   * Attribute/Talente (siehe actor.effectiveActionCostBreakdown).
+   */
+  _buildActionTileData(action, availability) {
+    const sys = action.system;
+    const apBreakdown = this.actor.effectiveActionCostBreakdown(action, "ap");
+    const manaBreakdown = this.actor.effectiveActionCostBreakdown(action, "mana");
+
+    const weapon = sys.rollSource === "weaponCategory" ? this.actor._primaryEquippedWeapon() : null;
+    const damageFormula = sys.damageFromWeapon ? (weapon?.system.damageFormula ?? null) : (sys.damageFormula || null);
+
+    return {
+      uuid: action.uuid,
+      name: action.name,
+      img: action.img,
+      category: sys.category,
+      costAp: apBreakdown.total,
+      costMana: manaBreakdown.total,
+      rollLabel: this._actionRollLabel(action, weapon),
+      tooltip: {
+        description: sys.description ?? "",
+        apBreakdown: sys.costAp || apBreakdown.rows.length > 1 ? apBreakdown : null,
+        manaBreakdown: sys.costMana || manaBreakdown.rows.length > 1 ? manaBreakdown : null,
+        unlockReason: availability.reason,
+        unlockedByText: availability.source
+          ? game.i18n.format("SCUVANYA.Action.UnlockedBy", { source: availability.source })
+          : null,
+        conditionsText: sys.unlockConditions?.type ? describeConditionNode(sys.unlockConditions) : null,
+        effects: sys.effects ?? [],
+        damageFormula
+      }
+    };
+  }
+
+  /** Beschriftet, worauf eine Aktion tatsächlich würfelt -- bei "weaponCategory" abhängig von der ausgerüsteten Waffe. */
+  _actionRollLabel(action, weapon) {
+    const sys = action.system;
+    if (sys.rollSource === "discipline" || sys.rollSource === "skill") return describePath(sys.rollPath);
+    if (sys.rollSource === "attribute") return describePath(sys.rollPath);
+    if (sys.rollSource === "weaponCategory") {
+      return weapon?.system.discipline ? this.actor._disciplineLabel("kampf", weapon.system.discipline) : null;
+    }
+    return null;
   }
 
   /** Slot-Leiste (Übersicht je Slot) + durchsuchbare/filterbare Gesamtliste fürs Inventar. */
@@ -244,6 +339,13 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
   static #onOpenSlot(event, target) {
     new EquipPickerApp(this.actor, target.dataset.slot).render(true);
+  }
+
+  static async #onUseAction(event, target) {
+    const uuid = target.closest("[data-action-uuid]")?.dataset.actionUuid;
+    if (!uuid) return;
+    const action = await fromUuid(uuid);
+    if (action) await this.actor.useAction(action);
   }
 
   _onRender(context, options) {

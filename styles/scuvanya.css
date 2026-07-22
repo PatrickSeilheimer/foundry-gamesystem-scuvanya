@@ -1964,3 +1964,81 @@
   color: var(--scv-accent);
   font-weight: bold;
 }
+
+/* ── Ressourcenleiste: Aktionspunkte (vierte Leiste neben HP/Mana/MG) ── */
+.character-sheet .sheet-res--ap .sheet-res__icon { color: #e0b84f; }
+.character-sheet .sheet-res__fill--ap { background: #e0b84f; }
+
+/* ── Aktionen-Tab: Kacheln gruppiert nach Kategorie (Talenteinsatz/Attacke/Zauber) ── */
+.character-sheet .action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.6rem;
+}
+
+.character-sheet .action-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--scv-bg);
+  border: 1px solid var(--scv-border);
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--scv-transition), border-color var(--scv-transition);
+}
+
+.character-sheet .action-tile:hover {
+  background: var(--scv-bg-hover, rgba(255, 255, 255, 0.04));
+  border-color: var(--scv-accent-border);
+}
+
+.character-sheet .action-tile__img {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--scv-border);
+}
+
+.character-sheet .action-tile__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.character-sheet .action-tile__name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  color: var(--scv-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.character-sheet .action-tile__roll {
+  font-size: 0.7rem;
+  color: var(--scv-text-muted);
+}
+
+.character-sheet .action-tile__costs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.character-sheet .action-tile__cost {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.character-sheet .action-tile__cost--ap { color: #e0b84f; }
+.character-sheet .action-tile__cost--mana { color: #6fb8e6; }

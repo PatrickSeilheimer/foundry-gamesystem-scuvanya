@@ -1,0 +1,45 @@
+{
+  "_id": "Ac1FkSt4Rw8Nx2Md",
+  "_key": "!items!Ac1FkSt4Rw8Nx2Md",
+  "name": "Funkenstoß",
+  "type": "action",
+  "img": "icons/magic/fire/projectile-meteor-comet-orange.webp",
+  "system": {
+    "key": "funkenstoss",
+    "description": "<p>Ein kurzer, greller Funkenstoß schießt aus deiner Hand und versengt, was er trifft.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 1,
+    "costMana": 2,
+    "damageFormula": "1d6",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [],
+    "unlockConditions": {
+      "type": "compare",
+      "path": "disziplinen.magie.pyrokinet",
+      "operator": "gte",
+      "value": 1
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

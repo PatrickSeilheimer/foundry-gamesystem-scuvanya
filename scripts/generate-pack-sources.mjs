@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFAULT_ITEMS } from "./default-content.mjs";
+import { DEFAULT_ACTIONS } from "./default-actions.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -43,7 +44,22 @@ const FIXED_IDS = {
   "[TEST] Schwert des Kriegers": "Eq1SwKr9Tb3Vc6Zm",
   "[TEST] Schild der Standhaftigkeit": "Eq2ShSt4Nk8Wq5Rp",
   "[TEST] Zweihandschwert": "Eq3ZwHs6Md2Ft9Xc",
-  "[TEST] Heiltrank": "Eq4HlTr8Kn3Wp5Zs"
+  "[TEST] Heiltrank": "Eq4HlTr8Kn3Wp5Zs",
+  "[TEST] Dolch der Gauner": "Eq5DcGn3Rw7Kt9Mp",
+  "[TEST] Kurzbogen": "Eq6KzBg8Nx4Ld2Hs",
+  "[TEST] Umhang des Pyromanen": "Eq7UmPy5Tc9Wr3Fn",
+
+  "Funkenstoß": "Ac1FkSt4Rw8Nx2Md",
+  "Feuerball": "Ac2FbKr9Wt3Ls6Hn",
+  "Feuerelementar beschwören": "Ac3FeBs6Xm2Rd8Tk",
+  "Wall aus Stein": "Ac4WsSt7Nc3Vp5Km",
+  "Wasserpeitsche": "Ac5WpHt2Bx9Rf4Ln",
+  "Gegner entwaffnen": "Ac6GeEw8Md5Ks3Rt",
+  "Waffenangriff": "Ac7WfAg3Tn9Lc6Hm",
+  "Gezielter Schuss": "Ac8GzSc5Wk2Rn8Vd",
+  "Gegner analysieren – magische Resistenzen": "Ac9GaMr4Xt7Ns2Kw",
+  "Gesundheit einschätzen": "AcAGeEs6Rm3Ht9Lp",
+  "Zweiter Atem": "AcBZwAt8Nc4Ws2Rk"
 };
 
 const PACK_FOR_TYPE = {
@@ -52,14 +68,15 @@ const PACK_FOR_TYPE = {
   weapon: "items",
   armor: "items",
   equipment: "items",
-  consumable: "items"
+  consumable: "items",
+  action: "actions"
 };
 
 function getSafeFilename(name) {
   return name.replace(/[^a-zA-Z0-9]/g, "_");
 }
 
-for (const entry of DEFAULT_ITEMS) {
+for (const entry of [...DEFAULT_ITEMS, ...DEFAULT_ACTIONS]) {
   const id = FIXED_IDS[entry.name];
   if (!id) throw new Error(`Keine feste ID für "${entry.name}" hinterlegt -- in FIXED_IDS ergänzen.`);
 

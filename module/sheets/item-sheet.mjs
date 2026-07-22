@@ -1,4 +1,5 @@
 import { SCUVANYA } from "../config.mjs";
+import { describeConditionNode } from "../rules/conditions.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -47,6 +48,11 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
     context.item = this.item;
     context.system = this.item.system;
     context.config = SCUVANYA;
+    if (this.item.type === "action") {
+      context.unlockConditionsText = this.item.system.unlockConditions?.type
+        ? describeConditionNode(this.item.system.unlockConditions)
+        : null;
+    }
     return context;
   }
 
