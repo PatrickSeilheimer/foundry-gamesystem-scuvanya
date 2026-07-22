@@ -1,11 +1,13 @@
 import { SCUVANYA } from "../config.mjs";
-import {
-  attributeSpentCost,
-  talentSpentCost,
-  tieredSpentCost,
-  specialtySpentCost,
-  EXTRA_TALENT_COST
-} from "../rules/costs.mjs";
+
+/**
+ * Rassen-/Berufsboni sind konzeptionell KEIN Bonus obendrauf, sondern verschieben den
+ * Startwert selbst (siehe character.mjs/path-resolve.mjs -- die Boni werden weiterhin
+ * technisch als eigenes "raceBonus"-Overlay geführt, damit ein Rassenwechsel den
+ * persistierten Basiswert nie verfälscht). Auf dem Bogen wird deshalb NUR die verschmolzene
+ * Summe angezeigt (z.B. "5"), nie eine Aufschlüsselung wie "1 (+4)" -- "raceBonus" bleibt in
+ * den Kontextobjekten nur noch als Flag für einen dezenten Hinweis-Punkt erhalten.
+ */
 
 export function mapLeveledSkills(keys, dataSource) {
   return keys.map(key => {
@@ -13,26 +15,23 @@ export function mapLeveledSkills(keys, dataSource) {
     return {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
-      level: dataSource[key].level,
+      level: dataSource[key].level + shift,
       bonus: dataSource[key].bonus,
-      raceBonus: shift,
-      nextCost: talentSpentCost(dataSource[key].level + 1, shift) - talentSpentCost(dataSource[key].level, shift)
+      raceBonus: shift
     };
   });
 }
 
-export function mapTieredSkills(keys, dataSource, kind = "handwerk") {
-  const startingLevel = kind === "spezial" ? SCUVANYA.specialtyStartingLevel : 0;
-  const spentFn = kind === "spezial" ? specialtySpentCost : tieredSpentCost;
+export function mapTieredSkills(keys, dataSource) {
   return keys.map(key => {
     const shift = dataSource[key].raceBonus ?? 0;
+    const level = dataSource[key].level + shift;
     return {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
-      level: dataSource[key].level,
-      die: SCUVANYA.tieredDieSteps[dataSource[key].level] ?? "-",
-      raceBonus: shift,
-      nextCost: spentFn(dataSource[key].level + 1, startingLevel, shift) - spentFn(dataSource[key].level, startingLevel, shift)
+      level,
+      die: SCUVANYA.tieredDieSteps[Math.min(level, SCUVANYA.tieredSkillMaxLevel)] ?? "-",
+      raceBonus: shift
     };
   });
 }
@@ -42,8 +41,7 @@ export function mapBooleanSkills(keys, dataSource) {
     key,
     label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
     known: dataSource[key].known,
-    granted: dataSource[key].granted ?? false,
-    cost: EXTRA_TALENT_COST
+    granted: dataSource[key].granted ?? false
   }));
 }
 
@@ -67,19 +65,28 @@ const DISCIPLINE_IMAGES = {
 export function mapDisciplines(disciplineConfig, dataSource) {
   return Object.entries(disciplineConfig).map(([key, cfg]) => {
     const shift = dataSource[key].raceBonus ?? 0;
-    const level = dataSource[key].level;
+    const level = dataSource[key].level + shift;
     return {
       key,
       label: game.i18n.localize(cfg.label),
       level,
       raceBonus: shift,
-      // Balkenbreite in Prozent (Skala 0-10, siehe SCUVANYA.disciplineMaxLevel).
-      widthPercent: Math.min(100, level * 10),
-      img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null,
-      nextCost: tieredSpentCost(dataSource[key].level + 1, 0, shift) - tieredSpentCost(dataSource[key].level, 0, shift)
+      img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null
     };
   });
 }
+
+// Icon je Attribut (Font Awesome 6 Free) -- rein dekorativ, keine mechanische Bedeutung.
+const ATTRIBUTE_ICONS = {
+  str: "fa-dumbbell",
+  dex: "fa-bullseye",
+  con: "fa-heart-pulse",
+  spd: "fa-bolt",
+  int: "fa-brain",
+  mnd: "fa-mountain",
+  mag: "fa-wand-magic-sparkles",
+  cha: "fa-star"
+};
 
 export function mapAttributes(dataSource) {
   return Object.entries(SCUVANYA.attributes).map(([key, cfg]) => {
@@ -88,17 +95,14 @@ export function mapAttributes(dataSource) {
       key,
       label: game.i18n.localize(cfg.label),
       abbr: cfg.abbr,
-      // "value" ist die reine, editierbare Basis (aus _source). "effectiveValue"/"mod" sind
-      // nur zur Anzeige/für Würfe -- niemals an ein Input-Feld binden (siehe character.mjs).
+      icon: ATTRIBUTE_ICONS[key],
+      // "value" bleibt die reine, editierbare Basis (aus _source, siehe character.mjs) --
+      // angezeigt wird aber ausschließlich "effectiveValue", die bereits verschmolzene Summe.
       value: dataSource[key].value,
       effectiveValue: dataSource[key].effectiveValue ?? dataSource[key].value,
       mod: dataSource[key].mod,
       modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`,
-      raceBonus: shift,
-      // Marginalkosten des nächsten Punkts -- dieselbe Formel wie beim tatsächlichen Kauf
-      // (character-sheet.mjs #onBuyAttribute), damit Vorschau und abgebuchte Kosten nie auseinanderlaufen.
-      nextCost: attributeSpentCost(dataSource[key].value + 1, SCUVANYA.attributeStartingValue, shift)
-        - attributeSpentCost(dataSource[key].value, SCUVANYA.attributeStartingValue, shift)
+      raceBonus: shift
     };
   });
 }

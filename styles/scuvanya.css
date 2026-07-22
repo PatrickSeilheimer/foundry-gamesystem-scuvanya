@@ -1028,26 +1028,52 @@
   border-color: var(--scv-accent);
 }
 
-/* ── Kopfleiste ─────────────────────────────────────────────────── */
+/* ── Fensterrahmen: sichtbarer dunkler Rand rund um Papier + Tab-Rail,
+   damit die Tabs sichtbar "aus dem Ordner herausragen" statt flach am
+   Fensterrand zu kleben (siehe .sheet-tab-rail weiter unten). ────── */
+.application.character .window-content {
+  background: var(--scv-bg);
+  padding: 0.6rem;
+}
+
+/* ── Kopfleiste: 4 gleichwertige Spalten -- Bild, Ressourcen, Rüstung,
+   Edit-Button -- jede mit fixer Breite, damit nichts umbricht/springt. */
 .character-sheet .sheet-topbar {
   display: flex;
-  align-items: center;
-  gap: 1.1rem;
-  padding: 0.6rem 1rem;
+  align-items: stretch;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
   background: var(--scv-surface);
   border: 1px solid var(--scv-accent-border);
   border-radius: 4px;
-  margin-bottom: 0.9rem;
-  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.character-sheet .sheet-topbar__col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0 0.6rem;
+}
+
+.character-sheet .sheet-topbar__col + .sheet-topbar__col { border-left: 1px solid var(--scv-border); }
+
+.character-sheet .sheet-topbar__identity {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding-left: 0;
 }
 
 .character-sheet .sheet-topbar__portrait {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   object-fit: cover;
   border-radius: 4px;
   border: 1px solid var(--scv-border);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .character-sheet .sheet-topbar__name {
@@ -1056,40 +1082,45 @@
   border-bottom: 1px solid transparent;
   color: var(--scv-accent);
   font-family: 'Cinzel', serif;
-  font-size: 1.05rem;
-  max-width: 160px;
+  font-size: 1rem;
+  width: 140px;
   transition: border-color var(--scv-transition);
 }
 
 .character-sheet .sheet-topbar__name:focus { outline: none; border-bottom-color: var(--scv-accent-border); }
-.character-sheet .sheet-topbar__spacer { flex: 1; }
+
+.character-sheet .sheet-topbar__resources { gap: 0.25rem; }
 
 .character-sheet .sheet-res {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
 }
 
-.character-sheet .sheet-res__icon { width: 16px; height: 16px; flex-shrink: 0; }
+.character-sheet .sheet-res__icon { width: 15px; height: 15px; flex-shrink: 0; }
 .character-sheet .sheet-res--lp .sheet-res__icon { color: #e0645f; }
 .character-sheet .sheet-res--mana .sheet-res__icon { color: #6fb8e6; }
 .character-sheet .sheet-res--mg .sheet-res__icon { color: #c99bf0; }
 
 .character-sheet .sheet-res__label {
   font-family: 'Cinzel', serif;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: var(--scv-text-muted);
+  /* Feste Breite, damit "HP"/"Mana"/"MG" bündig untereinander stehen. */
+  width: 2.6em;
+  flex-shrink: 0;
 }
 
 .character-sheet .sheet-res__bar {
-  width: 80px;
+  width: 90px;
   height: 7px;
   border-radius: 4px;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .character-sheet .sheet-res__fill { height: 100%; transition: width 0.25s ease; }
@@ -1097,18 +1128,99 @@
 .character-sheet .sheet-res__fill--mana { background: #6fb8e6; }
 .character-sheet .sheet-res__fill--mg { background: #c99bf0; }
 
-.character-sheet .sheet-res__value { font-size: 0.78rem; color: var(--scv-text); white-space: nowrap; }
-.character-sheet .sheet-res__value input {
-  width: 42px;
+.character-sheet .sheet-res__value {
+  display: flex;
+  align-items: center;
+  font-size: 0.76rem;
+  color: var(--scv-text);
+  white-space: nowrap;
+}
+
+.character-sheet .sheet-res__num {
+  /* Fest auf 3-stelligen Platz ausgelegt, damit Werte nie springen. */
+  min-width: 2.6em;
+  text-align: right;
+}
+
+.character-sheet .sheet-res__num--max { text-align: left; color: var(--scv-text-muted); }
+.character-sheet .sheet-res__slash { color: var(--scv-text-muted); padding: 0 0.15rem; }
+
+.character-sheet .sheet-res__value input.sheet-res__num {
   background: transparent;
   border: none;
   border-bottom: 1px solid transparent;
   color: var(--scv-text);
-  font-size: 0.78rem;
-  text-align: right;
+  font-size: 0.76rem;
+  font-family: inherit;
   transition: border-color var(--scv-transition);
 }
-.character-sheet .sheet-res__value input:focus { outline: none; border-bottom-color: var(--scv-accent-border); }
+
+.character-sheet .sheet-res__value input.sheet-res__num:focus { outline: none; border-bottom-color: var(--scv-accent-border); }
+
+.character-sheet .sheet-topbar__armor { gap: 0.3rem; min-width: 130px; }
+
+.character-sheet .sheet-armor-stat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.character-sheet .sheet-armor-stat__icon { font-size: 0.95rem; width: 1.3em; text-align: center; flex-shrink: 0; }
+
+.character-sheet .sheet-armor-stat__label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  color: var(--scv-text-muted);
+  width: 1.6em;
+  flex-shrink: 0;
+}
+
+.character-sheet .sheet-armor-stat input {
+  width: 3.2em;
+  background: var(--scv-bg);
+  border: 1px solid var(--scv-border);
+  border-radius: 3px;
+  color: var(--scv-text);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.1rem 0.2rem;
+}
+
+.character-sheet .sheet-armor-stat input:focus { outline: none; border-color: var(--scv-accent); }
+
+.character-sheet .sheet-armor-stat__dot {
+  position: absolute;
+  left: -0.6rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--scv-accent);
+  box-shadow: 0 0 4px var(--scv-accent);
+}
+
+.character-sheet .sheet-topbar__edit {
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 64px;
+  cursor: pointer;
+  color: var(--scv-text-muted);
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--scv-border);
+  transition: color var(--scv-transition);
+}
+
+.character-sheet .sheet-topbar__edit i { font-size: 1.3rem; }
+.character-sheet .sheet-topbar__edit span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.character-sheet .sheet-topbar__edit:hover { color: var(--scv-accent-hover); }
 
 /* ── Ordner: Papier links, Tab-Handles rechts ────────────────────── */
 .character-sheet .sheet-folder {
@@ -1123,23 +1235,27 @@
   min-width: 0;
   background: var(--scv-surface);
   border: 1px solid var(--scv-border);
-  border-radius: 6px;
+  border-radius: 6px 0 0 6px;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.35);
   padding: 1.4rem 1.6rem;
   overflow-y: auto;
 }
 
+/* Hängt bewusst über den rechten Rand des Papiers hinaus (negativer Margin
+   + Fensterrahmen-Hintergrund drumherum, siehe .window-content oben) --
+   dadurch wirken die Tabs wie echte, seitlich herausstehende Ordnerreiter. */
 .character-sheet .sheet-tab-rail {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  margin: 1.4rem 0 0 -1px;
+  gap: 0.6rem;
+  margin: 1.6rem 0 0 -1px;
   border-bottom: none;
   flex-shrink: 0;
 }
 
 .character-sheet .sheet-tab {
-  width: 46px;
-  height: 52px;
+  width: 44px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1149,18 +1265,19 @@
   border-radius: 0 8px 8px 0;
   color: var(--scv-text-muted);
   cursor: pointer;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
   transition: all var(--scv-transition);
 }
 
 .character-sheet .sheet-tab svg { width: 22px; height: 22px; }
 .character-sheet .sheet-tab i { font-size: 18px; }
-.character-sheet .sheet-tab:hover { color: var(--scv-accent-hover); }
+.character-sheet .sheet-tab:hover { color: var(--scv-accent-hover); transform: translateX(2px); }
 
 .character-sheet .sheet-tab--active {
   color: var(--scv-accent);
   background: var(--scv-bg);
   border-color: var(--scv-accent-border);
-  box-shadow: inset 3px 0 0 var(--scv-accent);
+  box-shadow: inset 3px 0 0 var(--scv-accent), 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .character-sheet .sheet-title {
@@ -1194,171 +1311,109 @@
 
 .character-sheet .sheet-section { margin-bottom: 1.6rem; }
 
-/* ── Uebersicht: Attribute ────────────────────────────────────────── */
-.character-sheet .uebersicht-attribute {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.75rem;
+/* ── Uebersicht: Attribute in Großformat, alle nebeneinander ─────────── */
+.character-sheet .attr-tile-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.character-sheet .uebersicht-attribut {
+.character-sheet .attr-tile {
   position: relative;
+  flex: 1;
+  min-width: 92px;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
-  border-radius: 4px;
-  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  padding: 0.7rem 0.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  transition: border-color var(--scv-transition);
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: all var(--scv-transition);
 }
 
-.character-sheet .uebersicht-attribut:hover { border-color: var(--scv-accent-border); }
+.character-sheet .attr-tile:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
 
-.character-sheet .uebersicht-attribut__dot {
+.character-sheet .attr-tile__dot {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 7px;
-  height: 7px;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--scv-accent);
   box-shadow: 0 0 5px var(--scv-accent);
 }
 
-.character-sheet .uebersicht-attribut__roll {
-  position: absolute;
-  top: 4px;
-  left: 6px;
-  font-size: 11px;
-  opacity: 0.55;
-  cursor: pointer;
-  transition: opacity var(--scv-transition);
-}
+.character-sheet .attr-tile__icon { font-size: 1.2rem; color: var(--scv-accent); margin-bottom: 0.2rem; }
 
-.character-sheet .uebersicht-attribut__roll:hover { opacity: 1; }
-
-.character-sheet .uebersicht-attribut__abk {
+.character-sheet .attr-tile__abbr {
   font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--scv-text-muted);
-}
-
-.character-sheet .uebersicht-attribut__buy {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  font-family: 'Cinzel', serif;
-  font-size: 1.05rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
   color: var(--scv-text);
 }
 
-.character-sheet .uebersicht-attribut__buy a {
-  cursor: pointer;
+.character-sheet .attr-tile__name {
+  font-size: 0.68rem;
+  color: var(--scv-text-muted);
+  text-align: center;
+}
+
+.character-sheet .attr-tile__value {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
   color: var(--scv-accent);
-  font-size: 0.85rem;
+  line-height: 1.1;
 }
 
-.character-sheet .uebersicht-attribut__mod {
-  font-size: 0.75rem;
-  color: var(--scv-accent);
-  min-width: 2.4ch;
-  text-align: right;
-}
+.character-sheet .attr-tile__mod { font-size: 0.7rem; color: var(--scv-text-muted); }
 
-/* ── Uebersicht: Disziplinen-Balken ───────────────────────────────── */
-.character-sheet .uebersicht-disziplinen {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.character-sheet .uebersicht-disziplin {
+/* ── Talente-Tab: kompaktes 4x2-Attributraster ───────────────────────── */
+.character-sheet .attr-mini-grid {
   display: grid;
-  grid-template-columns: 22px 140px 1fr 3.5ch;
-  align-items: center;
-  gap: 0.65rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
 }
 
-.character-sheet .uebersicht-disziplin__img {
-  width: 22px;
-  height: 22px;
-  object-fit: cover;
-  border-radius: 3px;
-}
-
-.character-sheet .uebersicht-disziplin__name { font-size: 0.86rem; color: var(--scv-text); }
-
-.character-sheet .uebersicht-disziplin__bar {
-  height: 6px;
-  border-radius: 3px;
+.character-sheet .attr-mini {
+  position: relative;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
-  overflow: hidden;
-}
-
-.character-sheet .uebersicht-disziplin__fill { height: 100%; background: var(--scv-accent); }
-
-.character-sheet .uebersicht-disziplin__stufe {
-  font-size: 0.72rem;
-  color: var(--scv-text-muted);
-  text-align: right;
-}
-
-/* ── Uebersicht: Sonstige Werte / Ruestung ────────────────────────── */
-.character-sheet .uebersicht-stats {
+  border-radius: 4px;
+  padding: 0.3rem 0.2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  max-width: 340px;
-}
-
-.character-sheet .uebersicht-stat {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 0.86rem;
-  color: var(--scv-text);
-  padding: 0.3rem 0;
-  border-bottom: 1px dashed var(--scv-border);
+  cursor: pointer;
+  transition: border-color var(--scv-transition);
 }
 
-.character-sheet .uebersicht-stat__wert {
-  color: var(--scv-accent);
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.character-sheet .attr-mini:hover { border-color: var(--scv-accent-border); }
+
+.character-sheet .attr-mini__dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--scv-accent);
 }
 
-.character-sheet .uebersicht-stat__wert input {
-  width: 48px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--scv-border);
-  color: var(--scv-accent);
-  font-weight: bold;
-  font-size: 0.86rem;
-  text-align: right;
-  font-family: inherit;
-}
-
-.character-sheet .uebersicht-stat__wert input:focus { outline: none; border-bottom-color: var(--scv-accent); }
-.character-sheet .uebersicht-stat__wert.negative { color: #e0645f; }
-
-.character-sheet .uebersicht-resistenzen { margin-top: 0.6rem; }
-
-.character-sheet .uebersicht-resistenzen-leer {
+.character-sheet .attr-mini__abbr {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
   color: var(--scv-text-muted);
-  font-style: italic;
-  font-size: 0.8rem;
-  margin-top: 0.4rem;
+  text-transform: uppercase;
 }
 
+.character-sheet .attr-mini__value { font-size: 0.95rem; color: var(--scv-accent); font-weight: bold; }
+
+/* ── Resistenz-Chips ──────────────────────────────────────────────────── */
 .character-sheet .uebersicht-resistenz-chip--resistent { border-color: #4a9d6e; color: #4a9d6e; }
 .character-sheet .uebersicht-resistenz-chip--verwundbar { border-color: #e0645f; color: #e0645f; }
 .character-sheet .uebersicht-resistenz-chip--immun { border-color: var(--scv-accent-border); color: var(--scv-accent); }
@@ -1435,18 +1490,6 @@
 
 .character-sheet .talent-row__name:hover { color: var(--scv-accent-hover); }
 
-.character-sheet .talent-row__buy {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  color: var(--scv-text);
-  white-space: nowrap;
-}
-
-.character-sheet .talent-row__buy a { cursor: pointer; color: var(--scv-accent); }
-
 .character-sheet .talent-row__stat {
   font-family: 'Cinzel', serif;
   font-size: 0.78rem;
@@ -1455,90 +1498,58 @@
   text-align: right;
 }
 
+.character-sheet .talent-row__stat--muted { font-size: 0.72rem; font-style: italic; text-align: left; flex-shrink: 0; }
 .character-sheet .talent-row--extra { justify-content: space-between; }
 
-.character-sheet .extra-toggle {
-  cursor: pointer;
-  color: var(--scv-text-muted);
-  font-weight: bold;
-  border-color: var(--scv-border);
-  background: var(--scv-bg);
+/* ── Disziplinen: große Icon-Kacheln, Leuchten skaliert mit Stufe ────
+   --glow-level (0-10, siehe context-helpers.mjs mapDisciplines) treibt
+   Unschärfe UND Deckkraft des Box-Shadows -- Stufe 0 = kein Leuchten,
+   Stufe 10 = kräftiges Golden Glow. */
+.character-sheet .disziplin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 1rem;
 }
 
-.character-sheet .extra-toggle.active {
-  color: var(--scv-accent);
-  background: var(--scv-accent-dim);
-  border-color: var(--scv-accent-border);
-}
-.character-sheet .cost-hint { color: var(--scv-text-muted); font-size: 0.72rem; }
-
-/* ── Kampf & Magie: Disziplin-Karten ──────────────────────────────── */
-.character-sheet .disziplin-liste {
+.character-sheet .disziplin-tile {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.character-sheet .disziplin-card {
-  display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background: var(--scv-bg);
-  border: 1px solid var(--scv-border);
-  border-radius: 4px;
-  padding: 0.45rem 0.7rem;
-  transition: border-color var(--scv-transition);
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: background var(--scv-transition);
 }
 
-.character-sheet .disziplin-card:hover { border-color: var(--scv-accent-border); }
+.character-sheet .disziplin-tile:hover { background: var(--scv-accent-dim); }
 
-.character-sheet .disziplin-card__img {
-  width: 36px;
-  height: 36px;
+.character-sheet .disziplin-tile__img {
+  width: 76px;
+  height: 76px;
   object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.character-sheet .disziplin-card__body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.character-sheet .disziplin-card__name { font-size: 0.86rem; color: var(--scv-text); }
-
-.character-sheet .disziplin-card__bar {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--scv-surface);
+  border-radius: 10px;
   border: 1px solid var(--scv-border);
-  overflow: hidden;
+  box-shadow:
+    0 0 calc(var(--glow-level, 0) * 3px) rgba(201, 168, 76, calc(var(--glow-level, 0) * 0.08)),
+    0 0 calc(var(--glow-level, 0) * 1px) rgba(201, 168, 76, calc(var(--glow-level, 0) * 0.12)) inset;
+  transition: box-shadow var(--scv-transition);
 }
 
-.character-sheet .disziplin-card__fill { height: 100%; background: var(--scv-accent); }
+.character-sheet .disziplin-tile__img--placeholder { background: var(--scv-bg); }
 
-.character-sheet .disziplin-card__buy {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+.character-sheet .disziplin-tile__name {
   font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   color: var(--scv-text);
-  white-space: nowrap;
+  text-align: center;
 }
 
-.character-sheet .disziplin-card__buy a { cursor: pointer; color: var(--scv-accent); }
-
-.character-sheet .disziplin-card__roll {
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity var(--scv-transition);
+.character-sheet .disziplin-tile__level {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: var(--scv-accent);
 }
-
-.character-sheet .disziplin-card__roll:hover { opacity: 1; }
 
 /* ── Inventar / Sprachen: Zeilenlisten ────────────────────────────── */
 .character-sheet .ausr-liste {
@@ -1573,31 +1584,6 @@
 }
 
 .character-sheet .ausr-row__name:hover { color: var(--scv-accent-hover); }
-
-.character-sheet .ausr-row__name-input {
-  flex: 1 1 auto;
-  min-width: 120px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--scv-border);
-  color: var(--scv-text);
-  font-size: 0.88rem;
-  padding: 0.2rem 0;
-}
-
-.character-sheet .ausr-row__name-input:focus { outline: none; border-bottom-color: var(--scv-accent); }
-
-.character-sheet .ausr-row__level-input {
-  width: 44px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--scv-border);
-  color: var(--scv-accent);
-  text-align: center;
-  font-size: 0.85rem;
-}
-
-.character-sheet .ausr-row__level-input:focus { outline: none; border-bottom-color: var(--scv-accent); }
 
 .character-sheet .ausr-row__entfernen {
   color: var(--scv-text-muted);

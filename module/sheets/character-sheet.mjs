@@ -7,15 +7,15 @@ import {
   mapDisciplines,
   mapAttributes
 } from "./context-helpers.mjs";
-import {
-  attributeSpentCost,
-  talentSpentCost,
-  tieredSpentCost,
-  specialtySpentCost,
-  EXTRA_TALENT_COST
-} from "../rules/costs.mjs";
 import CharacterCreationWizard from "../apps/character-creation.mjs";
 
+/**
+ * Der Bogen ist bewusst rein lesend/würfelnd für Attribute, Talente und Disziplinen --
+ * Punkte verteilen (Attribut-/Talent-/Disziplin-Käufe) passiert bis zu einem künftigen
+ * Level-Up-Modus ausschließlich im Charaktererstellungs-Wizard (siehe "Edit"-Button im
+ * Header). Das Sheet zeigt deshalb überall die bereits verschmolzene Summe aus Basiswert
+ * und Rassen-/Berufsbonus (siehe context-helpers.mjs), nie eine Aufschlüsselung.
+ */
 export default class ScuvanyaCharacterSheet extends BaseActorSheet {
   static DEFAULT_TAB = "attribute";
 
@@ -31,12 +31,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       rollHandwerkSkill: ScuvanyaCharacterSheet.#onRollHandwerkSkill,
       rollSpezialSkill: ScuvanyaCharacterSheet.#onRollSpezialSkill,
       rollDiscipline: ScuvanyaCharacterSheet.#onRollDiscipline,
-      addLanguage: ScuvanyaCharacterSheet.#onAddLanguage,
-      removeLanguage: ScuvanyaCharacterSheet.#onRemoveLanguage,
-      buyAttribute: ScuvanyaCharacterSheet.#onBuyAttribute,
-      buyTalent: ScuvanyaCharacterSheet.#onBuyTalent,
-      buyTiered: ScuvanyaCharacterSheet.#onBuyTiered,
-      buyExtra: ScuvanyaCharacterSheet.#onBuyExtra,
       openCreationWizard: ScuvanyaCharacterSheet.#onOpenCreationWizard
     }
   };
@@ -60,15 +54,17 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     context.wissenschaftenNatur = mapLeveledSkills(SCUVANYA.scienceSkills.natur, sys.talents.wissenschaften.natur);
     context.koerperlich = mapLeveledSkills(SCUVANYA.physicalSkills, sys.talents.koerperlich);
     context.sonder = mapLeveledSkills(Object.keys(SCUVANYA.sonderSkills), sys.talents.sonder);
-    context.handwerk = mapTieredSkills(SCUVANYA.craftSkills, sys.talents.handwerk, "handwerk");
-    context.spezial = mapTieredSkills(SCUVANYA.spezialSkills, sys.talents.spezial, "spezial");
+    context.handwerk = mapTieredSkills(SCUVANYA.craftSkills, sys.talents.handwerk);
+    context.spezial = mapTieredSkills(SCUVANYA.spezialSkills, sys.talents.spezial);
     context.extra = mapBooleanSkills(SCUVANYA.extraSkills, sys.talents.extra);
 
     context.kampfDisziplinen = mapDisciplines(SCUVANYA.combatDisciplines, sys.disziplinen.kampf);
     context.magieDisziplinen = mapDisciplines(SCUVANYA.magicDisciplines, sys.disziplinen.magie);
 
     context.gemeinsprache = sys.sprachen.gemeinsprache;
-    context.weitereSprachen = sys.sprachen.weitere;
+    // Nur tatsächlich beherrschte Sprachen (Stufe >= 1) -- die Übersicht ist eine reine
+    // Zusammenfassung, keine Bearbeitungsmaske (siehe Klassenkommentar).
+    context.weitereSprachen = sys.sprachen.weitere.filter(s => s.level >= 1);
 
     context.items = {
       weapon: this.actor.items.filter(i => i.type === "weapon"),
@@ -129,95 +125,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
   static #onRollDiscipline(event, target) {
     this.actor.rollDiscipline(target.dataset.kind, target.dataset.key);
-  }
-
-  static async #onAddLanguage() {
-    const weitere = foundry.utils.deepClone(this.actor.system.sprachen.weitere);
-    weitere.push({ name: game.i18n.localize("SCUVANYA.Language.NewName"), level: 0 });
-    await this.actor.update({ "system.sprachen.weitere": weitere });
-  }
-
-  static async #onRemoveLanguage(event, target) {
-    const index = Number(target.closest("[data-index]")?.dataset.index);
-    const weitere = foundry.utils.deepClone(this.actor.system.sprachen.weitere);
-    weitere.splice(index, 1);
-    await this.actor.update({ "system.sprachen.weitere": weitere });
-  }
-
-  static #canAfford(actor, cost) {
-    if (cost > actor.system.skillPoints.available) {
-      ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.NotEnoughSkillPoints", {
-        cost, available: actor.system.skillPoints.available
-      }));
-      return false;
-    }
-    return true;
-  }
-
-  static async #onBuyAttribute(event, target) {
-    const key = target.dataset.key;
-    const delta = Number(target.dataset.delta);
-    const actor = this.actor;
-    const current = actor.system.attributes[key].value;
-    const next = current + delta;
-    if (next < 1) return;
-    if (delta > 0) {
-      const shift = actor.system.attributes[key].raceBonus ?? 0;
-      const cost = attributeSpentCost(next, SCUVANYA.attributeStartingValue, shift)
-        - attributeSpentCost(current, SCUVANYA.attributeStartingValue, shift);
-      if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
-    }
-    await actor.update({ [`system.attributes.${key}.value`]: next });
-  }
-
-  /** data-path ist relativ zu system, z.B. "talents.sozial.positiv.charme.level". */
-  static async #onBuyTalent(event, target) {
-    const path = target.dataset.path;
-    const delta = Number(target.dataset.delta);
-    const actor = this.actor;
-    const current = foundry.utils.getProperty(actor.system, path) ?? 0;
-    const next = Math.max(0, current + delta);
-    if (next === current) return;
-    if (delta > 0) {
-      const skill = foundry.utils.getProperty(actor.system, path.replace(/\.level$/, ""));
-      const shift = skill?.raceBonus ?? 0;
-      const cost = talentSpentCost(next, shift) - talentSpentCost(current, shift);
-      if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
-    }
-    await actor.update({ [`system.${path}`]: next });
-  }
-
-  /** data-category: "handwerk" | "spezial" | "disziplin" -- steuert Grenzen und Kostenformel. */
-  static async #onBuyTiered(event, target) {
-    const path = target.dataset.path;
-    const category = target.dataset.category;
-    const delta = Number(target.dataset.delta);
-    const actor = this.actor;
-    const bounds = {
-      handwerk: [SCUVANYA.tieredSkillMinLevel, SCUVANYA.tieredSkillMaxLevel],
-      spezial: [SCUVANYA.specialtyStartingLevel, SCUVANYA.tieredSkillMaxLevel],
-      disziplin: [SCUVANYA.disciplineMinLevel, SCUVANYA.disciplineMaxLevel]
-    }[category];
-    const startingLevel = category === "spezial" ? SCUVANYA.specialtyStartingLevel : 0;
-    const current = foundry.utils.getProperty(actor.system, path) ?? 0;
-    const next = Math.min(bounds[1], Math.max(bounds[0], current + delta));
-    if (next === current) return;
-    if (delta > 0) {
-      const skill = foundry.utils.getProperty(actor.system, path.replace(/\.level$/, ""));
-      const shift = skill?.raceBonus ?? 0;
-      const spentFn = category === "spezial" ? specialtySpentCost : tieredSpentCost;
-      const cost = spentFn(next, startingLevel, shift) - spentFn(current, startingLevel, shift);
-      if (!ScuvanyaCharacterSheet.#canAfford(actor, cost)) return;
-    }
-    await actor.update({ [`system.${path}`]: next });
-  }
-
-  static async #onBuyExtra(event, target) {
-    const key = target.dataset.key;
-    const actor = this.actor;
-    const current = actor.system.talents.extra[key].known;
-    if (!current && !ScuvanyaCharacterSheet.#canAfford(actor, EXTRA_TALENT_COST)) return;
-    await actor.update({ [`system.talents.extra.${key}.known`]: !current });
   }
 
   static #onOpenCreationWizard() {

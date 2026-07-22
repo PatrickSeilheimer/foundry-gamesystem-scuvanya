@@ -2,17 +2,12 @@
 <div class="cc-category">
   <div class="cc-category__header">
     <span>{{root.title}}</span>
-    <span class="cc-category__system">{{localize 'SCUVANYA.System.gestuft'}}</span>
   </div>
   <div class="cc-category__body">
     {{#each root.skills as |skill|}}
     <div class="talent-row">
+      {{#if skill.raceBonus}}<span class="talent-row__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
       <a class="talent-row__name" data-action="{{root.rollAction}}" data-key="{{skill.key}}" title="{{localize 'SCUVANYA.Roll'}}">{{skill.label}}</a>
-      <span class="talent-row__buy">
-        <a data-action="buyTiered" data-category="{{root.buyCategory}}" data-path="{{root.buyPrefix}}.{{skill.key}}.level" data-delta="-1">−</a>
-        {{skill.level}}
-        <a data-action="buyTiered" data-category="{{root.buyCategory}}" data-path="{{root.buyPrefix}}.{{skill.key}}.level" data-delta="1" title="{{localize 'SCUVANYA.SkillPoints.CostHint'}}: {{skill.nextCost}}">+</a>
-      </span>
       <span class="talent-row__stat">{{skill.die}}</span>
     </div>
     {{/each}}

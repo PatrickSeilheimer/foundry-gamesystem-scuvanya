@@ -37,7 +37,14 @@
     "Resource": {
       "hp": "HP",
       "mana": "Mana",
-      "mentalHealth": "Mentale Gesundheit"
+      "mentalHealth": "Mentale Gesundheit",
+      "mentalHealthShort": "MG"
+    },
+
+    "Short": {
+      "ac": "RK",
+      "armorPhysical": "PR",
+      "armorMagical": "MR"
     },
 
     "Armor": {
@@ -51,18 +58,16 @@
     "Tab": {
       "attribute": "Übersicht",
       "talente": "Talente",
-      "kampf": "Kampf & Magie",
-      "sprachen": "Sprachen",
-      "inventar": "Inventar",
-      "biografie": "Biografie"
+      "kampf": "Disziplinen",
+      "aktionen": "Aktionen",
+      "inventar": "Inventar"
     },
 
     "Section": {
       "attribute": "Attribute",
-      "kampfMagie": "Kampf & Magie",
-      "ruestungResistenz": "Rüstung & Resistenzen",
-      "sonstigeWerte": "Sonstige Werte",
-      "sprachenBekannt": "Sprachen"
+      "resistenzen": "Resistenzen",
+      "sprachenBekannt": "Sprachen",
+      "biografie": "Biografie"
     },
 
     "Resistance": {
@@ -93,10 +98,16 @@
 
     "Hint": {
       "FreePoints": "Freie Attributpunkte",
-      "RaceBonusIncluded": "Enthält Rassen-/Berufsbonus in Klammern",
+      "RaceBonusIncluded": "Beinhaltet Rassen-/Berufsbonus -- ist bereits dein neuer Startwert",
       "Koerperlich": "Gemeinsamer Bonus = Durchschnitt aller investierten Punkte (abgerundet)",
       "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final",
-      "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden"
+      "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden",
+      "AktionenComingSoon": "Aktionen sind noch nicht verfügbar.",
+      "EditInCreator": "Attribute, Talente und Disziplinen werden aktuell im Charaktererstellungs-Wizard verteilt (Klick auf \"Edit\")."
+    },
+
+    "Sheet": {
+      "editButton": "Edit"
     },
 
     "Warning": {
