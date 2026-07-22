@@ -120,14 +120,22 @@ export default class ScuvanyaActor extends Actor {
     return typeof current === "number" ? current : 0;
   }
 
+  /**
+   * Wertet jede einzelne Ausrüstungs-Voraussetzung eines Items aus und gibt sie MIT
+   * Erfüllungsstatus zurück (für den Item-Tooltip, siehe character-sheet.mjs) -- anders als
+   * canEquipItem, das nur das Gesamtergebnis (alle erfüllt?) liefert.
+   */
+  evaluateConditions(item) {
+    return (item.system.conditions ?? []).filter(c => c.path).map(condition => {
+      const compare = ScuvanyaActor.#CONDITION_COMPARATORS[condition.operator] ?? ScuvanyaActor.#CONDITION_COMPARATORS.gte;
+      const actual = this._resolveConditionValue(condition.path);
+      return { ...condition, actual, met: compare(actual, condition.value) };
+    });
+  }
+
   /** Prüft, ob alle Ausrüstungs-Voraussetzungen eines Items erfüllt sind (siehe equipment-shared.mjs). */
   canEquipItem(item) {
-    for (const condition of item.system.conditions ?? []) {
-      if (!condition.path) continue;
-      const compare = ScuvanyaActor.#CONDITION_COMPARATORS[condition.operator] ?? ScuvanyaActor.#CONDITION_COMPARATORS.gte;
-      if (!compare(this._resolveConditionValue(condition.path), condition.value)) return false;
-    }
-    return true;
+    return this.evaluateConditions(item).every(c => c.met);
   }
 
   /**

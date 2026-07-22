@@ -9,7 +9,18 @@ import { SCUVANYA } from "../config.mjs";
  * über ein zweites Overlay ("itemBonus") und lösen -- anders als raceBonus -- eine sichtbare
  * "hat einen aktiven Bonus"-Markierung aus (siehe hasItemBonus unten): ein Ring ist ein
  * echter Bonus obendrauf, eine Rasse ist einfach der neue Startwert.
+ *
+ * "breakdown" liefert die Rechnung für den Hover-Tooltip (siehe character-sheet.mjs
+ * _wireTooltips): eine "Basis"-Zeile (Grundwert INKLUSIVE Rassen-/Berufsbonus, da der ja per
+ * Definition schon Teil der neuen Norm ist) plus je eine Zeile pro Item, das einen Effekt auf
+ * diesen Pfad hat (siehe path-resolve.mjs resolveItemEffects), und die Gesamtsumme.
  */
+function buildBreakdown(base, itemBreakdown) {
+  const rows = [{ label: game.i18n.localize("SCUVANYA.Base"), amount: base }];
+  for (const entry of itemBreakdown ?? []) rows.push({ label: entry.name, amount: entry.amount });
+  const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  return { rows, total };
+}
 
 export function mapLeveledSkills(keys, dataSource) {
   return keys.map(key => {
@@ -20,7 +31,8 @@ export function mapLeveledSkills(keys, dataSource) {
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
       level: dataSource[key].level + raceBonus + itemBonus,
       bonus: dataSource[key].bonus,
-      hasItemBonus: itemBonus !== 0
+      hasItemBonus: itemBonus !== 0,
+      breakdown: buildBreakdown(dataSource[key].level + raceBonus, dataSource[key].itemBreakdown)
     };
   });
 }
@@ -38,7 +50,8 @@ export function mapTieredSkills(keys, dataSource) {
       level,
       die: SCUVANYA.tieredDieSteps[level] ?? null,
       crosses: CROSS.repeat(Math.max(0, level)),
-      hasItemBonus: itemBonus !== 0
+      hasItemBonus: itemBonus !== 0,
+      breakdown: buildBreakdown(dataSource[key].level + raceBonus, dataSource[key].itemBreakdown)
     };
   });
 }
@@ -79,7 +92,8 @@ export function mapDisciplines(disciplineConfig, dataSource) {
       label: game.i18n.localize(cfg.label),
       level,
       hasItemBonus: itemBonus !== 0,
-      img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null
+      img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null,
+      breakdown: buildBreakdown(dataSource[key].level + raceBonus, dataSource[key].itemBreakdown)
     };
   });
 }
@@ -98,6 +112,7 @@ const ATTRIBUTE_ICONS = {
 
 export function mapAttributes(dataSource) {
   return Object.entries(SCUVANYA.attributes).map(([key, cfg]) => {
+    const raceBonus = dataSource[key].raceBonus ?? 0;
     const itemBonus = dataSource[key].itemBonus ?? 0;
     return {
       key,
@@ -110,7 +125,8 @@ export function mapAttributes(dataSource) {
       effectiveValue: dataSource[key].effectiveValue ?? dataSource[key].value,
       mod: dataSource[key].mod,
       modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`,
-      hasItemBonus: itemBonus !== 0
+      hasItemBonus: itemBonus !== 0,
+      breakdown: buildBreakdown(dataSource[key].value + raceBonus, dataSource[key].itemBreakdown)
     };
   });
 }

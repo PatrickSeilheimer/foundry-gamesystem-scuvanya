@@ -90,13 +90,16 @@
           <div class="attr-tile-container">
             <div class="attr-tile-row">
               {{#each attributes as |attr|}}
-              <div class="attr-tile" data-action="rollAttribute" data-key="{{attr.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+              <div class="attr-tile" data-action="rollAttribute" data-key="{{attr.key}}" data-breakdown-tooltip title="{{localize 'SCUVANYA.Roll'}}">
                 {{#if attr.hasItemBonus}}<span class="item-bonus-dot" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
                 <i class="fa-solid {{attr.icon}} attr-tile__icon"></i>
                 <span class="attr-tile__abbr">{{attr.abbr}}</span>
                 <span class="attr-tile__name">{{attr.label}}</span>
                 <span class="attr-tile__value">{{attr.effectiveValue}}</span>
                 <span class="attr-tile__mod">{{attr.modDisplay}}</span>
+                <div class="tooltip-content" hidden>
+                  {{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=attr.label breakdown=attr.breakdown}}
+                </div>
               </div>
               {{/each}}
             </div>
@@ -158,11 +161,14 @@
               <div class="cc-category__header"><span>{{localize 'SCUVANYA.Section.attribute'}}</span></div>
               <div class="attr-mini-grid">
                 {{#each attributes as |attr|}}
-                <div class="attr-mini" data-action="rollAttribute" data-key="{{attr.key}}" title="{{attr.label}}">
+                <div class="attr-mini" data-action="rollAttribute" data-key="{{attr.key}}" data-breakdown-tooltip title="{{attr.label}}">
                   {{#if attr.hasItemBonus}}<span class="item-bonus-dot" style="top:-2px;right:-2px;width:7px;height:7px;"></span>{{/if}}
                   <i class="fa-solid {{attr.icon}} attr-mini__icon"></i>
                   <span class="attr-mini__abbr">{{attr.abbr}}</span>
                   <span class="attr-mini__value">{{attr.effectiveValue}}</span>
+                  <div class="tooltip-content" hidden>
+                    {{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=attr.label breakdown=attr.breakdown}}
+                  </div>
                 </div>
                 {{/each}}
               </div>
@@ -210,11 +216,14 @@
           <h2 class="cc-section__title">{{localize 'SCUVANYA.Category.kampfdisziplinen'}}</h2>
           <div class="disziplin-grid">
             {{#each kampfDisziplinen as |d|}}
-            <div class="disziplin-tile" style="--glow-level: {{d.level}};" data-action="rollDiscipline" data-kind="kampf" data-key="{{d.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+            <div class="disziplin-tile" style="--glow-level: {{d.level}};" data-action="rollDiscipline" data-kind="kampf" data-key="{{d.key}}" data-breakdown-tooltip title="{{localize 'SCUVANYA.Roll'}}">
               {{#if d.hasItemBonus}}<span class="item-bonus-dot" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
               {{#if d.img}}<img class="disziplin-tile__img" src="{{d.img}}">{{else}}<div class="disziplin-tile__img disziplin-tile__img--placeholder"></div>{{/if}}
               <span class="disziplin-tile__name">{{d.label}}</span>
               <span class="disziplin-tile__level">{{d.level}}</span>
+              <div class="tooltip-content" hidden>
+                {{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=d.label breakdown=d.breakdown}}
+              </div>
             </div>
             {{/each}}
           </div>
@@ -264,14 +273,7 @@
         </section>
 
         <section class="sheet-section">
-          <div class="cc-section__head-row">
-            <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.inventarListe'}}</h2>
-            <div class="inventory-create">
-              {{#each (array "weapon" "armor" "consumable" "equipment") as |type|}}
-              <button type="button" class="cc-btn" data-action="itemCreate" data-type="{{type}}">+ {{localize (concat "SCUVANYA.ItemType." type)}}</button>
-              {{/each}}
-            </div>
-          </div>
+          <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.inventarListe'}}</h2>
 
           <div class="inventory-toolbar">
             <input type="text" class="cc-input inventory-search" placeholder="{{localize 'SCUVANYA.Inventory.Search'}}">
@@ -292,7 +294,12 @@
           <div class="ausr-liste inventory-list">
             {{#each inventoryItems as |item|}}
             <div class="ausr-row inventory-row" data-item-id="{{item.id}}" data-name="{{item.name}}" data-type="{{item.typeLabel}}" data-flags="{{item.flagsJoined}}">
-              <img class="ausr-row__img" src="{{item.img}}">
+              <a class="ausr-row__icon-trigger" data-item-tooltip="click" title="{{localize 'SCUVANYA.Item.ShowInfo'}}">
+                <img class="ausr-row__img" src="{{item.img}}">
+                <div class="tooltip-content" hidden>
+                  {{> "systems/scuvanya/templates/actor/parts/item-tooltip.hbs" item=item}}
+                </div>
+              </a>
               <a class="ausr-row__name" data-action="itemEdit">{{item.name}}</a>
               <span class="ausr-row__type">{{item.typeLabel}}</span>
               <span class="flag-badge-row">

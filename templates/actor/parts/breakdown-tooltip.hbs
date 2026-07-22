@@ -1,0 +1,11 @@
+{{#with this as |root|}}
+<div class="tooltip-title">{{root.name}}</div>
+<table class="breakdown-table">
+  <tbody>
+    {{#each root.breakdown.rows as |row|}}
+    <tr><td class="breakdown-label">{{row.label}}</td><td class="breakdown-amount">{{row.amount}}</td></tr>
+    {{/each}}
+    <tr class="breakdown-total-row"><td class="breakdown-label">{{localize 'SCUVANYA.Total'}}</td><td class="breakdown-amount">{{root.breakdown.total}}</td></tr>
+  </tbody>
+</table>
+{{/with}}

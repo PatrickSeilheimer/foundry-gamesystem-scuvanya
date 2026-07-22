@@ -1,0 +1,36 @@
+{{#with this as |root|}}
+<div class="tooltip-title">{{root.item.name}}</div>
+<div class="tooltip-subtitle">{{root.item.tooltip.typeLabel}}{{#if root.item.tooltip.slotLabel}} · {{root.item.tooltip.slotLabel}}{{/if}}</div>
+
+{{#if root.item.tooltip.flags.length}}
+<div class="tooltip-flags">
+  {{#each root.item.tooltip.flags as |flag|}}<span class="flag-badge">{{flag}}</span>{{/each}}
+</div>
+{{/if}}
+
+<div class="tooltip-description">
+  {{#if root.item.tooltip.description}}{{{root.item.tooltip.description}}}{{else}}<p>{{localize 'SCUVANYA.Item.NoDescription'}}</p>{{/if}}
+</div>
+
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Equipment.conditions'}}</div>
+{{#if root.item.tooltip.conditions.length}}
+<ul class="tooltip-condition-list">
+  {{#each root.item.tooltip.conditions as |condition|}}
+  <li class="{{#unless condition.met}}unmet{{/unless}}">{{#if condition.met}}✓{{else}}✗{{/if}} {{condition.text}}</li>
+  {{/each}}
+</ul>
+{{else}}
+<p class="tooltip-description">{{localize 'SCUVANYA.Item.NoConditions'}}</p>
+{{/if}}
+
+<div class="tooltip-section-title">{{localize 'SCUVANYA.Equipment.effects'}}</div>
+{{#if root.item.tooltip.effects.length}}
+<ul class="tooltip-effect-list">
+  {{#each root.item.tooltip.effects as |effect|}}
+  <li class="{{#unless effect.active}}inactive{{/unless}}">{{effect.text}} <span class="tooltip-effect-condition">({{effect.conditionLabel}})</span></li>
+  {{/each}}
+</ul>
+{{else}}
+<p class="tooltip-description">{{localize 'SCUVANYA.Item.NoEffects'}}</p>
+{{/if}}
+{{/with}}

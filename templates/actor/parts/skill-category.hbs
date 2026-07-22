@@ -6,10 +6,13 @@
   </div>
   <div class="cc-category__body">
     {{#each root.skills as |skill|}}
-    <div class="talent-row">
+    <div class="talent-row" data-breakdown-tooltip>
       {{#if skill.hasItemBonus}}<span class="item-bonus-dot item-bonus-dot--inline" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
       <a class="talent-row__name" data-action="{{root.rollAction}}" data-key="{{skill.key}}" {{#if root.rollDataName}}data-{{root.rollDataName}}="{{root.rollDataValue}}"{{/if}} title="{{localize 'SCUVANYA.Roll'}}">{{skill.label}}</a>
       <span class="talent-row__stat">{{skill.level}}</span>
+      <div class="tooltip-content" hidden>
+        {{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=skill.label breakdown=skill.breakdown}}
+      </div>
     </div>
     {{/each}}
   </div>

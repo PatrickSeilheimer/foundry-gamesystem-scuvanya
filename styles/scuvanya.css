@@ -1659,40 +1659,56 @@
 
 .character-sheet .slot-tile {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
   width: 84px;
   height: 84px;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
-  border-radius: 6px;
-  padding: 0.4rem;
+  border-radius: 14px;
   cursor: pointer;
   overflow: hidden;
-  transition: all var(--scv-transition);
+  /* Dunkler Innenschatten + hauchdünner heller Rand oben -- wirkt wie eine ins Material
+     eingelassene Vertiefung, in der (leer) nur der blasse Icon-Umriss liegt. */
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  transition: box-shadow var(--scv-transition), border-color var(--scv-transition);
 }
 
-.character-sheet .slot-tile:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
+.character-sheet .slot-tile:hover { border-color: var(--scv-accent-border); }
 .character-sheet .slot-tile--filled { border-color: var(--scv-accent-border); }
 
 .character-sheet .slot-tile__placeholder {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   color: var(--scv-text-muted);
-  opacity: 0.35;
+  opacity: 0.4;
+}
+
+/* Das "Plättchen": liegt sichtbar erhöht in der Vertiefung der Kachel, mit eigenem
+   Schlagschatten nach außen -- Gegenstück zum eingedrückten Leer-Zustand oben. */
+.character-sheet .slot-tile__plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  background: var(--scv-surface);
+  border-radius: 9px;
+  padding: 0.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .character-sheet .slot-tile__img {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   object-fit: cover;
   border-radius: 4px;
 }
 
 .character-sheet .slot-tile__name {
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   color: var(--scv-accent);
   text-align: center;
   max-width: 100%;
@@ -1839,3 +1855,112 @@
 
 .scuvanya-sheet .condition-row input[type="number"],
 .scuvanya-sheet .effect-row input[type="number"] { width: 4rem; }
+
+/* ══════════════════════════════════════════════════════════════════
+   Grundlegender Tooltip-Stil -- eine schattierte Karte, die an JEDER
+   Hover-/Klick-Stelle auf dem Bogen identisch wiederverwendet wird
+   (Item-Infos, Rechen-Aufschlüsselung von Attributen/Talenten/
+   Disziplinen). Ein einzelnes .scv-tooltip-Element pro Sheet-Render
+   wird per JS positioniert und mit vorgerendertem Inhalt gefüllt,
+   siehe character-sheet.mjs _wireTooltips.
+   ══════════════════════════════════════════════════════════════════ */
+.character-sheet .scv-tooltip {
+  position: fixed;
+  z-index: 100;
+  min-width: 190px;
+  max-width: 300px;
+  background: var(--scv-surface);
+  border: 1px solid var(--scv-accent-border);
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(0, 0, 0, 0.35);
+  padding: 0.7rem 0.9rem;
+  color: var(--scv-text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px) scale(0.98);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.character-sheet .scv-tooltip--visible { opacity: 1; transform: translateY(0) scale(1); }
+
+.character-sheet .scv-tooltip .tooltip-title {
+  font-family: 'Cinzel', serif;
+  color: var(--scv-accent);
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.character-sheet .scv-tooltip .tooltip-subtitle {
+  color: var(--scv-text-muted);
+  font-size: 0.72rem;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.character-sheet .scv-tooltip .tooltip-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.character-sheet .scv-tooltip .tooltip-description {
+  margin-bottom: 0.5rem;
+  color: var(--scv-text);
+}
+
+.character-sheet .scv-tooltip .tooltip-description p:first-child { margin-top: 0; }
+.character-sheet .scv-tooltip .tooltip-description p:last-child { margin-bottom: 0; }
+
+.character-sheet .scv-tooltip .tooltip-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--scv-text-muted);
+  margin: 0.5rem 0 0.2rem;
+}
+
+.character-sheet .scv-tooltip .tooltip-condition-list,
+.character-sheet .scv-tooltip .tooltip-effect-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.character-sheet .scv-tooltip .tooltip-condition-list li { color: #4a9d6e; }
+.character-sheet .scv-tooltip .tooltip-condition-list li.unmet { color: #e0645f; }
+.character-sheet .scv-tooltip .tooltip-effect-list li.inactive { color: var(--scv-text-muted); opacity: 0.75; }
+
+.character-sheet .scv-tooltip .tooltip-effect-condition {
+  font-size: 0.7rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Rechen-Tooltip: rechtsbündige Zahlenspalte, "Gesamt" optisch per Trennlinie abgesetzt. */
+.character-sheet .scv-tooltip .breakdown-table { width: 100%; border-collapse: collapse; }
+
+.character-sheet .scv-tooltip .breakdown-label {
+  text-align: left;
+  padding: 0.1rem 0.6rem 0.1rem 0;
+  white-space: nowrap;
+}
+
+.character-sheet .scv-tooltip .breakdown-amount {
+  text-align: right;
+  font-family: 'Cinzel', serif;
+  font-variant-numeric: tabular-nums;
+  padding: 0.1rem 0;
+}
+
+.character-sheet .scv-tooltip .breakdown-total-row .breakdown-label,
+.character-sheet .scv-tooltip .breakdown-total-row .breakdown-amount {
+  border-top: 1px solid var(--scv-border);
+  padding-top: 0.3rem;
+  margin-top: 0.2rem;
+  color: var(--scv-accent);
+  font-weight: bold;
+}

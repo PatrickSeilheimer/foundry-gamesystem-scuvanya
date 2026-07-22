@@ -63,17 +63,28 @@ export function resolveBundles(bundles, selections) {
  * Aufrufer VOR dem ersten Aufruf einmalig tun), sonst würde der zweite Aufruf den ersten
  * überschreiben statt zu addieren -- Rüstung/AC/Initiative kennen ohnehin keine getrennten
  * Overlays, sie akkumulieren beide Quellen gemeinsam (siehe _prepareArmorAndAc).
+ *
+ * "breakdown" (optional, nur beim itemBonus-Durchlauf gefüllt) ist { [path]: [{name, amount}] }
+ * -- wird 1:1 als "itemBreakdown" an Attribut/Talent/Disziplin gehängt, damit der Bogen einen
+ * Rechen-Tooltip zeigen kann (Basis + je Item eine Zeile + Gesamt), siehe context-helpers.mjs.
  */
-export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus") {
+export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus", breakdown = {}) {
   character._armorBonus ??= { physical: 0, magical: 0 };
   character._acBonus ??= 0;
   character._initiativeBonus ??= 0;
+
+  const attachBreakdown = (target, path) => {
+    if (breakdown[path]) target.itemBreakdown = breakdown[path];
+  };
 
   for (const [path, amount] of Object.entries(pathBonuses)) {
     if (path.startsWith("attributes.")) {
       const key = path.slice("attributes.".length);
       const attr = character.attributes[key];
-      if (attr) attr[overlayKey] = (attr[overlayKey] ?? 0) + amount;
+      if (attr) {
+        attr[overlayKey] = (attr[overlayKey] ?? 0) + amount;
+        attachBreakdown(attr, path);
+      }
     } else if (path.startsWith("talents.extra.")) {
       const key = path.slice("talents.extra.".length);
       const skill = character.talents.extra[key];
@@ -81,11 +92,17 @@ export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus
     } else if (path.startsWith("talents.")) {
       const sub = path.slice("talents.".length);
       const target = foundry.utils.getProperty(character.talents, sub);
-      if (target) target[overlayKey] = (target[overlayKey] ?? 0) + amount;
+      if (target) {
+        target[overlayKey] = (target[overlayKey] ?? 0) + amount;
+        attachBreakdown(target, path);
+      }
     } else if (path.startsWith("disziplinen.")) {
       const sub = path.slice("disziplinen.".length);
       const target = foundry.utils.getProperty(character.disziplinen, sub);
-      if (target) target[overlayKey] = (target[overlayKey] ?? 0) + amount;
+      if (target) {
+        target[overlayKey] = (target[overlayKey] ?? 0) + amount;
+        attachBreakdown(target, path);
+      }
     } else if (path.startsWith("resistances.")) {
       const key = path.slice("resistances.".length);
       if (key in character.resistancesEffective) character.resistancesEffective[key] += amount;
@@ -116,14 +133,24 @@ export function applyPathBonuses(character, pathBonuses, overlayKey = "raceBonus
  * ohne choice/distribute (Items brauchen keine Wahlmöglichkeiten). Ein Effekt zählt nur, wenn
  * seine "condition" erfüllt ist: "equipped" nur für Items in equippedItemIds, "carried" für
  * jedes hier übergebene Item (Aufrufer filtert bereits auf Besitz).
+ *
+ * "breakdown" gruppiert dieselben Beträge zusätzlich PRO ITEM (nicht pro Effekt) unter
+ * { [path]: [{name, amount}] } -- trägt ein Item mehrere Effekte auf denselben Pfad bei, zählt
+ * das als EINE Zeile mit der Summe, siehe Rechen-Tooltip auf dem Bogen.
  */
 export function resolveItemEffects(items, equippedItemIds) {
   const pathBonuses = {};
   const texts = [];
+  const breakdown = {};
 
-  const add = (path, amount) => {
+  const add = (path, amount, itemName) => {
     if (!path || !amount) return;
     pathBonuses[path] = (pathBonuses[path] ?? 0) + amount;
+
+    const entries = (breakdown[path] ??= []);
+    const existing = entries.find(e => e.name === itemName);
+    if (existing) existing.amount += amount;
+    else entries.push({ name: itemName, amount });
   };
 
   for (const item of items) {
@@ -131,10 +158,10 @@ export function resolveItemEffects(items, equippedItemIds) {
     for (const effect of item.system.effects ?? []) {
       const applies = effect.condition === "carried" || isEquipped;
       if (!applies) continue;
-      if (effect.kind === "fixed") add(effect.path, effect.amount);
+      if (effect.kind === "fixed") add(effect.path, effect.amount, item.name);
       else if (effect.kind === "text" && effect.text) texts.push({ name: item.name, text: effect.text });
     }
   }
 
-  return { pathBonuses, texts };
+  return { pathBonuses, texts, breakdown };
 }

@@ -130,9 +130,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this.progressionTexts = texts;
     applyPathBonuses(this, pathBonuses, "raceBonus");
 
-    const { pathBonuses: itemPathBonuses, texts: itemTexts } = this._computeItemBonus();
+    const { pathBonuses: itemPathBonuses, texts: itemTexts, breakdown: itemBreakdown } = this._computeItemBonus();
     this.itemTexts = itemTexts;
-    applyPathBonuses(this, itemPathBonuses, "itemBonus");
+    applyPathBonuses(this, itemPathBonuses, "itemBonus", itemBreakdown);
 
     this._prepareAttributes();
     this._prepareResources();

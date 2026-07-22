@@ -9,6 +9,9 @@ import {
 } from "./context-helpers.mjs";
 import CharacterCreationWizard from "../apps/character-creation.mjs";
 import EquipPickerApp from "../apps/equip-picker.mjs";
+import { describePath } from "../path-labels.mjs";
+
+const signed = n => `${n >= 0 ? "+" : ""}${n}`;
 
 /**
  * Der Bogen ist bewusst rein lesend/würfelnd für Attribute, Talente und Disziplinen --
@@ -41,6 +44,13 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
   // im Inventar nicht bei jeder Aktion zurückgesetzt werden -- siehe _wireInventoryToolbar.
   #inventoryFilter = { search: "", flags: new Set() };
 
+  // Ein einzelnes .scv-tooltip-Element pro Render, wiederverwendet für Item- UND Rechen-
+  // Tooltips (siehe _wireTooltips). #outsideClickHandler wird vor jedem Neuaufbau entfernt,
+  // sonst würden sich bei jedem Re-Render weitere document-Listener ansammeln.
+  #tooltipEl = null;
+  #outsideClickHandler = null;
+  #openTooltipItemId = null;
+
   static PARTS = {
     form: { template: "systems/scuvanya/templates/actor/character-sheet.hbs", scrollable: [".sheet-body"] }
   };
@@ -70,7 +80,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     // Kategorie-Bonus, der auf JEDEN Wurf der Kategorie addiert wird (siehe documents/actor.mjs
     // rollSocialSkill/rollScienceSkill/rollSonderSkill) -- wird im Card-Header angezeigt statt
     // redundant in jeder einzelnen Zeile.
-    const signed = n => `${n >= 0 ? "+" : ""}${n}`;
     const bonusLabel = (mod, suffixKey) =>
       `${game.i18n.localize("SCUVANYA.Bonus")}: ${signed(mod)} (${game.i18n.localize(suffixKey)})`;
     context.sozialBonusLabel = bonusLabel(sys.attributes.cha.mod, "SCUVANYA.Category.bonusChaMod");
@@ -115,6 +124,11 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       ringLinks: "ring", ringRechts: "ring", hauptHand: "hauptHand", nebenHand: "nebenHand"
     };
 
+    const equippedSlotLabelByItemId = {};
+    for (const [slotKey, itemId] of Object.entries(sys.equipment.slots)) {
+      if (itemId) equippedSlotLabelByItemId[itemId] = game.i18n.localize(SCUVANYA.equipSlots[slotKey].label);
+    }
+
     const slotsByCategory = { ruestung: [], schmuck: [], hand: [] };
     for (const [key, cfg] of Object.entries(SCUVANYA.equipSlots)) {
       const itemId = sys.equipment.slots[key];
@@ -123,17 +137,12 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
         key,
         label: game.i18n.localize(cfg.label),
         iconKey: ICON_KEYS[key],
-        item: item ? { id: item.id, name: item.name, img: item.img } : null
+        item: item ? { id: item.id, name: item.name, img: item.img, tooltip: this._buildItemTooltipData(item, true) } : null
       });
     }
     context.slotsRuestung = slotsByCategory.ruestung;
     context.slotsSchmuck = slotsByCategory.schmuck;
     context.slotsHand = slotsByCategory.hand;
-
-    const equippedSlotLabelByItemId = {};
-    for (const [slotKey, itemId] of Object.entries(sys.equipment.slots)) {
-      if (itemId) equippedSlotLabelByItemId[itemId] = game.i18n.localize(SCUVANYA.equipSlots[slotKey].label);
-    }
 
     context.inventoryItems = this.actor.items
       .filter(i => ["weapon", "armor", "equipment", "consumable"].includes(i.type))
@@ -147,10 +156,39 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
           typeLabel: game.i18n.localize(`SCUVANYA.ItemType.${i.type}`),
           flags,
           flagsJoined: flags.join("|"),
-          equippedSlotLabel: equippedSlotLabelByItemId[i.id] ?? null
+          equippedSlotLabel: equippedSlotLabelByItemId[i.id] ?? null,
+          tooltip: this._buildItemTooltipData(i, Boolean(equippedSlotLabelByItemId[i.id]))
         };
       });
     context.allFlags = [...new Set(context.inventoryItems.flatMap(i => i.flags))].sort();
+  }
+
+  /**
+   * Alle Infos für den Item-Tooltip (siehe templates/actor/parts/item-tooltip.hbs): Flags,
+   * Slot, Bedingungen MIT Erfüllungsstatus (siehe actor.evaluateConditions) und Effekte MIT
+   * aktivem/inaktivem Status (ein "equipped"-Effekt zählt nur, wenn isEquipped true ist).
+   */
+  _buildItemTooltipData(item, isEquipped) {
+    const conditions = this.actor.evaluateConditions(item).map(c => ({
+      text: `${describePath(c.path)} ${game.i18n.localize(SCUVANYA.conditionOperators[c.operator])} ${c.value} ` +
+        game.i18n.format("SCUVANYA.Item.ConditionActual", { value: c.actual }),
+      met: c.met
+    }));
+
+    const effects = (item.system.effects ?? []).map(effect => ({
+      text: effect.kind === "text" ? effect.text : `${describePath(effect.path, effect.amount)} ${signed(effect.amount)}`,
+      conditionLabel: game.i18n.localize(effect.condition === "carried" ? "SCUVANYA.Equipment.conditionCarried" : "SCUVANYA.Equipment.conditionEquipped"),
+      active: effect.condition === "carried" || isEquipped
+    }));
+
+    return {
+      description: item.system.description ?? "",
+      typeLabel: game.i18n.localize(`SCUVANYA.ItemType.${item.type}`),
+      flags: (item.system.flags ?? []).filter(Boolean),
+      slotLabel: item.system.slot ? game.i18n.localize(`SCUVANYA.ItemSlotValue.${item.system.slot}`) : null,
+      conditions,
+      effects
+    };
   }
 
   /** Nur von 0 abweichende Resistenzen/Verwundbarkeiten -- siehe SCUVANYA.resistanceSteps. */
@@ -211,6 +249,87 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
   _onRender(context, options) {
     super._onRender(context, options);
     this._wireInventoryToolbar();
+    this._wireTooltips();
+  }
+
+  /** @override -- Verhindert einen liegenbleibenden document-Klick-Listener nach Sheet-Schließen. */
+  async close(options) {
+    if (this.#outsideClickHandler) document.removeEventListener("click", this.#outsideClickHandler);
+    return super.close(options);
+  }
+
+  /**
+   * Grundlegender, überall wiederverwendeter Tooltip-Mechanismus (siehe .scv-tooltip in
+   * scuvanya.css): EIN Tooltip-Element pro Render, dessen Inhalt beim Öffnen aus einem
+   * versteckten, vorgerenderten ".tooltip-content"-Block direkt im auslösenden Element
+   * geklont wird (siehe item-tooltip.hbs/breakdown-tooltip.hbs) -- kein HTML-Bau in JS nötig.
+   *
+   * [data-item-tooltip="click"]  -- Inventarliste: Klick auf das Item-Bild öffnet/schließt.
+   * [data-item-tooltip="hover"]  -- Ausgerüstete Slot-Plättchen: sofort bei Hover.
+   * [data-breakdown-tooltip]     -- Attribute/Talente/Disziplinen: erst nach 2s Hover.
+   */
+  _wireTooltips() {
+    if (this.#outsideClickHandler) document.removeEventListener("click", this.#outsideClickHandler);
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "scv-tooltip";
+    this.element.appendChild(tooltip);
+    this.#tooltipEl = tooltip;
+    this.#openTooltipItemId = null;
+
+    const hide = () => {
+      tooltip.classList.remove("scv-tooltip--visible");
+      this.#openTooltipItemId = null;
+    };
+
+    const show = el => {
+      const contentEl = el.querySelector(":scope > .tooltip-content");
+      if (!contentEl) return;
+      tooltip.innerHTML = contentEl.innerHTML;
+      tooltip.classList.add("scv-tooltip--visible");
+
+      const rect = el.getBoundingClientRect();
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      let left = rect.left;
+      let top = rect.bottom + 8;
+      if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
+      if (top + th > window.innerHeight - 8) top = rect.top - th - 8;
+      tooltip.style.left = `${Math.max(8, left)}px`;
+      tooltip.style.top = `${Math.max(8, top)}px`;
+    };
+
+    for (const el of this.element.querySelectorAll('[data-item-tooltip="click"]')) {
+      el.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const itemId = el.closest("[data-item-id]")?.dataset.itemId;
+        if (this.#openTooltipItemId === itemId) { hide(); return; }
+        this.#openTooltipItemId = itemId;
+        show(el);
+      });
+    }
+
+    for (const el of this.element.querySelectorAll('[data-item-tooltip="hover"]')) {
+      el.addEventListener("mouseenter", () => show(el));
+      el.addEventListener("mouseleave", hide);
+    }
+
+    for (const el of this.element.querySelectorAll("[data-breakdown-tooltip]")) {
+      let timer = null;
+      el.addEventListener("mouseenter", () => {
+        timer = setTimeout(() => show(el), 2000);
+      });
+      el.addEventListener("mouseleave", () => {
+        clearTimeout(timer);
+        hide();
+      });
+    }
+
+    this.#outsideClickHandler = event => {
+      if (!tooltip.contains(event.target) && !event.target.closest('[data-item-tooltip="click"]')) hide();
+    };
+    document.addEventListener("click", this.#outsideClickHandler);
   }
 
   /**

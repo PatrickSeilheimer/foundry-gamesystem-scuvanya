@@ -6,6 +6,7 @@
     "Effective": "Effektiv",
     "Mod": "Mod",
     "Bonus": "Bonus",
+    "Total": "Gesamt",
     "Roll": "Würfeln",
     "Delete": "Löschen",
     "Description": "Beschreibung",
@@ -236,7 +237,12 @@
     "Item": {
       "race": "Rasse",
       "profession": "Beruf",
-      "NewName": "Neu: {type}"
+      "NewName": "Neu: {type}",
+      "ConditionActual": "(aktuell {value})",
+      "NoDescription": "Keine Beschreibung.",
+      "NoEffects": "Keine Effekte.",
+      "NoConditions": "Keine Voraussetzungen.",
+      "ShowInfo": "Infos anzeigen"
     },
 
     "Race": {
