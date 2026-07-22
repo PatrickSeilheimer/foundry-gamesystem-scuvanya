@@ -129,6 +129,48 @@ SCUVANYA.resistanceMultiplier = function (step) {
 // Item-Typen, die Effekte (Active Effects) tragen können.
 SCUVANYA.itemTypes = ["weapon", "armor", "consumable", "equipment", "race", "profession"];
 
+/**
+ * Ausrüstungs-Slots eines Charakters (siehe module/data/actor/character.mjs
+ * equipment.slots und module/apps/equip-picker.mjs). "accepts" listet die Werte, die
+ * system.slot eines Items annehmen kann, damit es in diesen Slot passt -- ein Ring-Item
+ * setzt z.B. slot="ring" und passt dadurch sowohl in ringLinks als auch ringRechts.
+ */
+SCUVANYA.equipSlots = {
+  kopf: { label: "SCUVANYA.EquipSlot.kopf", category: "ruestung", accepts: ["kopf"], icon: "🪖" },
+  brust: { label: "SCUVANYA.EquipSlot.brust", category: "ruestung", accepts: ["brust"], icon: "🧥" },
+  arme: { label: "SCUVANYA.EquipSlot.arme", category: "ruestung", accepts: ["arme"], icon: "🧤" },
+  beine: { label: "SCUVANYA.EquipSlot.beine", category: "ruestung", accepts: ["beine"], icon: "👖" },
+  fuesse: { label: "SCUVANYA.EquipSlot.fuesse", category: "ruestung", accepts: ["fuesse"], icon: "👢" },
+  ohrringe: { label: "SCUVANYA.EquipSlot.ohrringe", category: "schmuck", accepts: ["ohrringe"], icon: "💎" },
+  halskette: { label: "SCUVANYA.EquipSlot.halskette", category: "schmuck", accepts: ["halskette"], icon: "📿" },
+  armbaender: { label: "SCUVANYA.EquipSlot.armbaender", category: "schmuck", accepts: ["armbaender"], icon: "💎" },
+  ringLinks: { label: "SCUVANYA.EquipSlot.ringLinks", category: "schmuck", accepts: ["ring"], icon: "💍" },
+  ringRechts: { label: "SCUVANYA.EquipSlot.ringRechts", category: "schmuck", accepts: ["ring"], icon: "💍" },
+  hauptHand: { label: "SCUVANYA.EquipSlot.hauptHand", category: "hand", accepts: ["hauptHand", "beidhaendig"], icon: "⚔️" },
+  nebenHand: { label: "SCUVANYA.EquipSlot.nebenHand", category: "hand", accepts: ["nebenHand", "beidhaendig"], icon: "🛡️" }
+};
+
+// Werte, die system.slot eines equippbaren Items annehmen kann (siehe equipSlots.*.accepts).
+SCUVANYA.itemSlotValues = [
+  "kopf", "brust", "arme", "beine", "fuesse",
+  "ohrringe", "halskette", "armbaender", "ring",
+  "hauptHand", "nebenHand", "beidhaendig"
+];
+
+// Vergleichsoperatoren für Item-Bedingungen (siehe equipment-shared.mjs conditionSchema).
+SCUVANYA.conditionOperators = {
+  gte: "SCUVANYA.ConditionOperator.gte",
+  lte: "SCUVANYA.ConditionOperator.lte",
+  eq: "SCUVANYA.ConditionOperator.eq",
+  gt: "SCUVANYA.ConditionOperator.gt",
+  lt: "SCUVANYA.ConditionOperator.lt"
+};
+
+// Wann ein Effekt eines Items zählt: "equipped" (Standardfall, muss ausgerüstet sein) oder
+// "carried" (wirkt bereits, wenn das Item nur im Inventar liegt -- selten, z.B. ein Amulett,
+// das passiv wirkt, ohne angelegt zu sein).
+SCUVANYA.effectConditions = ["equipped", "carried"];
+
 // Boni-Arten innerhalb einer Eigenschaft (siehe progression-shared.mjs bonusBundleSchema):
 // "fixed": fester Bonus auf genau ein Ziel (path).
 // "choice": wähle EIN Ziel aus options, erhält amount.

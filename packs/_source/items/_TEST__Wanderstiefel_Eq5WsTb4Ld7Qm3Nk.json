@@ -1,0 +1,48 @@
+{
+  "_id": "Eq5WsTb4Ld7Qm3Nk",
+  "_key": "!items!Eq5WsTb4Ld7Qm3Nk",
+  "name": "[TEST] Wanderstiefel",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Federleichte Stiefel aus bestem Leder, verzaubert, um ihren Träger schneller vorankommen zu lassen.</p>",
+    "armorType": "physical",
+    "value": 0,
+    "flags": [
+      "ruestung",
+      "magisch",
+      "test"
+    ],
+    "slot": "fuesse",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "wanderstiefelTempo",
+        "kind": "fixed",
+        "path": "attributes.spd",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

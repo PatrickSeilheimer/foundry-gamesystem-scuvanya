@@ -29,10 +29,31 @@ const FIXED_IDS = {
   Florathi: "Fl3Zk7Bq5Nc9Ht2W",
   Therari: "Th8Mp4Vd6Kx2Rw5S",
   "Militär": "XbApaOOVVm7HJhKP",
-  Wissenschaftler: "UkeLTpYDIpctUwS8"
+  Wissenschaftler: "UkeLTpYDIpctUwS8",
+
+  "[TEST] Eiserner Helm": "Eq1HmKp4Ws8Nd2Rx",
+  "[TEST] Schwerer Kürass": "Eq2KrZb6Tm9Fc3Lp",
+  "[TEST] Lederarmschienen": "Eq3ArWq7Nx5Hd8Vt",
+  "[TEST] Beinschienen": "Eq4BnXf2Rc9Km6Zs",
+  "[TEST] Wanderstiefel": "Eq5WsTb4Ld7Qm3Nk",
+  "[TEST] Ohrringe der Klarheit": "Eq6OhRp8Vc2Ws5Ft",
+  "[TEST] Amulett der Wachsamkeit": "Eq7AmZk3Nx6Bq9Ld",
+  "[TEST] Armband der Stärke": "Eq8ArKt5Ws2Rc7Mn",
+  "[TEST] Ring der Macht": "Eq9RgMp7Xf4Nd1Kw",
+  "[TEST] Schwert des Kriegers": "Eq1SwKr9Tb3Vc6Zm",
+  "[TEST] Schild der Standhaftigkeit": "Eq2ShSt4Nk8Wq5Rp",
+  "[TEST] Zweihandschwert": "Eq3ZwHs6Md2Ft9Xc",
+  "[TEST] Heiltrank": "Eq4HlTr8Kn3Wp5Zs"
 };
 
-const PACK_FOR_TYPE = { race: "races", profession: "professions" };
+const PACK_FOR_TYPE = {
+  race: "races",
+  profession: "professions",
+  weapon: "items",
+  armor: "items",
+  equipment: "items",
+  consumable: "items"
+};
 
 function getSafeFilename(name) {
   return name.replace(/[^a-zA-Z0-9]/g, "_");
@@ -53,7 +74,7 @@ for (const entry of DEFAULT_ITEMS) {
     folder: null,
     sort: 0,
     ownership: { default: 0 },
-    flags: {},
+    flags: entry.flags ?? {},
     _stats: {
       systemId: "scuvanya",
       systemVersion: "0.1.0",

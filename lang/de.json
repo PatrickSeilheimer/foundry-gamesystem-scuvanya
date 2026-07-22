@@ -49,6 +49,60 @@
       "armorMagical": "MR"
     },
 
+    "EquipSlot": {
+      "kopf": "Kopf",
+      "brust": "Brust",
+      "arme": "Arme",
+      "beine": "Beine",
+      "fuesse": "Füße",
+      "ohrringe": "Ohrringe",
+      "halskette": "Halskette",
+      "armbaender": "Armbänder",
+      "ringLinks": "Ring (links)",
+      "ringRechts": "Ring (rechts)",
+      "hauptHand": "Haupthand",
+      "nebenHand": "Nebenhand"
+    },
+
+    "ItemSlotValue": {
+      "kopf": "Kopf",
+      "brust": "Brust",
+      "arme": "Arme",
+      "beine": "Beine",
+      "fuesse": "Füße",
+      "ohrringe": "Ohrringe",
+      "halskette": "Halskette",
+      "armbaender": "Armbänder",
+      "ring": "Ring (links oder rechts)",
+      "hauptHand": "Haupthand",
+      "nebenHand": "Nebenhand",
+      "beidhaendig": "Beidhändig (Haupt- oder Nebenhand)"
+    },
+
+    "ConditionOperator": {
+      "gte": "≥",
+      "lte": "≤",
+      "eq": "=",
+      "gt": ">",
+      "lt": "<"
+    },
+
+    "EquipPicker": {
+      "Title": "Slot: {slot}",
+      "Current": "Aktuell ausgerüstet",
+      "Unequip": "Ausziehen",
+      "Empty": "Leer",
+      "Candidates": "Verfügbare Gegenstände",
+      "NoCandidates": "Keine passenden, nicht ausgerüsteten Gegenstände im Inventar."
+    },
+
+    "Inventory": {
+      "Search": "Suchen …",
+      "SortName": "Name",
+      "SortType": "Kategorie",
+      "Empty": "Keine Gegenstände im Inventar."
+    },
+
     "Armor": {
       "physical": "Rüstung (physisch)",
       "magical": "Rüstung (magisch)",
@@ -69,7 +123,9 @@
       "attribute": "Attribute",
       "resistenzen": "Resistenzen und Verwundbarkeiten",
       "sprachenBekannt": "Sprachen",
-      "biografie": "Biografie"
+      "biografie": "Biografie",
+      "ausgeruestet": "Ausgerüstet",
+      "inventarListe": "Inventar"
     },
 
     "Resistance": {
@@ -109,6 +165,7 @@
       "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final",
       "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden",
       "AktionenComingSoon": "Aktionen sind noch nicht verfügbar.",
+      "ItemBonusIncluded": "Enthält einen Bonus durch ausgerüstete/getragene Ausrüstung",
       "EditInCreator": "Attribute, Talente und Disziplinen werden aktuell im Charaktererstellungs-Wizard verteilt (Klick auf \"Edit\")."
     },
 
@@ -120,7 +177,9 @@
       "Untrained": "{skill}: keine Ausbildung (Stufe 0), kein Wurf möglich",
       "OnlyOne": "Es kann nur eine Rasse bzw. ein Beruf pro Charakter vergeben werden ({type})",
       "NoFreePoints": "Keine freien Attributpunkte mehr übrig",
-      "NotEnoughSkillPoints": "Nicht genug Skillpunkte (Kosten: {cost}, verfügbar: {available})"
+      "NotEnoughSkillPoints": "Nicht genug Skillpunkte (Kosten: {cost}, verfügbar: {available})",
+      "SlotMismatch": "Dieses Item passt nicht in diesen Slot",
+      "ConditionsNotMet": "Die Voraussetzungen für \"{item}\" sind nicht erfüllt"
     },
 
     "SkillPoints": {
@@ -214,7 +273,22 @@
     },
 
     "Equipment": {
-      "weight": "Gewicht"
+      "weight": "Gewicht",
+      "flags": "Flags",
+      "flagsHint": "Beliebige Schlagworte zur Kategorisierung -- werden im Inventar des Charakterbogens als Filter angeboten.",
+      "addFlag": "Flag hinzufügen",
+      "slot": "Ausrüstungs-Slot",
+      "conditions": "Voraussetzungen",
+      "conditionsHint": "Alle Voraussetzungen müssen erfüllt sein, damit das Item ausgerüstet werden kann (z.B. attributes.str >= 12).",
+      "conditionPath": "Pfad (z.B. attributes.str)",
+      "effects": "Effekte",
+      "effectsHint": "\"Ausgerüstet\" zählt nur, wenn das Item in einem Slot steckt. \"Im Besitz\" zählt schon, wenn es nur im Inventar liegt.",
+      "effectKindFixed": "Fester Bonus",
+      "effectKindText": "Text",
+      "effectText": "Text",
+      "effectPath": "Pfad (z.B. disziplinen.kampf.krieger)",
+      "conditionEquipped": "Ausgerüstet",
+      "conditionCarried": "Im Besitz"
     },
 
     "Progression": {

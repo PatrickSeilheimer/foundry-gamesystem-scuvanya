@@ -1,0 +1,54 @@
+{
+  "_id": "Eq9RgMp7Xf4Nd1Kw",
+  "_key": "!items!Eq9RgMp7Xf4Nd1Kw",
+  "name": "[TEST] Ring der Macht",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein schlichter goldener Ring, der die magischen Fähigkeiten seines Trägers deutlich verstärkt. Passt sowohl an den linken als auch den rechten Ringfinger.</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "schmuck",
+      "magisch",
+      "test"
+    ],
+    "slot": "ring",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "ringMagie",
+        "kind": "fixed",
+        "path": "attributes.mag",
+        "amount": 2,
+        "condition": "equipped"
+      },
+      {
+        "key": "ringWaerme",
+        "kind": "text",
+        "text": "Der Ring wird spürbar warm, wenn in der Nähe Magie gewirkt wird.",
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

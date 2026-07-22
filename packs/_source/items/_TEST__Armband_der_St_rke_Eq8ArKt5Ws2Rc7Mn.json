@@ -1,0 +1,48 @@
+{
+  "_id": "Eq8ArKt5Ws2Rc7Mn",
+  "_key": "!items!Eq8ArKt5Ws2Rc7Mn",
+  "name": "[TEST] Armband der Stärke",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein schwerer Armreif aus dunklem Metall, der die Muskeln seines Trägers spürbar kräftigt.</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "schmuck",
+      "magisch",
+      "test"
+    ],
+    "slot": "armbaender",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "armbandStaerke",
+        "kind": "fixed",
+        "path": "attributes.str",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

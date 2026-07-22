@@ -1,0 +1,48 @@
+{
+  "_id": "Eq7AmZk3Nx6Bq9Ld",
+  "_key": "!items!Eq7AmZk3Nx6Bq9Ld",
+  "name": "[TEST] Amulett der Wachsamkeit",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein warm pulsierendes Amulett. Seine schützende Wirkung entfaltet es bereits, wenn es nur am Körper getragen oder in der Tasche mitgeführt wird -- es muss dafür nicht sichtbar umgehängt sein.</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "schmuck",
+      "magisch",
+      "test"
+    ],
+    "slot": "halskette",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "amulettWachsamkeit",
+        "kind": "fixed",
+        "path": "initiative",
+        "amount": 2,
+        "condition": "carried"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

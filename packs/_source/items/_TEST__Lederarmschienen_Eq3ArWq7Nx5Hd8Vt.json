@@ -1,0 +1,48 @@
+{
+  "_id": "Eq3ArWq7Nx5Hd8Vt",
+  "_key": "!items!Eq3ArWq7Nx5Hd8Vt",
+  "name": "[TEST] Lederarmschienen",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Gegerbtes Leder, an den Unterarmen geschnallt. Bietet leichten Schutz, ohne die Beweglichkeit einzuschränken.</p>",
+    "armorType": "physical",
+    "value": 1,
+    "flags": [
+      "ruestung",
+      "leicht",
+      "test"
+    ],
+    "slot": "arme",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "armschienenSchutz",
+        "kind": "fixed",
+        "path": "armor.physical",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

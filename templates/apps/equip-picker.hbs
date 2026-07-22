@@ -1,0 +1,27 @@
+<form class="scuvanya-sheet equip-picker" autocomplete="off">
+  <section class="equip-picker-body">
+
+    <h3>{{localize 'SCUVANYA.EquipPicker.Current'}}</h3>
+    {{#if current}}
+    <div class="equip-picker-current">
+      <img src="{{current.img}}">
+      <span class="equip-picker-current__name">{{current.name}}</span>
+      <button type="button" class="cc-btn" data-action="unequip">{{localize 'SCUVANYA.EquipPicker.Unequip'}}</button>
+    </div>
+    {{else}}
+    <p class="cc-hint">{{localize 'SCUVANYA.EquipPicker.Empty'}}</p>
+    {{/if}}
+
+    <h3>{{localize 'SCUVANYA.EquipPicker.Candidates'}}</h3>
+    <div class="equip-picker-list">
+      {{#each candidates as |item|}}
+      <a class="equip-picker-item" data-action="pick" data-item-id="{{item.id}}">
+        <img src="{{item.img}}">
+        <span class="equip-picker-item__name">{{item.name}}</span>
+      </a>
+      {{else}}
+      <p class="cc-hint">{{localize 'SCUVANYA.EquipPicker.NoCandidates'}}</p>
+      {{/each}}
+    </div>
+  </section>
+</form>

@@ -1,0 +1,64 @@
+{{#with this as |root|}}
+<h3>{{localize 'SCUVANYA.Equipment.flags'}}</h3>
+<p class="hint">{{localize 'SCUVANYA.Equipment.flagsHint'}}</p>
+<div class="flag-edit-row">
+  {{#each root.system.flags as |flag flagIndex|}}
+  <span class="flag-edit-chip">
+    <input type="text" name="system.flags.{{flagIndex}}" value="{{flag}}">
+    <a data-action="removeFlag" data-flag-index="{{flagIndex}}">✕</a>
+  </span>
+  {{/each}}
+  <button type="button" data-action="addFlag">+ {{localize 'SCUVANYA.Equipment.addFlag'}}</button>
+</div>
+
+{{#if root.equipable}}
+<h3>{{localize 'SCUVANYA.Equipment.slot'}}</h3>
+<select name="system.slot">
+  <option value="">—</option>
+  {{#each root.config.itemSlotValues as |slotValue|}}
+  <option value="{{slotValue}}" {{#if (eq slotValue root.system.slot)}}selected{{/if}}>{{localize (concat "SCUVANYA.ItemSlotValue." slotValue)}}</option>
+  {{/each}}
+</select>
+
+<h3>{{localize 'SCUVANYA.Equipment.conditions'}}
+  <button type="button" data-action="addCondition">+</button>
+</h3>
+<p class="hint">{{localize 'SCUVANYA.Equipment.conditionsHint'}}</p>
+{{#each root.system.conditions as |condition conditionIndex|}}
+<div class="condition-row" data-condition-index="{{conditionIndex}}">
+  <input type="text" name="system.conditions.{{conditionIndex}}.path" value="{{condition.path}}" placeholder="{{localize 'SCUVANYA.Equipment.conditionPath'}}">
+  <select name="system.conditions.{{conditionIndex}}.operator">
+    {{#each root.config.conditionOperators as |opLabel opKey|}}
+    <option value="{{opKey}}" {{#if (eq opKey condition.operator)}}selected{{/if}}>{{localize opLabel}}</option>
+    {{/each}}
+  </select>
+  <input type="number" name="system.conditions.{{conditionIndex}}.value" value="{{condition.value}}">
+  <a data-action="removeCondition" data-condition-index="{{conditionIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+</div>
+{{/each}}
+
+<h3>{{localize 'SCUVANYA.Equipment.effects'}}
+  <button type="button" data-action="addEffect">+</button>
+</h3>
+<p class="hint">{{localize 'SCUVANYA.Equipment.effectsHint'}}</p>
+{{#each root.system.effects as |effect effectIndex|}}
+<div class="effect-row" data-effect-index="{{effectIndex}}">
+  <select name="system.effects.{{effectIndex}}.kind">
+    <option value="fixed" {{#if (eq effect.kind "fixed")}}selected{{/if}}>{{localize 'SCUVANYA.Equipment.effectKindFixed'}}</option>
+    <option value="text" {{#if (eq effect.kind "text")}}selected{{/if}}>{{localize 'SCUVANYA.Equipment.effectKindText'}}</option>
+  </select>
+  {{#if (eq effect.kind "text")}}
+  <input type="text" name="system.effects.{{effectIndex}}.text" value="{{effect.text}}" placeholder="{{localize 'SCUVANYA.Equipment.effectText'}}">
+  {{else}}
+  <input type="text" name="system.effects.{{effectIndex}}.path" value="{{effect.path}}" placeholder="{{localize 'SCUVANYA.Equipment.effectPath'}}">
+  <input type="number" name="system.effects.{{effectIndex}}.amount" value="{{effect.amount}}">
+  {{/if}}
+  <select name="system.effects.{{effectIndex}}.condition">
+    <option value="equipped" {{#if (eq effect.condition "equipped")}}selected{{/if}}>{{localize 'SCUVANYA.Equipment.conditionEquipped'}}</option>
+    <option value="carried" {{#if (eq effect.condition "carried")}}selected{{/if}}>{{localize 'SCUVANYA.Equipment.conditionCarried'}}</option>
+  </select>
+  <a data-action="removeEffect" data-effect-index="{{effectIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
+</div>
+{{/each}}
+{{/if}}
+{{/with}}

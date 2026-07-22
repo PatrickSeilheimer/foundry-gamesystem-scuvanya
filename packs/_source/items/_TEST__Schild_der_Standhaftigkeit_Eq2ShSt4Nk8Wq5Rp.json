@@ -1,0 +1,55 @@
+{
+  "_id": "Eq2ShSt4Nk8Wq5Rp",
+  "_key": "!items!Eq2ShSt4Nk8Wq5Rp",
+  "name": "[TEST] Schild der Standhaftigkeit",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein massiver Rundschild aus Eisen und Eichenholz, der sowohl gegen Klingen als auch gegen Fernangriffe zuverlässig schützt.</p>",
+    "armorType": "physical",
+    "value": 2,
+    "flags": [
+      "ruestung",
+      "schild",
+      "test"
+    ],
+    "slot": "nebenHand",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "schildSchutz",
+        "kind": "fixed",
+        "path": "armor.physical",
+        "amount": 2,
+        "condition": "equipped"
+      },
+      {
+        "key": "schildAc",
+        "kind": "fixed",
+        "path": "ac.value",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

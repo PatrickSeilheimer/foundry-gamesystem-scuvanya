@@ -1,0 +1,58 @@
+{
+  "_id": "Eq3ZwHs6Md2Ft9Xc",
+  "_key": "!items!Eq3ZwHs6Md2Ft9Xc",
+  "name": "[TEST] Zweihandschwert",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Eine gewaltige, beidhändig geführte Klinge. Für den vollen Krafteinsatz müssen beide Hände frei sein -- es passt deshalb sowohl in die Haupt- als auch in die Nebenhand.</p>",
+    "damageFormula": "2d6",
+    "damageType": "hieb",
+    "ranged": false,
+    "discipline": "krieger",
+    "equipped": false,
+    "flags": [
+      "waffe",
+      "zweihaendig",
+      "schwer",
+      "test"
+    ],
+    "slot": "beidhaendig",
+    "conditions": [
+      {
+        "path": "attributes.str",
+        "operator": "gte",
+        "value": 12
+      }
+    ],
+    "effects": [
+      {
+        "key": "zweihandKrieger",
+        "kind": "fixed",
+        "path": "disziplinen.kampf.krieger",
+        "amount": 2,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

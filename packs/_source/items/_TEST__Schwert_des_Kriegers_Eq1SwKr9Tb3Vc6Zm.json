@@ -1,0 +1,51 @@
+{
+  "_id": "Eq1SwKr9Tb3Vc6Zm",
+  "_key": "!items!Eq1SwKr9Tb3Vc6Zm",
+  "name": "[TEST] Schwert des Kriegers",
+  "type": "weapon",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein gut ausbalanciertes Langschwert mit einer Gravur alter Kriegerorden. Es liegt erfahrenen Kriegern besonders gut in der Hand.</p>",
+    "damageFormula": "1d8",
+    "damageType": "hieb",
+    "ranged": false,
+    "discipline": "krieger",
+    "equipped": false,
+    "flags": [
+      "waffe",
+      "nahkampf",
+      "test"
+    ],
+    "slot": "hauptHand",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "schwertKrieger",
+        "kind": "fixed",
+        "path": "disziplinen.kampf.krieger",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -19,7 +19,7 @@ import {
   EXTRA_TALENT_COST
 } from "../../rules/costs.mjs";
 import { activeRaceBundles } from "../item/race-resolve.mjs";
-import { resolveBundles, applyPathBonuses } from "../item/path-resolve.mjs";
+import { resolveBundles, applyPathBonuses, resolveItemEffects } from "../item/path-resolve.mjs";
 
 const fields = foundry.data.fields;
 
@@ -94,6 +94,18 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       disziplinen: new fields.SchemaField({
         kampf: disciplinesField(Object.keys(SCUVANYA.combatDisciplines)),
         magie: disciplinesField(Object.keys(SCUVANYA.magicDisciplines))
+      }),
+
+      // Welches Item (embedded item id, "" = leer) aktuell in welchem Ausrüstungs-Slot steckt,
+      // siehe SCUVANYA.equipSlots und module/apps/equip-picker.mjs. Das ist die einzige
+      // Quelle der Wahrheit für "ausgerüstet" auf dem Charakterbogen -- das ältere, einfache
+      // item.system.equipped-Feld (Waffe/Rüstung) bleibt nur aus Altlast-Gründen bestehen.
+      equipment: new fields.SchemaField({
+        slots: new fields.SchemaField(
+          Object.fromEntries(Object.keys(SCUVANYA.equipSlots).map(key => [
+            key, new fields.StringField({ required: false, blank: true, initial: "" })
+          ]))
+        )
       })
     };
   }
@@ -108,10 +120,19 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     // resistancesEffective muss VOR applyPathBonuses existieren, da Resistenz-Boni dort
     // direkt hineinaddiert werden (siehe path-resolve.mjs).
     this.resistancesEffective = foundry.utils.deepClone(this.resistances);
+    // Einmaliger Reset VOR beiden applyPathBonuses-Durchläufen (Rasse/Beruf + Ausrüstung) --
+    // siehe Kommentar in path-resolve.mjs, warum das nicht mehr in applyPathBonuses selbst passiert.
+    this._armorBonus = { physical: 0, magical: 0 };
+    this._acBonus = 0;
+    this._initiativeBonus = 0;
 
     const { pathBonuses, texts } = this._computeProgressionBonus();
     this.progressionTexts = texts;
-    applyPathBonuses(this, pathBonuses);
+    applyPathBonuses(this, pathBonuses, "raceBonus");
+
+    const { pathBonuses: itemPathBonuses, texts: itemTexts } = this._computeItemBonus();
+    this.itemTexts = itemTexts;
+    applyPathBonuses(this, itemPathBonuses, "itemBonus");
 
     this._prepareAttributes();
     this._prepareResources();
@@ -147,11 +168,27 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     return { pathBonuses, texts };
   }
 
+  /**
+   * Sammelt die Effekte aller ausrüstbaren Items (Waffe/Rüstung/Ausrüstung) zu EINEM flachen
+   * Boni-Satz -- getrennt von _computeProgressionBonus, weil Ausrüstungsboni ein eigenes
+   * Overlay ("itemBonus" statt "raceBonus") bekommen, siehe applyPathBonuses. "equipped"-Effekte
+   * zählen nur für Items, deren ID gerade in einem Slot steckt (system.equipment.slots.*),
+   * "carried"-Effekte für jedes Item im Besitz, ausgerüstet oder nicht.
+   */
+  _computeItemBonus() {
+    const items = (this.parent?.items ?? []).filter(i =>
+      ["weapon", "armor", "equipment"].includes(i.type)
+    );
+    const equippedItemIds = new Set(Object.values(this.equipment.slots).filter(Boolean));
+    return resolveItemEffects(items, equippedItemIds);
+  }
+
   _prepareAttributes() {
     for (const key of Object.keys(SCUVANYA.attributes)) {
       const attr = this.attributes[key];
       attr.raceBonus = attr.raceBonus ?? 0;
-      attr.effectiveValue = attr.value + attr.raceBonus;
+      attr.itemBonus = attr.itemBonus ?? 0;
+      attr.effectiveValue = attr.value + attr.raceBonus + attr.itemBonus;
       attr.mod = attr.effectiveValue - 10;
     }
   }

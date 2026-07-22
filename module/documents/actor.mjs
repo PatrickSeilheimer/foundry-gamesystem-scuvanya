@@ -25,21 +25,21 @@ export default class ScuvanyaActor extends Actor {
   async rollSocialSkill(polarity, key) {
     const skill = this.system.talents.sozial[polarity][key];
     const chaMod = this.system.attributes.cha.mod;
-    const raceBonus = skill.raceBonus ?? 0;
-    return rollToChat(this, `1d20 + ${skill.level} + ${chaMod} + ${raceBonus}`, `${this._skillLabel(key)}`);
+    const bonus = (skill.raceBonus ?? 0) + (skill.itemBonus ?? 0);
+    return rollToChat(this, `1d20 + ${skill.level} + ${chaMod} + ${bonus}`, `${this._skillLabel(key)}`);
   }
 
   async rollScienceSkill(branch, key) {
     const skill = this.system.talents.wissenschaften[branch][key];
     const intMod = this.system.attributes.int.mod;
-    const raceBonus = skill.raceBonus ?? 0;
-    return rollToChat(this, `1d20 + ${skill.level} + ${intMod} + ${raceBonus}`, `${this._skillLabel(key)}`);
+    const bonus = (skill.raceBonus ?? 0) + (skill.itemBonus ?? 0);
+    return rollToChat(this, `1d20 + ${skill.level} + ${intMod} + ${bonus}`, `${this._skillLabel(key)}`);
   }
 
   async rollPhysicalSkill(key) {
     const skill = this.system.talents.koerperlich[key];
-    const raceBonus = skill.raceBonus ?? 0;
-    return rollToChat(this, `1d20 + ${skill.bonus} + ${raceBonus}`, `${this._skillLabel(key)}`);
+    const bonus = (skill.raceBonus ?? 0) + (skill.itemBonus ?? 0);
+    return rollToChat(this, `1d20 + ${skill.bonus} + ${bonus}`, `${this._skillLabel(key)}`);
   }
 
   async rollSonderSkill(key) {
@@ -47,8 +47,8 @@ export default class ScuvanyaActor extends Actor {
     // PLATZHALTER: Bonusattribut je Sondertalent aus SCUVANYA.sonderSkills, aktuell alles MAG.
     const attrKey = SCUVANYA.sonderSkills[key] ?? "mag";
     const attrMod = this.system.attributes[attrKey].mod;
-    const raceBonus = skill.raceBonus ?? 0;
-    return rollToChat(this, `1d20 + ${skill.level} + ${attrMod} + ${raceBonus}`, `${this._skillLabel(key)}`);
+    const bonus = (skill.raceBonus ?? 0) + (skill.itemBonus ?? 0);
+    return rollToChat(this, `1d20 + ${skill.level} + ${attrMod} + ${bonus}`, `${this._skillLabel(key)}`);
   }
 
   async rollHandwerkSkill(key) {
@@ -66,15 +66,15 @@ export default class ScuvanyaActor extends Actor {
       ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.Untrained", { skill: this._skillLabel(key) }));
       return null;
     }
-    const raceBonus = skill.raceBonus ?? 0;
-    if (raceBonus) formula += ` + ${raceBonus}`;
+    const bonus = (skill.raceBonus ?? 0) + (skill.itemBonus ?? 0);
+    if (bonus) formula += ` + ${bonus}`;
     return rollToChat(this, formula, `${this._skillLabel(key)}`);
   }
 
   async rollDiscipline(kind, key) {
     const discipline = this.system.disziplinen[kind][key];
-    const raceBonus = discipline.raceBonus ?? 0;
-    return rollToChat(this, `1d20 + ${discipline.level} + ${raceBonus}`, `${this._disciplineLabel(kind, key)}`);
+    const bonus = (discipline.raceBonus ?? 0) + (discipline.itemBonus ?? 0);
+    return rollToChat(this, `1d20 + ${discipline.level} + ${bonus}`, `${this._disciplineLabel(kind, key)}`);
   }
 
   /**
@@ -96,6 +96,65 @@ export default class ScuvanyaActor extends Actor {
 
     const hp = this.system.resources.hp;
     return this.update({ "system.resources.hp.value": Math.max(0, hp.value - finalDamage) });
+  }
+
+  static #CONDITION_COMPARATORS = {
+    gte: (a, b) => a >= b,
+    lte: (a, b) => a <= b,
+    eq: (a, b) => a === b,
+    gt: (a, b) => a > b,
+    lt: (a, b) => a < b
+  };
+
+  /**
+   * Liest den aktuellen (effektiven) Wert für einen Bedingungs-Pfad. Attribute lösen bewusst
+   * auf "effectiveValue" auf (Basis + Rassen-/Berufsbonus + Ausrüstungsbonus), damit z.B. eine
+   * STR-Bedingung den tatsächlich wirksamen Wert prüft, nicht nur die reine Basis.
+   */
+  _resolveConditionValue(path) {
+    if (path.startsWith("attributes.")) {
+      const key = path.slice("attributes.".length);
+      return this.system.attributes[key]?.effectiveValue ?? 0;
+    }
+    const current = foundry.utils.getProperty(this.system, path);
+    return typeof current === "number" ? current : 0;
+  }
+
+  /** Prüft, ob alle Ausrüstungs-Voraussetzungen eines Items erfüllt sind (siehe equipment-shared.mjs). */
+  canEquipItem(item) {
+    for (const condition of item.system.conditions ?? []) {
+      if (!condition.path) continue;
+      const compare = ScuvanyaActor.#CONDITION_COMPARATORS[condition.operator] ?? ScuvanyaActor.#CONDITION_COMPARATORS.gte;
+      if (!compare(this._resolveConditionValue(condition.path), condition.value)) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Rüstet ein Item in einem Slot aus (ersetzt ggf. das vorher dort steckende Item). Prüft
+   * Slot-Kompatibilität (item.system.slot muss in SCUVANYA.equipSlots[slotKey].accepts stehen)
+   * und die Ausrüstungs-Voraussetzungen (canEquipItem). Gibt false zurück und zeigt eine Warnung,
+   * wenn eine der beiden Prüfungen fehlschlägt.
+   */
+  async equipItem(slotKey, itemId) {
+    const slotConfig = SCUVANYA.equipSlots[slotKey];
+    if (!slotConfig) return false;
+    const item = this.items.get(itemId);
+    if (!item || !slotConfig.accepts.includes(item.system.slot)) {
+      ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.SlotMismatch"));
+      return false;
+    }
+    if (!this.canEquipItem(item)) {
+      ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.ConditionsNotMet", { item: item.name }));
+      return false;
+    }
+    await this.update({ [`system.equipment.slots.${slotKey}`]: itemId });
+    return true;
+  }
+
+  async unequipSlot(slotKey) {
+    if (!SCUVANYA.equipSlots[slotKey]) return;
+    await this.update({ [`system.equipment.slots.${slotKey}`]: "" });
   }
 
   _skillLabel(key) {

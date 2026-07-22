@@ -13,6 +13,7 @@
   <div class="cc-category__body">
     {{#each root.skills as |skill|}}
     <div class="talent-row">
+      {{#if skill.hasItemBonus}}<span class="item-bonus-dot item-bonus-dot--inline" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
       <a class="talent-row__name" data-action="{{root.rollAction}}" data-key="{{skill.key}}" title="{{localize 'SCUVANYA.Roll'}}">{{skill.label}}</a>
       {{#if skill.die}}<span class="talent-row__die">{{skill.die}}</span>{{/if}}
       <span class="talent-row__crosses">{{skill.crosses}}</span>

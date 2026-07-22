@@ -1,5 +1,6 @@
 import { SCUVANYA } from "../../config.mjs";
 import { baseItemSchema } from "./base-item.mjs";
+import { equipableItemSchema } from "./equipment-shared.mjs";
 
 const fields = foundry.data.fields;
 
@@ -7,6 +8,7 @@ export default class WeaponData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...baseItemSchema(),
+      ...equipableItemSchema(),
       damageFormula: new fields.StringField({ required: true, initial: "1d6" }),
       damageType: new fields.StringField({
         required: true,

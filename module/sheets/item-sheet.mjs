@@ -28,7 +28,13 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
       addBonusOption: ScuvanyaItemSheet.#onAddBonusOption,
       removeBonusOption: ScuvanyaItemSheet.#onRemoveBonusOption,
       addSubrace: ScuvanyaItemSheet.#onAddSubrace,
-      removeSubrace: ScuvanyaItemSheet.#onRemoveSubrace
+      removeSubrace: ScuvanyaItemSheet.#onRemoveSubrace,
+      addFlag: ScuvanyaItemSheet.#onAddFlag,
+      removeFlag: ScuvanyaItemSheet.#onRemoveFlag,
+      addCondition: ScuvanyaItemSheet.#onAddCondition,
+      removeCondition: ScuvanyaItemSheet.#onRemoveCondition,
+      addEffect: ScuvanyaItemSheet.#onAddEffect,
+      removeEffect: ScuvanyaItemSheet.#onRemoveEffect
     }
   };
 
@@ -108,5 +114,44 @@ export default class ScuvanyaItemSheet extends HandlebarsApplicationMixin(ItemSh
     const subraces = foundry.utils.deepClone(this.item.system.subraces ?? []);
     subraces.splice(index, 1);
     await this.item.update({ "system.subraces": subraces });
+  }
+
+  static async #onAddFlag() {
+    const flags = foundry.utils.deepClone(this.item.system.flags ?? []);
+    flags.push("");
+    await this.item.update({ "system.flags": flags });
+  }
+
+  static async #onRemoveFlag(event, target) {
+    const index = Number(target.closest("[data-flag-index]")?.dataset.flagIndex);
+    const flags = foundry.utils.deepClone(this.item.system.flags ?? []);
+    flags.splice(index, 1);
+    await this.item.update({ "system.flags": flags });
+  }
+
+  static async #onAddCondition() {
+    const conditions = foundry.utils.deepClone(this.item.system.conditions ?? []);
+    conditions.push({ path: "", operator: "gte", value: 0 });
+    await this.item.update({ "system.conditions": conditions });
+  }
+
+  static async #onRemoveCondition(event, target) {
+    const index = Number(target.closest("[data-condition-index]")?.dataset.conditionIndex);
+    const conditions = foundry.utils.deepClone(this.item.system.conditions ?? []);
+    conditions.splice(index, 1);
+    await this.item.update({ "system.conditions": conditions });
+  }
+
+  static async #onAddEffect() {
+    const effects = foundry.utils.deepClone(this.item.system.effects ?? []);
+    effects.push({ key: "", kind: "fixed", path: "", amount: 0, text: "", condition: "equipped" });
+    await this.item.update({ "system.effects": effects });
+  }
+
+  static async #onRemoveEffect(event, target) {
+    const index = Number(target.closest("[data-effect-index]")?.dataset.effectIndex);
+    const effects = foundry.utils.deepClone(this.item.system.effects ?? []);
+    effects.splice(index, 1);
+    await this.item.update({ "system.effects": effects });
   }
 }

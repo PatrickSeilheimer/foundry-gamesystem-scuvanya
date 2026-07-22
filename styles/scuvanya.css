@@ -1302,6 +1302,7 @@
 }
 
 .character-sheet .attr-tile {
+  position: relative;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
   border-radius: 14px;
@@ -1313,6 +1314,32 @@
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   transition: all var(--scv-transition);
+}
+
+/* Markiert einen Ausrüstungs-Effekt (item-bonus) -- NICHT Rassen-/Berufsboni, siehe
+   context-helpers.mjs. Deutlich sichtbarer Leucht-Punkt statt der kaum erkennbaren
+   Vorgänger-Version. */
+.character-sheet .item-bonus-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--scv-accent);
+  border: 2px solid var(--scv-bg);
+  box-shadow: 0 0 6px 1px var(--scv-accent);
+}
+
+/* Für schmale Zeilen (Talent-Listen), wo ein absolut positionierter Eck-Punkt nicht passt. */
+.character-sheet .item-bonus-dot--inline {
+  position: static;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.15rem;
+  border: none;
+  flex-shrink: 0;
 }
 
 .character-sheet .attr-tile:hover {
@@ -1503,6 +1530,7 @@
 }
 
 .character-sheet .disziplin-tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1620,3 +1648,185 @@
   resize: vertical;
   line-height: 1.6;
 }
+
+/* ── Inventar: Slot-Leiste ────────────────────────────────────────── */
+.character-sheet .slot-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.character-sheet .slot-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--scv-bg);
+  border: 1px solid var(--scv-border);
+  border-radius: 20px;
+  padding: 0.3rem 0.7rem 0.3rem 0.4rem;
+  cursor: pointer;
+  transition: all var(--scv-transition);
+}
+
+.character-sheet .slot-chip:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
+.character-sheet .slot-chip--filled { border-color: var(--scv-accent-border); }
+
+.character-sheet .slot-chip__icon { font-size: 1rem; }
+
+.character-sheet .slot-chip__label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--scv-text-muted);
+}
+
+.character-sheet .slot-chip__item {
+  font-size: 0.78rem;
+  color: var(--scv-text);
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.character-sheet .slot-chip--filled .slot-chip__item { color: var(--scv-accent); }
+
+/* ── Inventar: Werkzeugleiste (Suche/Sortierung/Anlegen) + Flag-Filter ───────── */
+.character-sheet .inventory-create {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.character-sheet .inventory-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.6rem 0;
+}
+
+.character-sheet .inventory-search { max-width: 220px; }
+
+.character-sheet .inventory-sort {
+  display: flex;
+  gap: 0.35rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--scv-border);
+}
+
+.character-sheet .inventory-sort-btn { cursor: pointer; }
+
+.character-sheet .inventory-flag-filters { margin-bottom: 0.6rem; }
+
+.character-sheet .inventory-flag-filter { cursor: pointer; transition: all var(--scv-transition); }
+
+.character-sheet .inventory-flag-filter.selected {
+  background: var(--scv-accent-dim);
+  border-color: var(--scv-accent);
+  color: var(--scv-accent);
+}
+
+.character-sheet .ausr-row__type {
+  font-size: 0.72rem;
+  color: var(--scv-text-muted);
+  font-style: italic;
+  flex-shrink: 0;
+}
+
+.character-sheet .flag-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+/* ── Equip-Picker Popup (nutzt das .character-creation Theme, siehe equip-picker.mjs) ── */
+.equip-picker .equip-picker-body { padding: 0.9rem 1.1rem; }
+
+.equip-picker .equip-picker-current {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.equip-picker .equip-picker-current img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--scv-border);
+}
+
+.equip-picker .equip-picker-current__name { flex: 1; color: var(--scv-text); }
+
+.equip-picker .equip-picker-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--scv-border);
+  border-radius: 4px;
+}
+
+.equip-picker .equip-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--scv-border);
+  color: var(--scv-text);
+  transition: background var(--scv-transition);
+}
+
+.equip-picker .equip-picker-item:last-child { border-bottom: none; }
+.equip-picker .equip-picker-item:hover { background: var(--scv-accent-dim); color: var(--scv-accent-hover); }
+
+.equip-picker .equip-picker-item img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+/* ── Item-Sheet: Flags/Bedingungen/Effekte (Waffe/Rüstung/Ausrüstung/Verbrauchsgut) ── */
+.scuvanya-sheet .flag-edit-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.scuvanya-sheet .flag-edit-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 0.1rem 0.3rem;
+}
+
+.scuvanya-sheet .flag-edit-chip input[type="text"] { width: 7rem; }
+
+.scuvanya-sheet .condition-row,
+.scuvanya-sheet .effect-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 0.35rem;
+  margin-bottom: 0.4rem;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.scuvanya-sheet .condition-row input[type="text"],
+.scuvanya-sheet .effect-row input[type="text"] { width: 10rem; }
+
+.scuvanya-sheet .condition-row input[type="number"],
+.scuvanya-sheet .effect-row input[type="number"] { width: 4rem; }

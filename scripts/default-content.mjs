@@ -21,6 +21,8 @@
  * (siehe system.json). Rassen ohne Bild-Set (aktuell nur Therari) behalten den
  * Platzhalter aus race.mjs (icons/svg/mystery-man.svg).
  */
+import { DEFAULT_EQUIPMENT } from "./default-items.mjs";
+
 const ATTRIBUTE_KEYS = ["str", "dex", "con", "spd", "int", "mnd", "mag", "cha"];
 const ATTRIBUTE_PATHS = ATTRIBUTE_KEYS.map(k => `attributes.${k}`);
 
@@ -1196,5 +1198,7 @@ export const DEFAULT_ITEMS = [
         }
       ]
     }
-  }
+  },
+
+  ...DEFAULT_EQUIPMENT
 ];

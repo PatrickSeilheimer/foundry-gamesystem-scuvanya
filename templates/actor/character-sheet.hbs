@@ -91,6 +91,7 @@
             <div class="attr-tile-row">
               {{#each attributes as |attr|}}
               <div class="attr-tile" data-action="rollAttribute" data-key="{{attr.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+                {{#if attr.hasItemBonus}}<span class="item-bonus-dot" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
                 <i class="fa-solid {{attr.icon}} attr-tile__icon"></i>
                 <span class="attr-tile__abbr">{{attr.abbr}}</span>
                 <span class="attr-tile__name">{{attr.label}}</span>
@@ -158,6 +159,7 @@
               <div class="attr-mini-grid">
                 {{#each attributes as |attr|}}
                 <div class="attr-mini" data-action="rollAttribute" data-key="{{attr.key}}" title="{{attr.label}}">
+                  {{#if attr.hasItemBonus}}<span class="item-bonus-dot" style="top:-2px;right:-2px;width:7px;height:7px;"></span>{{/if}}
                   <i class="fa-solid {{attr.icon}} attr-mini__icon"></i>
                   <span class="attr-mini__abbr">{{attr.abbr}}</span>
                   <span class="attr-mini__value">{{attr.effectiveValue}}</span>
@@ -209,6 +211,7 @@
           <div class="disziplin-grid">
             {{#each kampfDisziplinen as |d|}}
             <div class="disziplin-tile" style="--glow-level: {{d.level}};" data-action="rollDiscipline" data-kind="kampf" data-key="{{d.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+              {{#if d.hasItemBonus}}<span class="item-bonus-dot" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
               {{#if d.img}}<img class="disziplin-tile__img" src="{{d.img}}">{{else}}<div class="disziplin-tile__img disziplin-tile__img--placeholder"></div>{{/if}}
               <span class="disziplin-tile__name">{{d.label}}</span>
               <span class="disziplin-tile__level">{{d.level}}</span>
@@ -222,6 +225,7 @@
           <div class="disziplin-grid">
             {{#each magieDisziplinen as |d|}}
             <div class="disziplin-tile" style="--glow-level: {{d.level}};" data-action="rollDiscipline" data-kind="magie" data-key="{{d.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+              {{#if d.hasItemBonus}}<span class="item-bonus-dot" title="{{localize 'SCUVANYA.Hint.ItemBonusIncluded'}}"></span>{{/if}}
               {{#if d.img}}<img class="disziplin-tile__img" src="{{d.img}}">{{else}}<div class="disziplin-tile__img disziplin-tile__img--placeholder"></div>{{/if}}
               <span class="disziplin-tile__name">{{d.label}}</span>
               <span class="disziplin-tile__level">{{d.level}}</span>
@@ -239,28 +243,69 @@
 
       {{!-- INVENTAR --}}
       <div class="tab inventar-tab {{#if (eq activeTab 'inventar')}}active{{/if}}">
-        {{#each (array "weapon" "armor" "consumable" "equipment") as |type|}}
+
         <section class="sheet-section">
-          <div class="cc-section__head-row">
-            <h2 class="cc-section__title">{{localize (concat "SCUVANYA.ItemType." type)}}</h2>
-            <button type="button" class="cc-btn" data-action="itemCreate" data-type="{{type}}">+</button>
+          <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.ausgeruestet'}}</h2>
+          <div class="slot-bar">
+            {{#each slotsRuestung as |slot|}}
+            {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
+            {{/each}}
           </div>
-          <div class="ausr-liste">
-            {{#each (lookup ../items type) as |item|}}
-            <div class="ausr-row" data-item-id="{{item.id}}">
-              <img class="ausr-row__img" src="{{item.img}}">
-              <a class="ausr-row__name" data-action="itemEdit">{{item.name}}</a>
-              <a class="flag-badge {{#if item.system.equipped}}flag-badge--active{{/if}}" data-action="itemToggleEquip">
-                {{#if item.system.equipped}}{{localize 'SCUVANYA.Equipped'}}{{else}}{{localize 'SCUVANYA.NotEquipped'}}{{/if}}
-              </a>
-              <a class="ausr-row__entfernen" data-action="itemDelete" title="{{localize 'SCUVANYA.Delete'}}">✕</a>
-            </div>
-            {{else}}
-            <p class="cc-hint">{{localize (concat "SCUVANYA.ItemType." type)}}: —</p>
+          <div class="slot-bar">
+            {{#each slotsSchmuck as |slot|}}
+            {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
+            {{/each}}
+          </div>
+          <div class="slot-bar">
+            {{#each slotsHand as |slot|}}
+            {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
             {{/each}}
           </div>
         </section>
-        {{/each}}
+
+        <section class="sheet-section">
+          <div class="cc-section__head-row">
+            <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.inventarListe'}}</h2>
+            <div class="inventory-create">
+              {{#each (array "weapon" "armor" "consumable" "equipment") as |type|}}
+              <button type="button" class="cc-btn" data-action="itemCreate" data-type="{{type}}">+ {{localize (concat "SCUVANYA.ItemType." type)}}</button>
+              {{/each}}
+            </div>
+          </div>
+
+          <div class="inventory-toolbar">
+            <input type="text" class="cc-input inventory-search" placeholder="{{localize 'SCUVANYA.Inventory.Search'}}">
+            <div class="inventory-sort">
+              <a class="cc-chip inventory-sort-btn" data-sort="name">{{localize 'SCUVANYA.Inventory.SortName'}}</a>
+              <a class="cc-chip inventory-sort-btn" data-sort="type">{{localize 'SCUVANYA.Inventory.SortType'}}</a>
+            </div>
+          </div>
+
+          {{#if allFlags.length}}
+          <div class="cc-chip-row inventory-flag-filters">
+            {{#each allFlags as |flag|}}
+            <a class="cc-chip inventory-flag-filter" data-flag="{{flag}}">{{flag}}</a>
+            {{/each}}
+          </div>
+          {{/if}}
+
+          <div class="ausr-liste inventory-list">
+            {{#each inventoryItems as |item|}}
+            <div class="ausr-row inventory-row" data-item-id="{{item.id}}" data-name="{{item.name}}" data-type="{{item.typeLabel}}" data-flags="{{item.flagsJoined}}">
+              <img class="ausr-row__img" src="{{item.img}}">
+              <a class="ausr-row__name" data-action="itemEdit">{{item.name}}</a>
+              <span class="ausr-row__type">{{item.typeLabel}}</span>
+              <span class="flag-badge-row">
+                {{#each item.flags as |flag|}}<span class="flag-badge">{{flag}}</span>{{/each}}
+                {{#if item.equippedSlotLabel}}<span class="flag-badge flag-badge--active">{{item.equippedSlotLabel}}</span>{{/if}}
+              </span>
+              <a class="ausr-row__entfernen" data-action="itemDelete" title="{{localize 'SCUVANYA.Delete'}}">✕</a>
+            </div>
+            {{else}}
+            <p class="cc-hint">{{localize 'SCUVANYA.Inventory.Empty'}}</p>
+            {{/each}}
+          </div>
+        </section>
 
         <section class="sheet-section">
           <div class="cc-section__head-row">

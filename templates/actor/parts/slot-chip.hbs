@@ -1,0 +1,7 @@
+{{#with this as |root|}}
+<a class="slot-chip {{#if root.slot.item}}slot-chip--filled{{/if}}" data-action="openSlot" data-slot="{{root.slot.key}}" title="{{root.slot.label}}">
+  <span class="slot-chip__icon">{{root.slot.icon}}</span>
+  <span class="slot-chip__label">{{root.slot.label}}</span>
+  <span class="slot-chip__item">{{#if root.slot.item}}{{root.slot.item.name}}{{else}}{{localize 'SCUVANYA.EquipPicker.Empty'}}{{/if}}</span>
+</a>
+{{/with}}

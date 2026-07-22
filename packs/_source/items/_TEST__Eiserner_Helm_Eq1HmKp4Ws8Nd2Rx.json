@@ -1,0 +1,48 @@
+{
+  "_id": "Eq1HmKp4Ws8Nd2Rx",
+  "_key": "!items!Eq1HmKp4Ws8Nd2Rx",
+  "name": "[TEST] Eiserner Helm",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein schlichter eiserner Helm, wie ihn Wachen und Söldner gleichermaßen tragen.</p>",
+    "armorType": "physical",
+    "value": 1,
+    "flags": [
+      "ruestung",
+      "leicht",
+      "test"
+    ],
+    "slot": "kopf",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "helmSchutz",
+        "kind": "fixed",
+        "path": "armor.physical",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

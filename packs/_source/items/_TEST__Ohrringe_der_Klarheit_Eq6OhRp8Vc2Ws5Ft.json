@@ -1,0 +1,48 @@
+{
+  "_id": "Eq6OhRp8Vc2Ws5Ft",
+  "_key": "!items!Eq6OhRp8Vc2Ws5Ft",
+  "name": "[TEST] Ohrringe der Klarheit",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Filigrane Ohrringe aus Silber, die den Geist des Trägers schärfen.</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "schmuck",
+      "magisch",
+      "test"
+    ],
+    "slot": "ohrringe",
+    "conditions": [],
+    "effects": [
+      {
+        "key": "ohrringeKlarheit",
+        "kind": "fixed",
+        "path": "attributes.mnd",
+        "amount": 1,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

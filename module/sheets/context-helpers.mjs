@@ -5,20 +5,22 @@ import { SCUVANYA } from "../config.mjs";
  * Startwert selbst (siehe character.mjs/path-resolve.mjs -- die Boni werden weiterhin
  * technisch als eigenes "raceBonus"-Overlay geführt, damit ein Rassenwechsel den
  * persistierten Basiswert nie verfälscht). Auf dem Bogen wird deshalb NUR die verschmolzene
- * Summe angezeigt (z.B. "5"), nie eine Aufschlüsselung wie "1 (+4)". Aus demselben Grund lösen
- * Rassen-/Berufsboni auch KEINE "hat einen aktiven Bonus"-Markierung aus -- die ist Quellen wie
- * Ausrüstung/Active Effects vorbehalten, die es aktuell noch nicht gibt (raceBonus fließt daher
- * nur noch in "level" ein, wird aber nicht mehr separat nach außen gereicht).
+ * Summe angezeigt (z.B. "5"), nie eine Aufschlüsselung wie "1 (+4)". Ausrüstungseffekte laufen
+ * über ein zweites Overlay ("itemBonus") und lösen -- anders als raceBonus -- eine sichtbare
+ * "hat einen aktiven Bonus"-Markierung aus (siehe hasItemBonus unten): ein Ring ist ein
+ * echter Bonus obendrauf, eine Rasse ist einfach der neue Startwert.
  */
 
 export function mapLeveledSkills(keys, dataSource) {
   return keys.map(key => {
-    const shift = dataSource[key].raceBonus ?? 0;
+    const raceBonus = dataSource[key].raceBonus ?? 0;
+    const itemBonus = dataSource[key].itemBonus ?? 0;
     return {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
-      level: dataSource[key].level + shift,
-      bonus: dataSource[key].bonus
+      level: dataSource[key].level + raceBonus + itemBonus,
+      bonus: dataSource[key].bonus,
+      hasItemBonus: itemBonus !== 0
     };
   });
 }
@@ -27,14 +29,16 @@ const CROSS = "✕";
 
 export function mapTieredSkills(keys, dataSource) {
   return keys.map(key => {
-    const shift = dataSource[key].raceBonus ?? 0;
-    const level = Math.min(dataSource[key].level + shift, SCUVANYA.tieredSkillMaxLevel);
+    const raceBonus = dataSource[key].raceBonus ?? 0;
+    const itemBonus = dataSource[key].itemBonus ?? 0;
+    const level = Math.min(dataSource[key].level + raceBonus + itemBonus, SCUVANYA.tieredSkillMaxLevel);
     return {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
       level,
       die: SCUVANYA.tieredDieSteps[level] ?? null,
-      crosses: CROSS.repeat(Math.max(0, level))
+      crosses: CROSS.repeat(Math.max(0, level)),
+      hasItemBonus: itemBonus !== 0
     };
   });
 }
@@ -67,12 +71,14 @@ const DISCIPLINE_IMAGES = {
 
 export function mapDisciplines(disciplineConfig, dataSource) {
   return Object.entries(disciplineConfig).map(([key, cfg]) => {
-    const shift = dataSource[key].raceBonus ?? 0;
-    const level = dataSource[key].level + shift;
+    const raceBonus = dataSource[key].raceBonus ?? 0;
+    const itemBonus = dataSource[key].itemBonus ?? 0;
+    const level = dataSource[key].level + raceBonus + itemBonus;
     return {
       key,
       label: game.i18n.localize(cfg.label),
       level,
+      hasItemBonus: itemBonus !== 0,
       img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null
     };
   });
@@ -92,6 +98,7 @@ const ATTRIBUTE_ICONS = {
 
 export function mapAttributes(dataSource) {
   return Object.entries(SCUVANYA.attributes).map(([key, cfg]) => {
+    const itemBonus = dataSource[key].itemBonus ?? 0;
     return {
       key,
       label: game.i18n.localize(cfg.label),
@@ -102,7 +109,8 @@ export function mapAttributes(dataSource) {
       value: dataSource[key].value,
       effectiveValue: dataSource[key].effectiveValue ?? dataSource[key].value,
       mod: dataSource[key].mod,
-      modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`
+      modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`,
+      hasItemBonus: itemBonus !== 0
     };
   });
 }

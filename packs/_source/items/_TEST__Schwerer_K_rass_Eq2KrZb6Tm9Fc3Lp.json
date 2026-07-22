@@ -1,0 +1,54 @@
+{
+  "_id": "Eq2KrZb6Tm9Fc3Lp",
+  "_key": "!items!Eq2KrZb6Tm9Fc3Lp",
+  "name": "[TEST] Schwerer Kürass",
+  "type": "armor",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein massiver Brustpanzer aus Plattenstahl. Ohne entsprechende Körperkraft behindert sein Gewicht mehr, als er schützt -- er lässt sich erst ab STR 12 sinnvoll tragen.</p>",
+    "armorType": "physical",
+    "value": 3,
+    "flags": [
+      "ruestung",
+      "schwer",
+      "test"
+    ],
+    "slot": "brust",
+    "conditions": [
+      {
+        "path": "attributes.str",
+        "operator": "gte",
+        "value": 12
+      }
+    ],
+    "effects": [
+      {
+        "key": "kuerassSchutz",
+        "kind": "fixed",
+        "path": "armor.physical",
+        "amount": 3,
+        "condition": "equipped"
+      }
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

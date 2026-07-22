@@ -1,0 +1,37 @@
+{
+  "_id": "Eq4HlTr8Kn3Wp5Zs",
+  "_key": "!items!Eq4HlTr8Kn3Wp5Zs",
+  "name": "[TEST] Heiltrank",
+  "type": "consumable",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein kleines Fläschchen mit einer rot schimmernden Flüssigkeit. Schmeckt nach Kirschen und Eisen.</p>",
+    "quantity": 3,
+    "consumeOnUse": true,
+    "flags": [
+      "verbrauchbar",
+      "heilung",
+      "test"
+    ]
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

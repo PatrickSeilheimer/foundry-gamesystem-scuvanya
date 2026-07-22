@@ -65,7 +65,9 @@ Hooks.once("init", () => {
     "systems/scuvanya/templates/apps/parts/badge.hbs",
     "systems/scuvanya/templates/apps/parts/decision.hbs",
     "systems/scuvanya/templates/item/parts/bonus-bundle.hbs",
+    "systems/scuvanya/templates/item/parts/equipment-fields.hbs",
     "systems/scuvanya/templates/actor/parts/skill-category.hbs",
-    "systems/scuvanya/templates/actor/parts/tiered-category.hbs"
+    "systems/scuvanya/templates/actor/parts/tiered-category.hbs",
+    "systems/scuvanya/templates/actor/parts/slot-chip.hbs"
   ]);
 });
