@@ -135,6 +135,10 @@ export default class ScuvanyaActor extends Actor {
    * Slot-Kompatibilität (item.system.slot muss in SCUVANYA.equipSlots[slotKey].accepts stehen)
    * und die Ausrüstungs-Voraussetzungen (canEquipItem). Gibt false zurück und zeigt eine Warnung,
    * wenn eine der beiden Prüfungen fehlschlägt.
+   *
+   * Zweihändige Waffen (item.system.slot === "beidhaendig") belegen IMMER beide Hand-Slots
+   * gleichzeitig, egal über welche der beiden Popups sie ausgerüstet wurden -- was auch immer
+   * vorher in Haupt-/Nebenhand steckte, weicht dafür vollständig.
    */
   async equipItem(slotKey, itemId) {
     const slotConfig = SCUVANYA.equipSlots[slotKey];
@@ -148,13 +152,41 @@ export default class ScuvanyaActor extends Actor {
       ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.ConditionsNotMet", { item: item.name }));
       return false;
     }
-    await this.update({ [`system.equipment.slots.${slotKey}`]: itemId });
+
+    const isTwoHanded = item.system.slot === "beidhaendig";
+    const slots = foundry.utils.deepClone(this.system.equipment.slots);
+    if (isTwoHanded) {
+      slots.hauptHand = "";
+      slots.nebenHand = "";
+    } else {
+      this.#clearStaleTwoHander(slots, slotKey);
+    }
+    for (const key of isTwoHanded ? ["hauptHand", "nebenHand"] : [slotKey]) slots[key] = itemId;
+
+    await this.update({ "system.equipment.slots": slots });
     return true;
   }
 
   async unequipSlot(slotKey) {
     if (!SCUVANYA.equipSlots[slotKey]) return;
-    await this.update({ [`system.equipment.slots.${slotKey}`]: "" });
+    const slots = foundry.utils.deepClone(this.system.equipment.slots);
+    this.#clearStaleTwoHander(slots, slotKey) || (slots[slotKey] = "");
+    await this.update({ "system.equipment.slots": slots });
+  }
+
+  /**
+   * Falls slotKey Haupt- oder Nebenhand ist UND beide Hände aktuell auf dieselbe Item-ID
+   * zeigen (= eine Zweihandwaffe steckt dort), müssen BEIDE geleert werden -- sonst "geistert"
+   * die Zweihandwaffe in der jeweils anderen Hand weiter. Gibt true zurück, wenn genau das
+   * passiert ist (Aufrufer muss dann slotKey nicht mehr separat leeren).
+   */
+  #clearStaleTwoHander(slots, slotKey) {
+    const isHandSlot = slotKey === "hauptHand" || slotKey === "nebenHand";
+    const twoHandedEquipped = isHandSlot && slots.hauptHand && slots.hauptHand === slots.nebenHand;
+    if (!twoHandedEquipped) return false;
+    slots.hauptHand = "";
+    slots.nebenHand = "";
+    return true;
   }
 
   _skillLabel(key) {

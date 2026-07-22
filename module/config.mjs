@@ -136,18 +136,20 @@ SCUVANYA.itemTypes = ["weapon", "armor", "consumable", "equipment", "race", "pro
  * setzt z.B. slot="ring" und passt dadurch sowohl in ringLinks als auch ringRechts.
  */
 SCUVANYA.equipSlots = {
-  kopf: { label: "SCUVANYA.EquipSlot.kopf", category: "ruestung", accepts: ["kopf"], icon: "🪖" },
-  brust: { label: "SCUVANYA.EquipSlot.brust", category: "ruestung", accepts: ["brust"], icon: "🧥" },
-  arme: { label: "SCUVANYA.EquipSlot.arme", category: "ruestung", accepts: ["arme"], icon: "🧤" },
-  beine: { label: "SCUVANYA.EquipSlot.beine", category: "ruestung", accepts: ["beine"], icon: "👖" },
-  fuesse: { label: "SCUVANYA.EquipSlot.fuesse", category: "ruestung", accepts: ["fuesse"], icon: "👢" },
-  ohrringe: { label: "SCUVANYA.EquipSlot.ohrringe", category: "schmuck", accepts: ["ohrringe"], icon: "💎" },
-  halskette: { label: "SCUVANYA.EquipSlot.halskette", category: "schmuck", accepts: ["halskette"], icon: "📿" },
-  armbaender: { label: "SCUVANYA.EquipSlot.armbaender", category: "schmuck", accepts: ["armbaender"], icon: "💎" },
-  ringLinks: { label: "SCUVANYA.EquipSlot.ringLinks", category: "schmuck", accepts: ["ring"], icon: "💍" },
-  ringRechts: { label: "SCUVANYA.EquipSlot.ringRechts", category: "schmuck", accepts: ["ring"], icon: "💍" },
-  hauptHand: { label: "SCUVANYA.EquipSlot.hauptHand", category: "hand", accepts: ["hauptHand", "beidhaendig"], icon: "⚔️" },
-  nebenHand: { label: "SCUVANYA.EquipSlot.nebenHand", category: "hand", accepts: ["nebenHand", "beidhaendig"], icon: "🛡️" }
+  kopf: { label: "SCUVANYA.EquipSlot.kopf", category: "ruestung", accepts: ["kopf"] },
+  brust: { label: "SCUVANYA.EquipSlot.brust", category: "ruestung", accepts: ["brust"] },
+  arme: { label: "SCUVANYA.EquipSlot.arme", category: "ruestung", accepts: ["arme"] },
+  beine: { label: "SCUVANYA.EquipSlot.beine", category: "ruestung", accepts: ["beine"] },
+  fuesse: { label: "SCUVANYA.EquipSlot.fuesse", category: "ruestung", accepts: ["fuesse"] },
+  ohrringe: { label: "SCUVANYA.EquipSlot.ohrringe", category: "schmuck", accepts: ["ohrringe"] },
+  halskette: { label: "SCUVANYA.EquipSlot.halskette", category: "schmuck", accepts: ["halskette"] },
+  armbaender: { label: "SCUVANYA.EquipSlot.armbaender", category: "schmuck", accepts: ["armbaender"] },
+  ringLinks: { label: "SCUVANYA.EquipSlot.ringLinks", category: "schmuck", accepts: ["ring"] },
+  ringRechts: { label: "SCUVANYA.EquipSlot.ringRechts", category: "schmuck", accepts: ["ring"] },
+  // "beidhaendig" (Zweihandwaffen) passt in beide Hand-Slots UND belegt beim Ausrüsten
+  // automatisch beide gleichzeitig, siehe documents/actor.mjs equipItem/unequipSlot.
+  hauptHand: { label: "SCUVANYA.EquipSlot.hauptHand", category: "hand", accepts: ["hauptHand", "beidhaendig"] },
+  nebenHand: { label: "SCUVANYA.EquipSlot.nebenHand", category: "hand", accepts: ["nebenHand", "beidhaendig"] }
 };
 
 // Werte, die system.slot eines equippbaren Items annehmen kann (siehe equipSlots.*.accepts).

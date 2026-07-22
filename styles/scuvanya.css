@@ -1649,49 +1649,58 @@
   line-height: 1.6;
 }
 
-/* ── Inventar: Slot-Leiste ────────────────────────────────────────── */
+/* ── Inventar: Slot-Leiste -- quadratische Kacheln ───────────────────── */
 .character-sheet .slot-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
 }
 
-.character-sheet .slot-chip {
+.character-sheet .slot-tile {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 0.3rem;
+  width: 84px;
+  height: 84px;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
-  border-radius: 20px;
-  padding: 0.3rem 0.7rem 0.3rem 0.4rem;
+  border-radius: 6px;
+  padding: 0.4rem;
   cursor: pointer;
+  overflow: hidden;
   transition: all var(--scv-transition);
 }
 
-.character-sheet .slot-chip:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
-.character-sheet .slot-chip--filled { border-color: var(--scv-accent-border); }
+.character-sheet .slot-tile:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
+.character-sheet .slot-tile--filled { border-color: var(--scv-accent-border); }
 
-.character-sheet .slot-chip__icon { font-size: 1rem; }
-
-.character-sheet .slot-chip__label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.character-sheet .slot-tile__placeholder {
+  width: 40px;
+  height: 40px;
   color: var(--scv-text-muted);
+  opacity: 0.35;
 }
 
-.character-sheet .slot-chip__item {
-  font-size: 0.78rem;
-  color: var(--scv-text);
-  max-width: 110px;
+.character-sheet .slot-tile__img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.character-sheet .slot-tile__name {
+  font-size: 0.66rem;
+  color: var(--scv-accent);
+  text-align: center;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.2;
 }
-
-.character-sheet .slot-chip--filled .slot-chip__item { color: var(--scv-accent); }
 
 /* ── Inventar: Werkzeugleiste (Suche/Sortierung/Anlegen) + Flag-Filter ───────── */
 .character-sheet .inventory-create {

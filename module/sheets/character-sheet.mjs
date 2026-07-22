@@ -107,6 +107,14 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
   /** Slot-Leiste (Übersicht je Slot) + durchsuchbare/filterbare Gesamtliste fürs Inventar. */
   _prepareEquipmentContext(context, sys) {
+    // Ring links/rechts teilen sich denselben Platzhalter-Icon-Umriss (siehe slot-chip.hbs),
+    // weil beide dieselbe Art Item annehmen (system.slot === "ring").
+    const ICON_KEYS = {
+      kopf: "kopf", brust: "brust", arme: "arme", beine: "beine", fuesse: "fuesse",
+      ohrringe: "ohrringe", halskette: "halskette", armbaender: "armbaender",
+      ringLinks: "ring", ringRechts: "ring", hauptHand: "hauptHand", nebenHand: "nebenHand"
+    };
+
     const slotsByCategory = { ruestung: [], schmuck: [], hand: [] };
     for (const [key, cfg] of Object.entries(SCUVANYA.equipSlots)) {
       const itemId = sys.equipment.slots[key];
@@ -114,7 +122,7 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       slotsByCategory[cfg.category].push({
         key,
         label: game.i18n.localize(cfg.label),
-        icon: cfg.icon,
+        iconKey: ICON_KEYS[key],
         item: item ? { id: item.id, name: item.name, img: item.img } : null
       });
     }

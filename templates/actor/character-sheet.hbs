@@ -247,17 +247,17 @@
         <section class="sheet-section">
           <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.ausgeruestet'}}</h2>
           <div class="slot-bar">
+            {{#each slotsHand as |slot|}}
+            {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
+            {{/each}}
+          </div>
+          <div class="slot-bar">
             {{#each slotsRuestung as |slot|}}
             {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
             {{/each}}
           </div>
           <div class="slot-bar">
             {{#each slotsSchmuck as |slot|}}
-            {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
-            {{/each}}
-          </div>
-          <div class="slot-bar">
-            {{#each slotsHand as |slot|}}
             {{> "systems/scuvanya/templates/actor/parts/slot-chip.hbs" slot=slot}}
             {{/each}}
           </div>
@@ -305,36 +305,6 @@
             <p class="cc-hint">{{localize 'SCUVANYA.Inventory.Empty'}}</p>
             {{/each}}
           </div>
-        </section>
-
-        <section class="sheet-section">
-          <div class="cc-section__head-row">
-            <h2 class="cc-section__title">{{localize 'SCUVANYA.Item.race'}}</h2>
-            {{#unless items.race}}<button type="button" class="cc-btn" data-action="itemCreate" data-type="race">+</button>{{/unless}}
-          </div>
-          {{#if items.race}}
-          <div class="ausr-liste">
-            <div class="ausr-row" data-item-id="{{items.race.id}}">
-              <a class="ausr-row__name" data-action="itemEdit">{{items.race.name}}</a>
-              <a class="ausr-row__entfernen" data-action="itemDelete" title="{{localize 'SCUVANYA.Delete'}}">✕</a>
-            </div>
-          </div>
-          {{/if}}
-        </section>
-
-        <section class="sheet-section">
-          <div class="cc-section__head-row">
-            <h2 class="cc-section__title">{{localize 'SCUVANYA.Item.profession'}}</h2>
-            {{#unless items.profession}}<button type="button" class="cc-btn" data-action="itemCreate" data-type="profession">+</button>{{/unless}}
-          </div>
-          {{#if items.profession}}
-          <div class="ausr-liste">
-            <div class="ausr-row" data-item-id="{{items.profession.id}}">
-              <a class="ausr-row__name" data-action="itemEdit">{{items.profession.name}}</a>
-              <a class="ausr-row__entfernen" data-action="itemDelete" title="{{localize 'SCUVANYA.Delete'}}">✕</a>
-            </div>
-          </div>
-          {{/if}}
         </section>
       </div>
 
