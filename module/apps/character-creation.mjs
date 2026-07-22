@@ -23,7 +23,6 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     actions: {
       pickRace: CharacterCreationWizard.#onPickRace,
       pickProfession: CharacterCreationWizard.#onPickProfession,
-      clearProfession: CharacterCreationWizard.#onClearProfession,
       setGender: CharacterCreationWizard.#onSetGender,
       selectSubrace: CharacterCreationWizard.#onSelectSubrace,
       chooseOption: CharacterCreationWizard.#onChooseOption,
@@ -347,12 +346,6 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     this.render();
   }
 
-  static #onClearProfession() {
-    this.wizardData.professionId = null;
-    this.wizardData.professionChoices = {};
-    this.render();
-  }
-
   static #onChooseOption(event, target) {
     const scope = target.dataset.scope;
     const bucket = scope === "race" ? "raceChoices" : "professionChoices";
@@ -401,6 +394,10 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     }
     if (this.step === 2 && !this._decisionsComplete(await this._raceBundles(), this.wizardData.raceChoices)) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
+      return;
+    }
+    if (this.step === 3 && !this.wizardData.professionId) {
+      ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedProfession"));
       return;
     }
     if (this.step === 4 && this.wizardData.professionId) {

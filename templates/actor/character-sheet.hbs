@@ -9,10 +9,10 @@
     <div class="sheet-topbar__col sheet-topbar__resources">
       <div class="sheet-res sheet-res--lp" title="{{localize 'SCUVANYA.Resource.hp'}}">
         <svg class="sheet-res__icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-7.5-4.6-10-9.5C0.5 7.8 2.6 4 6.5 4 9 4 11 5.8 12 8c1-2.2 3-4 5.5-4 3.9 0 6 3.8 4.5 7.5C19.5 16.4 12 21 12 21Z"/></svg>
-        <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.hp'}}</span>
+        <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.hpShort'}}</span>
         <div class="sheet-res__bar"><div class="sheet-res__fill sheet-res__fill--lp" style="width: {{percent system.resources.hp.value system.resources.hp.max}}%"></div></div>
         <span class="sheet-res__value">
-          <input type="number" class="sheet-res__num" name="system.resources.hp.value" value="{{system.resources.hp.value}}">
+          <span class="sheet-res__num">{{system.resources.hp.value}}</span>
           <span class="sheet-res__slash">/</span>
           <span class="sheet-res__num sheet-res__num--max">{{system.resources.hp.max}}</span>
         </span>
@@ -20,10 +20,10 @@
 
       <div class="sheet-res sheet-res--mana" title="{{localize 'SCUVANYA.Resource.mana'}}">
         <svg class="sheet-res__icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z"/></svg>
-        <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.mana'}}</span>
+        <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.manaShort'}}</span>
         <div class="sheet-res__bar"><div class="sheet-res__fill sheet-res__fill--mana" style="width: {{percent system.resources.mana.value system.resources.mana.max}}%"></div></div>
         <span class="sheet-res__value">
-          <input type="number" class="sheet-res__num" name="system.resources.mana.value" value="{{system.resources.mana.value}}">
+          <span class="sheet-res__num">{{system.resources.mana.value}}</span>
           <span class="sheet-res__slash">/</span>
           <span class="sheet-res__num sheet-res__num--max">{{system.resources.mana.max}}</span>
         </span>
@@ -39,7 +39,7 @@
         <span class="sheet-res__label">{{localize 'SCUVANYA.Resource.mentalHealthShort'}}</span>
         <div class="sheet-res__bar"><div class="sheet-res__fill sheet-res__fill--mg" style="width: {{percent system.resources.mentalHealth.value system.resources.mentalHealth.max}}%"></div></div>
         <span class="sheet-res__value">
-          <input type="number" class="sheet-res__num" name="system.resources.mentalHealth.value" value="{{system.resources.mentalHealth.value}}">
+          <span class="sheet-res__num">{{system.resources.mentalHealth.value}}</span>
           <span class="sheet-res__slash">/</span>
           <span class="sheet-res__num sheet-res__num--max">{{system.resources.mentalHealth.max}}</span>
         </span>
@@ -48,22 +48,19 @@
 
     <div class="sheet-topbar__col sheet-topbar__armor">
       <div class="sheet-armor-stat" title="{{localize 'SCUVANYA.AC'}}">
-        {{#if (ne system.acEffective system.ac.value)}}<span class="sheet-armor-stat__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
         <span class="sheet-armor-stat__icon">🛡️</span>
         <span class="sheet-armor-stat__label">{{localize 'SCUVANYA.Short.ac'}}</span>
-        <input type="number" name="system.ac.value" value="{{system.ac.value}}">
+        <span class="sheet-armor-stat__value">{{system.acEffective}}</span>
       </div>
       <div class="sheet-armor-stat" title="{{localize 'SCUVANYA.Armor.physical'}}">
-        {{#if (ne system.armorEffective.physical system.armor.physical)}}<span class="sheet-armor-stat__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
         <span class="sheet-armor-stat__icon">⚔️</span>
         <span class="sheet-armor-stat__label">{{localize 'SCUVANYA.Short.armorPhysical'}}</span>
-        <input type="number" name="system.armor.physical" value="{{system.armor.physical}}">
+        <span class="sheet-armor-stat__value">{{system.armorEffective.physical}}</span>
       </div>
       <div class="sheet-armor-stat" title="{{localize 'SCUVANYA.Armor.magical'}}">
-        {{#if (ne system.armorEffective.magical system.armor.magical)}}<span class="sheet-armor-stat__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
         <span class="sheet-armor-stat__icon">💥</span>
         <span class="sheet-armor-stat__label">{{localize 'SCUVANYA.Short.armorMagical'}}</span>
-        <input type="number" name="system.armor.magical" value="{{system.armor.magical}}">
+        <span class="sheet-armor-stat__value">{{system.armorEffective.magical}}</span>
       </div>
     </div>
 
@@ -80,7 +77,7 @@
       <div class="tab uebersicht-tab {{#if (eq activeTab 'attribute')}}active{{/if}}">
         <h1 class="sheet-title">{{actor.name}}</h1>
         <div class="sheet-subline">
-          {{#if items.race}}<span>{{items.race.name}}</span>{{/if}}
+          {{#if items.race}}<span>{{items.race.name}}{{#if subraceName}} ({{subraceName}}){{/if}}</span>{{/if}}
           {{#if items.profession}}<span>{{items.profession.name}}</span>{{/if}}
           <span>{{localize (concat "SCUVANYA.Body." system.geschlecht)}}</span>
           {{#if body.age}}<span>{{body.age}} {{localize 'SCUVANYA.Body.age'}}</span>{{/if}}
@@ -90,30 +87,46 @@
 
         <section class="sheet-section">
           <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.attribute'}}</h2>
-          <div class="attr-tile-row">
-            {{#each attributes as |attr|}}
-            <div class="attr-tile" data-action="rollAttribute" data-key="{{attr.key}}" title="{{localize 'SCUVANYA.Roll'}}">
-              {{#if attr.raceBonus}}<span class="attr-tile__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
-              <i class="fa-solid {{attr.icon}} attr-tile__icon"></i>
-              <span class="attr-tile__abbr">{{attr.abbr}}</span>
-              <span class="attr-tile__name">{{attr.label}}</span>
-              <span class="attr-tile__value">{{attr.effectiveValue}}</span>
-              <span class="attr-tile__mod">{{attr.modDisplay}}</span>
+          <div class="attr-tile-container">
+            <div class="attr-tile-row">
+              {{#each attributes as |attr|}}
+              <div class="attr-tile" data-action="rollAttribute" data-key="{{attr.key}}" title="{{localize 'SCUVANYA.Roll'}}">
+                <i class="fa-solid {{attr.icon}} attr-tile__icon"></i>
+                <span class="attr-tile__abbr">{{attr.abbr}}</span>
+                <span class="attr-tile__name">{{attr.label}}</span>
+                <span class="attr-tile__value">{{attr.effectiveValue}}</span>
+                <span class="attr-tile__mod">{{attr.modDisplay}}</span>
+              </div>
+              {{/each}}
             </div>
-            {{/each}}
           </div>
         </section>
 
-        {{#if resistanceChips.length}}
+        <section class="sheet-section">
+          <h2 class="cc-section__title">{{localize 'SCUVANYA.Progression.textTraits'}}</h2>
+          {{#if system.progressionTexts.length}}
+          <div class="progression-text-list">
+            {{#each system.progressionTexts as |entry|}}
+            <div class="progression-text-card"><strong>{{entry.name}}:</strong> {{entry.text}}</div>
+            {{/each}}
+          </div>
+          {{else}}
+          <p class="cc-hint">{{localize 'SCUVANYA.Progression.textTraitsNone'}}</p>
+          {{/if}}
+        </section>
+
         <section class="sheet-section">
           <h2 class="cc-section__title">{{localize 'SCUVANYA.Section.resistenzen'}}</h2>
+          {{#if resistanceChips.length}}
           <div class="cc-chip-row">
             {{#each resistanceChips as |chip|}}
             <span class="cc-chip uebersicht-resistenz-chip uebersicht-resistenz-chip--{{chip.typ}}">{{chip.name}}: {{chip.label}}</span>
             {{/each}}
           </div>
+          {{else}}
+          <p class="cc-hint">{{localize 'SCUVANYA.Resistance.none'}}</p>
+          {{/if}}
         </section>
-        {{/if}}
 
         {{#if weitereSprachen.length}}
         <section class="sheet-section">
@@ -122,17 +135,6 @@
             <span class="cc-chip">{{localize 'SCUVANYA.Language.Gemeinsprache'}} · {{gemeinsprache.level}}</span>
             {{#each weitereSprachen as |sprache|}}
             <span class="cc-chip">{{sprache.name}} · {{sprache.level}}</span>
-            {{/each}}
-          </div>
-        </section>
-        {{/if}}
-
-        {{#if system.progressionTexts.length}}
-        <section class="sheet-section">
-          <h2 class="cc-section__title">{{localize 'SCUVANYA.Progression.textTraits'}}</h2>
-          <div class="progression-text-list">
-            {{#each system.progressionTexts as |entry|}}
-            <div class="progression-text-card"><strong>{{entry.name}}:</strong> {{entry.text}}</div>
             {{/each}}
           </div>
         </section>
@@ -156,33 +158,32 @@
               <div class="attr-mini-grid">
                 {{#each attributes as |attr|}}
                 <div class="attr-mini" data-action="rollAttribute" data-key="{{attr.key}}" title="{{attr.label}}">
-                  {{#if attr.raceBonus}}<span class="attr-mini__dot"></span>{{/if}}
+                  <i class="fa-solid {{attr.icon}} attr-mini__icon"></i>
                   <span class="attr-mini__abbr">{{attr.abbr}}</span>
                   <span class="attr-mini__value">{{attr.effectiveValue}}</span>
                 </div>
                 {{/each}}
               </div>
             </div>
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.koerperlich') skills=koerperlich rollAction="rollPhysicalSkill" showBonus=true}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.koerperlich') skills=koerperlich rollAction="rollPhysicalSkill" bonusLabel=koerperlichBonusLabel}}
           </div>
 
           <div class="cc-category-pair">
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sozialPositiv') skills=sozialPositiv rollAction="rollSocialSkill" rollDataName="polarity" rollDataValue="positiv"}}
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sozialNegativ') skills=sozialNegativ rollAction="rollSocialSkill" rollDataName="polarity" rollDataValue="negativ"}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sozialPositiv') skills=sozialPositiv rollAction="rollSocialSkill" rollDataName="polarity" rollDataValue="positiv" bonusLabel=sozialBonusLabel}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sozialNegativ') skills=sozialNegativ rollAction="rollSocialSkill" rollDataName="polarity" rollDataValue="negativ" bonusLabel=sozialBonusLabel}}
           </div>
 
           <div class="cc-category-pair">
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenNatur') skills=wissenschaftenNatur rollAction="rollScienceSkill" rollDataName="branch" rollDataValue="natur"}}
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenSozial') skills=wissenschaftenSozial rollAction="rollScienceSkill" rollDataName="branch" rollDataValue="sozial"}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenNatur') skills=wissenschaftenNatur rollAction="rollScienceSkill" rollDataName="branch" rollDataValue="natur" bonusLabel=wissenschaftBonusLabel}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenSozial') skills=wissenschaftenSozial rollAction="rollScienceSkill" rollDataName="branch" rollDataValue="sozial" bonusLabel=wissenschaftBonusLabel}}
           </div>
 
           <div class="cc-category-pair">
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sonder') skills=sonder rollAction="rollSonderSkill"}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sonder') skills=sonder rollAction="rollSonderSkill" bonusLabel=sonderBonusLabel}}
             {{> "systems/scuvanya/templates/actor/parts/tiered-category.hbs" title=(localize 'SCUVANYA.Category.handwerk') skills=handwerk rollAction="rollHandwerkSkill"}}
           </div>
 
           <div class="cc-category-pair">
-            {{> "systems/scuvanya/templates/actor/parts/tiered-category.hbs" title=(localize 'SCUVANYA.Category.spezial') skills=spezial rollAction="rollSpezialSkill"}}
             <div class="cc-category">
               <div class="cc-category__header"><span>{{localize 'SCUVANYA.Category.extra'}}</span></div>
               <div class="cc-category__body">
@@ -194,6 +195,7 @@
                 {{/each}}
               </div>
             </div>
+            {{> "systems/scuvanya/templates/actor/parts/tiered-category.hbs" title=(localize 'SCUVANYA.Category.spezial') skills=spezial rollAction="rollSpezialSkill"}}
           </div>
         </div>
       </div>

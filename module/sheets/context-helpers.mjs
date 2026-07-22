@@ -5,8 +5,10 @@ import { SCUVANYA } from "../config.mjs";
  * Startwert selbst (siehe character.mjs/path-resolve.mjs -- die Boni werden weiterhin
  * technisch als eigenes "raceBonus"-Overlay geführt, damit ein Rassenwechsel den
  * persistierten Basiswert nie verfälscht). Auf dem Bogen wird deshalb NUR die verschmolzene
- * Summe angezeigt (z.B. "5"), nie eine Aufschlüsselung wie "1 (+4)" -- "raceBonus" bleibt in
- * den Kontextobjekten nur noch als Flag für einen dezenten Hinweis-Punkt erhalten.
+ * Summe angezeigt (z.B. "5"), nie eine Aufschlüsselung wie "1 (+4)". Aus demselben Grund lösen
+ * Rassen-/Berufsboni auch KEINE "hat einen aktiven Bonus"-Markierung aus -- die ist Quellen wie
+ * Ausrüstung/Active Effects vorbehalten, die es aktuell noch nicht gibt (raceBonus fließt daher
+ * nur noch in "level" ein, wird aber nicht mehr separat nach außen gereicht).
  */
 
 export function mapLeveledSkills(keys, dataSource) {
@@ -16,22 +18,23 @@ export function mapLeveledSkills(keys, dataSource) {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
       level: dataSource[key].level + shift,
-      bonus: dataSource[key].bonus,
-      raceBonus: shift
+      bonus: dataSource[key].bonus
     };
   });
 }
 
+const CROSS = "✕";
+
 export function mapTieredSkills(keys, dataSource) {
   return keys.map(key => {
     const shift = dataSource[key].raceBonus ?? 0;
-    const level = dataSource[key].level + shift;
+    const level = Math.min(dataSource[key].level + shift, SCUVANYA.tieredSkillMaxLevel);
     return {
       key,
       label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
       level,
-      die: SCUVANYA.tieredDieSteps[Math.min(level, SCUVANYA.tieredSkillMaxLevel)] ?? "-",
-      raceBonus: shift
+      die: SCUVANYA.tieredDieSteps[level] ?? null,
+      crosses: CROSS.repeat(Math.max(0, level))
     };
   });
 }
@@ -70,7 +73,6 @@ export function mapDisciplines(disciplineConfig, dataSource) {
       key,
       label: game.i18n.localize(cfg.label),
       level,
-      raceBonus: shift,
       img: DISCIPLINE_IMAGES[key] ? `systems/scuvanya/assets/disciplines/${DISCIPLINE_IMAGES[key]}` : null
     };
   });
@@ -90,7 +92,6 @@ const ATTRIBUTE_ICONS = {
 
 export function mapAttributes(dataSource) {
   return Object.entries(SCUVANYA.attributes).map(([key, cfg]) => {
-    const shift = dataSource[key].raceBonus ?? 0;
     return {
       key,
       label: game.i18n.localize(cfg.label),
@@ -101,8 +102,7 @@ export function mapAttributes(dataSource) {
       value: dataSource[key].value,
       effectiveValue: dataSource[key].effectiveValue ?? dataSource[key].value,
       mod: dataSource[key].mod,
-      modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`,
-      raceBonus: shift
+      modDisplay: `${dataSource[key].mod >= 0 ? "+" : ""}${dataSource[key].mod}`
     };
   });
 }

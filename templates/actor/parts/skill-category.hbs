@@ -2,13 +2,12 @@
 <div class="cc-category">
   <div class="cc-category__header">
     <span>{{root.title}}</span>
+    {{#if root.bonusLabel}}<span class="cc-category__bonus">{{root.bonusLabel}}</span>{{/if}}
   </div>
   <div class="cc-category__body">
     {{#each root.skills as |skill|}}
     <div class="talent-row">
-      {{#if skill.raceBonus}}<span class="talent-row__dot" title="{{localize 'SCUVANYA.Hint.RaceBonusIncluded'}}"></span>{{/if}}
       <a class="talent-row__name" data-action="{{root.rollAction}}" data-key="{{skill.key}}" {{#if root.rollDataName}}data-{{root.rollDataName}}="{{root.rollDataValue}}"{{/if}} title="{{localize 'SCUVANYA.Roll'}}">{{skill.label}}</a>
-      {{#if root.showBonus}}<span class="talent-row__stat talent-row__stat--muted">{{localize 'SCUVANYA.Bonus'}}: {{skill.bonus}}</span>{{/if}}
       <span class="talent-row__stat">{{skill.level}}</span>
     </div>
     {{/each}}

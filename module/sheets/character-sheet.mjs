@@ -61,6 +61,17 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     context.kampfDisziplinen = mapDisciplines(SCUVANYA.combatDisciplines, sys.disziplinen.kampf);
     context.magieDisziplinen = mapDisciplines(SCUVANYA.magicDisciplines, sys.disziplinen.magie);
 
+    // Kategorie-Bonus, der auf JEDEN Wurf der Kategorie addiert wird (siehe documents/actor.mjs
+    // rollSocialSkill/rollScienceSkill/rollSonderSkill) -- wird im Card-Header angezeigt statt
+    // redundant in jeder einzelnen Zeile.
+    const signed = n => `${n >= 0 ? "+" : ""}${n}`;
+    const bonusLabel = (mod, suffixKey) =>
+      `${game.i18n.localize("SCUVANYA.Bonus")}: ${signed(mod)} (${game.i18n.localize(suffixKey)})`;
+    context.sozialBonusLabel = bonusLabel(sys.attributes.cha.mod, "SCUVANYA.Category.bonusChaMod");
+    context.wissenschaftBonusLabel = bonusLabel(sys.attributes.int.mod, "SCUVANYA.Category.bonusIntMod");
+    context.sonderBonusLabel = bonusLabel(sys.attributes.mag.mod, "SCUVANYA.Category.bonusMagMod");
+    context.koerperlichBonusLabel = bonusLabel(context.koerperlich[0]?.bonus ?? 0, "SCUVANYA.Category.bonusAverage");
+
     context.gemeinsprache = sys.sprachen.gemeinsprache;
     // Nur tatsächlich beherrschte Sprachen (Stufe >= 1) -- die Übersicht ist eine reine
     // Zusammenfassung, keine Bearbeitungsmaske (siehe Klassenkommentar).
@@ -76,6 +87,12 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
     };
 
     context.resistanceChips = this._resistanceChips(sys.resistancesEffective);
+
+    const race = context.items.race;
+    const subraceKey = race?.system.subraceKey;
+    context.subraceName = subraceKey
+      ? race.system.subraces.find(s => s.key === subraceKey)?.name ?? null
+      : null;
 
     return context;
   }

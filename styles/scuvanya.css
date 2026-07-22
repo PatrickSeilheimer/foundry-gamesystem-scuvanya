@@ -1145,22 +1145,9 @@
 .character-sheet .sheet-res__num--max { text-align: left; color: var(--scv-text-muted); }
 .character-sheet .sheet-res__slash { color: var(--scv-text-muted); padding: 0 0.15rem; }
 
-.character-sheet .sheet-res__value input.sheet-res__num {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid transparent;
-  color: var(--scv-text);
-  font-size: 0.76rem;
-  font-family: inherit;
-  transition: border-color var(--scv-transition);
-}
-
-.character-sheet .sheet-res__value input.sheet-res__num:focus { outline: none; border-bottom-color: var(--scv-accent-border); }
-
 .character-sheet .sheet-topbar__armor { gap: 0.3rem; min-width: 130px; }
 
 .character-sheet .sheet-armor-stat {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1176,27 +1163,15 @@
   flex-shrink: 0;
 }
 
-.character-sheet .sheet-armor-stat input {
-  width: 3.2em;
+.character-sheet .sheet-armor-stat__value {
+  min-width: 2.4em;
+  text-align: center;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
   border-radius: 3px;
   color: var(--scv-text);
   font-size: 0.8rem;
-  text-align: center;
-  padding: 0.1rem 0.2rem;
-}
-
-.character-sheet .sheet-armor-stat input:focus { outline: none; border-color: var(--scv-accent); }
-
-.character-sheet .sheet-armor-stat__dot {
-  position: absolute;
-  left: -0.6rem;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--scv-accent);
-  box-shadow: 0 0 4px var(--scv-accent);
+  padding: 0.15rem 0.3rem;
 }
 
 .character-sheet .sheet-topbar__edit {
@@ -1312,39 +1287,39 @@
 .character-sheet .sheet-section { margin-bottom: 1.6rem; }
 
 /* ── Uebersicht: Attribute in Großformat, alle nebeneinander ─────────── */
+/* container-type erlaubt eine @container-Regel unten, die exakt 8→4+4 Spalten
+   umschaltet, statt bei knappem Platz beliebig (z.B. 5+3) umzubrechen. */
+.character-sheet .attr-tile-container { container-type: inline-size; }
+
 .character-sheet .attr-tile-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
   gap: 0.6rem;
 }
 
+@container (max-width: 640px) {
+  .character-sheet .attr-tile-row { grid-template-columns: repeat(4, 1fr); }
+}
+
 .character-sheet .attr-tile {
-  position: relative;
-  flex: 1;
-  min-width: 92px;
   background: var(--scv-bg);
   border: 1px solid var(--scv-border);
-  border-radius: 6px;
+  border-radius: 14px;
   padding: 0.7rem 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   transition: all var(--scv-transition);
 }
 
-.character-sheet .attr-tile:hover { border-color: var(--scv-accent-border); background: var(--scv-accent-dim); }
-
-.character-sheet .attr-tile__dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--scv-accent);
-  box-shadow: 0 0 5px var(--scv-accent);
+.character-sheet .attr-tile:hover {
+  border-color: var(--scv-accent-border);
+  background: var(--scv-accent-dim);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
 }
 
 .character-sheet .attr-tile__icon { font-size: 1.2rem; color: var(--scv-accent); margin-bottom: 0.2rem; }
@@ -1394,15 +1369,7 @@
 
 .character-sheet .attr-mini:hover { border-color: var(--scv-accent-border); }
 
-.character-sheet .attr-mini__dot {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--scv-accent);
-}
+.character-sheet .attr-mini__icon { font-size: 0.7rem; color: var(--scv-accent); margin-bottom: 0.1rem; }
 
 .character-sheet .attr-mini__abbr {
   font-family: 'Cinzel', serif;
@@ -1433,6 +1400,14 @@
 
 .character-sheet .cc-category-pair--single { grid-template-columns: 1fr; }
 
+.character-sheet .cc-category {
+  background: var(--scv-surface);
+  border: 1px solid var(--scv-border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 .character-sheet .cc-category__header {
   display: flex;
   justify-content: space-between;
@@ -1445,11 +1420,12 @@
   margin-bottom: 0.4rem;
 }
 
-.character-sheet .cc-category__system {
+.character-sheet .cc-category__bonus {
   font-family: 'Crimson Text', serif;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--scv-text-muted);
   font-style: italic;
+  white-space: nowrap;
 }
 
 .character-sheet .cc-category__body {
@@ -1458,7 +1434,6 @@
 }
 
 .character-sheet .talent-row {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1468,15 +1443,6 @@
 }
 
 .character-sheet .talent-row:hover { background: var(--scv-accent-dim); }
-
-.character-sheet .talent-row__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--scv-accent);
-  box-shadow: 0 0 4px var(--scv-accent);
-  flex-shrink: 0;
-}
 
 .character-sheet .talent-row__name {
   flex: 1;
@@ -1498,8 +1464,33 @@
   text-align: right;
 }
 
-.character-sheet .talent-row__stat--muted { font-size: 0.72rem; font-style: italic; text-align: left; flex-shrink: 0; }
 .character-sheet .talent-row--extra { justify-content: space-between; }
+
+/* ── Handwerk/Spezial: 5-Würfel-Legende im Header + Kreuze pro Zeile ─── */
+.character-sheet .die-legend { display: flex; gap: 0.3rem; }
+
+.character-sheet .die-chip {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  color: var(--scv-text-muted);
+  border: 1px solid var(--scv-border);
+  border-radius: 3px;
+  padding: 0.05rem 0.3rem;
+}
+
+.character-sheet .talent-row__die {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  color: var(--scv-accent);
+  min-width: 2ch;
+}
+
+.character-sheet .talent-row__crosses {
+  font-size: 0.85rem;
+  color: var(--scv-accent);
+  letter-spacing: 0.1em;
+  min-width: 5.5ch;
+}
 
 /* ── Disziplinen: große Icon-Kacheln, Leuchten skaliert mit Stufe ────
    --glow-level (0-10, siehe context-helpers.mjs mapDisciplines) treibt

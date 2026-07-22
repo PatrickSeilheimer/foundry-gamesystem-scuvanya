@@ -35,8 +35,10 @@
     },
 
     "Resource": {
-      "hp": "HP",
+      "hp": "Gesundheit",
+      "hpShort": "HP",
       "mana": "Mana",
+      "manaShort": "MP",
       "mentalHealth": "Mentale Gesundheit",
       "mentalHealthShort": "MG"
     },
@@ -65,7 +67,7 @@
 
     "Section": {
       "attribute": "Attribute",
-      "resistenzen": "Resistenzen",
+      "resistenzen": "Resistenzen und Verwundbarkeiten",
       "sprachenBekannt": "Sprachen",
       "biografie": "Biografie"
     },
@@ -74,7 +76,7 @@
       "resistent": "Resistent",
       "verwundbar": "Verwundbar",
       "immun": "Immun",
-      "none": "Keine besonderen Resistenzen oder Verwundbarkeiten."
+      "none": "Keine Resistenzen oder Verwundbarkeiten."
     },
 
     "System": {
@@ -83,6 +85,10 @@
     },
 
     "Category": {
+      "bonusAverage": "Durchschnitt",
+      "bonusChaMod": "CHA-Mod",
+      "bonusIntMod": "INT-Mod",
+      "bonusMagMod": "MAG-Mod",
       "sozialPositiv": "Soziale Talente (positiv)",
       "sozialNegativ": "Soziale Talente (negativ)",
       "wissenschaftenSozial": "Wissenschaften (sozial)",
@@ -154,6 +160,7 @@
       "Cancel": "Abbrechen",
       "NeedRace": "Bitte zuerst eine Rasse wählen",
       "NeedSubrace": "Bitte zuerst eine Subrasse wählen",
+      "NeedProfession": "Bitte zuerst einen Beruf wählen",
       "NeedChoice": "Bitte alle Wahlmöglichkeiten treffen bzw. alle Punkte verteilen, bevor du weitergehst",
       "NoRaceItems": "Keine Rassen im Items-Verzeichnis gefunden. Lege ein Item vom Typ \"Rasse\" an.",
       "SubraceRequiredHint": "Diese Rasse hat Subrassen -- die Wahl einer Subrasse ist erforderlich.",
@@ -216,6 +223,7 @@
       "choiceKey": "Interner Schlüssel",
       "choiceOption": "Option",
       "textTraits": "Besondere Merkmale",
+      "textTraitsNone": "Keine besonderen Merkmale.",
       "attributeStart": "Start-Attribute",
       "attributeStartHint": "Feste Attributboni ohne Namen/Beschreibung -- sind bei einem Charakter mit dieser Rasse/diesem Beruf einfach da. Wahlmöglichkeiten, die ein Attribut betreffen, gehören stattdessen zu einer Eigenschaft weiter unten.",
       "eigenschaften": "Eigenschaften",
