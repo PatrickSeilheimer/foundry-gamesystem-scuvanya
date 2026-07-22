@@ -1028,6 +1028,27 @@
   border-color: var(--scv-accent);
 }
 
+/* ── Dunkles Gold/Pergament-Theme des Charakterbogens -- dieselben Variablen wie
+   .character-creation (siehe oben), hier aber auf den ganzen Application-Rahmen
+   (.application.character) deklariert, NICHT nur auf .character-sheet: das per JS an
+   this.element (den Rahmen, nicht das Formular) angehängte .scv-tooltip liegt als
+   GESCHWISTER von .window-content, nicht als Nachfahre von .character-sheet -- ohne diese
+   Deklaration auf dem gemeinsamen Vorfahren wären var(--scv-*) dort ungültig und alle
+   Hintergrundfarben würden auf "durchsichtig" zurückfallen (siehe Konversation: Tooltip
+   erschien durchsichtig/im Hintergrund). */
+.application.character {
+  --scv-bg: #17150e;
+  --scv-surface: #201d15;
+  --scv-accent: #c9a84c;
+  --scv-accent-dim: rgba(201, 168, 76, 0.12);
+  --scv-accent-border: rgba(201, 168, 76, 0.35);
+  --scv-accent-hover: #dfbc6a;
+  --scv-text: #d8d3c2;
+  --scv-text-muted: #8b8676;
+  --scv-border: #34301f;
+  --scv-transition: 0.25s ease;
+}
+
 /* ── Fensterrahmen: sichtbarer dunkler Rand rund um Papier + Tab-Rail,
    damit die Tabs sichtbar "aus dem Ordner herausragen" statt flach am
    Fensterrand zu kleben (siehe .sheet-tab-rail weiter unten). ────── */
