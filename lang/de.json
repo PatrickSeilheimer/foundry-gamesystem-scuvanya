@@ -147,7 +147,6 @@
       "bonusAverage": "Durchschnitt",
       "bonusChaMod": "CHA-Mod",
       "bonusIntMod": "INT-Mod",
-      "bonusMagMod": "MAG-Mod",
       "sozialPositiv": "Soziale Talente (positiv)",
       "sozialNegativ": "Soziale Talente (negativ)",
       "wissenschaftenSozial": "Wissenschaften (sozial)",
@@ -208,7 +207,6 @@
       "FreePoints": "Freie Attributpunkte",
       "RaceBonusIncluded": "Beinhaltet Rassen-/Berufsbonus -- ist bereits dein neuer Startwert",
       "Koerperlich": "Gemeinsamer Bonus = Durchschnitt aller investierten Punkte (abgerundet)",
-      "Sonder": "Bonusattribut je Talent ist Platzhalter (aktuell MAG) und noch nicht final",
       "GrantedByProgression": "Automatisch durch Rasse/Beruf vorhanden",
       "RequiresSkill": "benötigt {skill}",
       "ItemBonusIncluded": "Enthält einen Bonus durch ausgerüstete/getragene Ausrüstung",
@@ -217,6 +215,20 @@
 
     "Sheet": {
       "editButton": "Edit"
+    },
+
+    "Rest": {
+      "Button": "Rast",
+      "ButtonHint": "Eine Stunde rasten (gesamte Gruppe) -- jeder heilt automatisch 10% Max-HP und wählt eine Aktivität.",
+      "PartyMessage": "Die Gruppe rastet eine Stunde.",
+      "PromptTitle": "Rast: {name}",
+      "PromptHint": "Was möchtest du während der Rast tun?",
+      "Meditation": "Meditation",
+      "HealWounds": "Wunden versorgen",
+      "HealWoundsMessage": "{name} versorgt seine Wunden und heilt zusätzlich {amount} HP.",
+      "Craft": "Handwerk",
+      "ChooseCraft": "Welches Handwerk?",
+      "DoNothing": "Nichts (nur ausruhen)"
     },
 
     "Warning": {

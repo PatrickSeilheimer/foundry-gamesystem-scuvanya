@@ -12,6 +12,7 @@ import EquipPickerApp from "../apps/equip-picker.mjs";
 import { describePath } from "../path-labels.mjs";
 import { describeConditionNode } from "../rules/conditions.mjs";
 import { getActionCatalog } from "../actions/catalog.mjs";
+import { requestPartyRest } from "../rest.mjs";
 
 const signed = n => `${n >= 0 ? "+" : ""}${n}`;
 
@@ -39,7 +40,8 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       rollDiscipline: ScuvanyaCharacterSheet.#onRollDiscipline,
       openCreationWizard: ScuvanyaCharacterSheet.#onOpenCreationWizard,
       openSlot: ScuvanyaCharacterSheet.#onOpenSlot,
-      useAction: ScuvanyaCharacterSheet.#onUseAction
+      useAction: ScuvanyaCharacterSheet.#onUseAction,
+      startRest: ScuvanyaCharacterSheet.#onStartRest
     }
   };
 
@@ -106,7 +108,6 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       `${game.i18n.localize("SCUVANYA.Bonus")}: ${signed(mod)} (${game.i18n.localize(suffixKey)})`;
     context.sozialBonusLabel = bonusLabel(sys.attributes.cha.mod, "SCUVANYA.Category.bonusChaMod");
     context.wissenschaftBonusLabel = bonusLabel(sys.attributes.int.mod, "SCUVANYA.Category.bonusIntMod");
-    context.sonderBonusLabel = bonusLabel(sys.attributes.mag.mod, "SCUVANYA.Category.bonusMagMod");
     context.koerperlichBonusLabel = bonusLabel(context.koerperlich[0]?.bonus ?? 0, "SCUVANYA.Category.bonusAverage");
 
     context.gemeinsprache = sys.sprachen.gemeinsprache;
@@ -363,6 +364,10 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
   static #onOpenCreationWizard() {
     new CharacterCreationWizard(this.actor).render(true);
+  }
+
+  static #onStartRest() {
+    requestPartyRest();
   }
 
   static #onOpenSlot(event, target) {

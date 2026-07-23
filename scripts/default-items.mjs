@@ -235,6 +235,28 @@ export const DEFAULT_EQUIPMENT = [
     }
   },
   {
+    name: "[TEST] Werkzeug",
+    type: "equipment",
+    flags: TEST_FLAGS,
+    system: {
+      description: "<p>Ein Bündel Werkzeug für so ziemlich jedes Handwerk -- nur zum Schmieden reicht es nicht. Dient während einer Rast als Nachweis, dass ein Handwerk auch tatsächlich ausgeübt werden kann (siehe documents/actor.mjs getUsableCraftSkills).</p>",
+      quantity: 1,
+      weight: 0,
+      // Kein Slot -- Werkzeuge müssen nicht ausgerüstet werden, nur im Inventar mitgeführt.
+      // "handwerkszeug" ist der generische Marker, die restlichen Flags sind je ein Schlüssel
+      // aus SCUVANYA.craftSkills (siehe module/config.mjs) -- bewusst ALLE außer "grobschmied",
+      // um zu Testzwecken zu zeigen, dass ein Werkzeug auch NICHT universell sein kann.
+      flags: [
+        "handwerkszeug", "test",
+        "feinschmied", "plattner", "gerber", "zimmerer", "weber",
+        "alchemist", "koch", "jagen", "fischen", "verzaubern"
+      ],
+      slot: "",
+      conditions: [],
+      effects: []
+    }
+  },
+  {
     name: "[TEST] Schild der Standhaftigkeit",
     type: "armor",
     flags: TEST_FLAGS,

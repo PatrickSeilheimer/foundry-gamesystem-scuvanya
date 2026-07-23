@@ -248,6 +248,23 @@ export default class ScuvanyaActor extends Actor {
   }
 
   /**
+   * Werkzeug für ein Handwerk im Besitz? (siehe Konversation Rast/Handwerk) -- muss NICHT
+   * ausgerüstet sein (Werkzeuge kennen keinen Ausrüstungs-Slot), nur mitgeführt werden. Die
+   * Kennung ist derselbe Schlüssel wie SCUVANYA.craftSkills, z.B. ein Item mit
+   * system.flags enthält "koch" -> taugt als Werkzeug für das Handwerk "koch".
+   */
+  hasCraftingTool(craftKey) {
+    return this.items.some(i => (i.system.flags ?? []).includes(craftKey));
+  }
+
+  /** Alle Handwerke, die während einer Rast ausgeübt werden können: Stufe >= 1 UND passendes Werkzeug im Besitz. */
+  getUsableCraftSkills() {
+    return SCUVANYA.craftSkills
+      .map(key => ({ key, level: this.system.talents.handwerk[key]?.level ?? 0 }))
+      .filter(entry => entry.level >= 1 && this.hasCraftingTool(entry.key));
+  }
+
+  /**
    * Baut die Würfelformel für einen Talent-Pfad (system.rollPath einer Aktion mit
    * rollSource "skill") -- deckt alle Talent-Kategorien ab, damit ein Aktions-Klick exakt
    * dieselbe Formel würfelt wie ein Klick direkt auf das Talent (siehe rollSocialSkill etc.).

@@ -18,6 +18,7 @@ import ScuvanyaItem from "./module/documents/item.mjs";
 import ScuvanyaCharacterSheet from "./module/sheets/character-sheet.mjs";
 import ScuvanyaNpcSheet from "./module/sheets/npc-sheet.mjs";
 import ScuvanyaItemSheet from "./module/sheets/item-sheet.mjs";
+import { initRestSocket } from "./module/rest.mjs";
 
 Hooks.once("init", () => {
   game.scuvanya = { config: SCUVANYA };
@@ -100,3 +101,5 @@ async function startNewCombatRound(combat) {
 
 Hooks.on("combatStart", (combat) => startNewCombatRound(combat));
 Hooks.on("combatRound", (combat) => startNewCombatRound(combat));
+
+Hooks.once("ready", () => initRestSocket());

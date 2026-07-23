@@ -81,6 +81,11 @@
       <i class="fa-solid fa-hammer"></i>
       <span>{{localize 'SCUVANYA.Sheet.editButton'}}</span>
     </button>
+
+    <button type="button" class="sheet-topbar__col sheet-topbar__edit" data-action="startRest" title="{{localize 'SCUVANYA.Rest.ButtonHint'}}">
+      <i class="fa-solid fa-campground"></i>
+      <span>{{localize 'SCUVANYA.Rest.Button'}}</span>
+    </button>
   </div>
 
   <div class="sheet-folder">
@@ -200,7 +205,7 @@
           </div>
 
           <div class="cc-category-pair">
-            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sonder') skills=sonder rollAction="rollSonderSkill" bonusLabel=sonderBonusLabel}}
+            {{> "systems/scuvanya/templates/actor/parts/skill-category.hbs" title=(localize 'SCUVANYA.Category.sonder') skills=sonder rollAction="rollSonderSkill"}}
             {{> "systems/scuvanya/templates/actor/parts/tiered-category.hbs" title=(localize 'SCUVANYA.Category.handwerk') skills=handwerk rollAction="rollHandwerkSkill"}}
           </div>
 

@@ -56,6 +56,7 @@ const FIXED_IDS = {
   "[TEST] Dolch der Gauner": "Eq5DcGn3Rw7Kt9Mp",
   "[TEST] Kurzbogen": "Eq6KzBg8Nx4Ld2Hs",
   "[TEST] Umhang des Pyromanen": "Eq7UmPy5Tc9Wr3Fn",
+  "[TEST] Werkzeug": "Eq8WkZg4Nc7Wt2Rm",
 
   Handflamme: "Sp1HfKm3Wt7Nc9Rd",
   Funkenschlag: "Sp2FkSg8Vm4Lt2Hs",

@@ -1,0 +1,49 @@
+{
+  "_id": "Eq8WkZg4Nc7Wt2Rm",
+  "_key": "!items!Eq8WkZg4Nc7Wt2Rm",
+  "name": "[TEST] Werkzeug",
+  "type": "equipment",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "description": "<p>Ein Bündel Werkzeug für so ziemlich jedes Handwerk -- nur zum Schmieden reicht es nicht. Dient während einer Rast als Nachweis, dass ein Handwerk auch tatsächlich ausgeübt werden kann (siehe documents/actor.mjs getUsableCraftSkills).</p>",
+    "quantity": 1,
+    "weight": 0,
+    "flags": [
+      "handwerkszeug",
+      "test",
+      "feinschmied",
+      "plattner",
+      "gerber",
+      "zimmerer",
+      "weber",
+      "alchemist",
+      "koch",
+      "jagen",
+      "fischen",
+      "verzaubern"
+    ],
+    "slot": "",
+    "conditions": [],
+    "effects": []
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "scuvanya": {
+      "testItem": true
+    }
+  },
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

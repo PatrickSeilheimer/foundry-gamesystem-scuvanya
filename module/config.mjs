@@ -37,21 +37,19 @@ SCUVANYA.scienceSkills = {
 // Körperliche Talente: gemeinsamer Durchschnittsbonus über alle 5.
 SCUVANYA.physicalSkills = ["klettern", "laufen", "schwimmen", "springen", "werfen"];
 
-// Sondertalente: individueller Bonus pro Talent (Formel noch nicht final).
-// PLATZHALTER: alle Sondertalente nutzen vorerst MAG-Mod als Bonusquelle.
-// Sobald die finale Liste vorliegt, hier je Talent das echte Attribut eintragen.
+// Sondertalente: individueller Bonus pro Talent, je nach thematischem Attribut.
 SCUVANYA.sonderSkills = {
-  fingerfertigkeit: "mag",
-  taschendiebstahl: "mag",
-  schloesserKnacken: "mag",
-  schleichen: "mag",
-  spurenLesen: "mag",
-  ueberlebenstechniken: "mag",
-  orientierung: "mag",
-  selbstvertrauen: "mag",
-  konzentration: "mag",
-  magischesGespuer: "mag",
-  durchschauen: "mag"
+  fingerfertigkeit: "dex",
+  taschendiebstahl: "dex",
+  schloesserKnacken: "dex",
+  schleichen: "dex",
+  spurenLesen: "int",
+  durchschauen: "int",
+  ueberlebenstechniken: "mnd",
+  orientierung: "mnd",
+  selbstvertrauen: "mnd",
+  konzentration: "mnd",
+  magischesGespuer: "mag"
 };
 
 // Handwerk: Stufe 0-5, startet bei 0, nutzt Stufenwürfel (explodierend).
