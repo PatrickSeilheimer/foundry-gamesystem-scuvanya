@@ -19,6 +19,7 @@ import ScuvanyaCharacterSheet from "./module/sheets/character-sheet.mjs";
 import ScuvanyaNpcSheet from "./module/sheets/npc-sheet.mjs";
 import ScuvanyaItemSheet from "./module/sheets/item-sheet.mjs";
 import { initRestSocket } from "./module/rest.mjs";
+import { initResourceMaxSync } from "./module/rules/resource-sync.mjs";
 
 Hooks.once("init", () => {
   game.scuvanya = { config: SCUVANYA };
@@ -62,6 +63,7 @@ Hooks.once("init", () => {
   });
 
   registerHandlebarsHelpers();
+  initResourceMaxSync();
 
   foundry.applications.handlebars.loadTemplates([
     "systems/scuvanya/templates/apps/parts/bonus-preview.hbs",
