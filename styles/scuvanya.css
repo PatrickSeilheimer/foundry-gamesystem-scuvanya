@@ -2209,3 +2209,145 @@
 
 .character-sheet .action-tile__cost--ap { color: #e0b84f; }
 .character-sheet .action-tile__cost--mana { color: #6fb8e6; }
+
+/* ══════════════════════════════════════════════════════════════════
+   Encounter-Tracker (siehe module/apps/encounter-tracker.mjs) -- eigene
+   Variablendeklaration wie bei .application.character, siehe Kommentar
+   dort zum "durchsichtiger Tooltip"-Fehler, den das vermeidet.
+   ══════════════════════════════════════════════════════════════════ */
+.application.encounter-tracker {
+  --scv-bg: #17150e;
+  --scv-surface: #201d15;
+  --scv-accent: #c9a84c;
+  --scv-accent-dim: rgba(201, 168, 76, 0.12);
+  --scv-accent-border: rgba(201, 168, 76, 0.35);
+  --scv-accent-hover: #dfbc6a;
+  --scv-text: #d8d3c2;
+  --scv-text-muted: #8b8676;
+  --scv-border: #34301f;
+  --scv-transition: 0.25s ease;
+}
+
+.application.encounter-tracker .window-content {
+  background: var(--scv-bg);
+  color: var(--scv-text);
+  padding: 0.6rem 0.7rem;
+}
+
+.encounter-tracker-app .hint {
+  color: var(--scv-text-muted);
+  font-style: italic;
+}
+
+.encounter-tracker-app .et-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Cinzel', serif;
+  color: var(--scv-accent);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.encounter-tracker-app .et-round-over {
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid var(--scv-accent-border);
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--scv-accent);
+  margin-bottom: 0.5rem;
+}
+
+.encounter-tracker-app .et-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.encounter-tracker-app .et-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 4px;
+  background: var(--scv-surface);
+  opacity: 0.55;
+}
+
+.encounter-tracker-app .et-row--ready {
+  opacity: 1;
+  border-color: var(--scv-accent-border);
+}
+
+.encounter-tracker-app .et-row__img {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.encounter-tracker-app .et-row__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.encounter-tracker-app .et-row__init {
+  flex: 0 0 auto;
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  color: var(--scv-accent);
+  min-width: 2ch;
+  text-align: center;
+}
+
+.encounter-tracker-app .et-row__ap {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  color: var(--scv-text-muted);
+  white-space: nowrap;
+}
+
+.encounter-tracker-app .et-row__roll {
+  flex: 0 0 auto;
+  cursor: pointer;
+  color: var(--scv-accent);
+}
+
+.encounter-tracker-app .et-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.encounter-tracker-app .et-controls button {
+  flex: 1 1 auto;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 3px;
+  background: var(--scv-surface);
+  color: var(--scv-text);
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.encounter-tracker-app .et-controls button:hover {
+  border-color: var(--scv-accent-border);
+  color: var(--scv-accent);
+}
+
+/* Button, den scuvanya.mjs (Hooks.on("renderCombatTracker")) oben in Foundrys eingebaute
+   Combat-Tracker-Sidebar einfügt, um den Encounter-Tracker zu öffnen. */
+.scuvanya-open-tracker {
+  width: 100%;
+  margin: 4px 0;
+  padding: 4px 8px;
+  cursor: pointer;
+}

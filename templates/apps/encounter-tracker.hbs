@@ -1,0 +1,40 @@
+<div class="encounter-tracker-app">
+  {{#unless hasCombat}}
+  <p class="hint">{{localize 'SCUVANYA.Encounter.NoCombat'}}</p>
+  {{else}}
+
+  <div class="et-header">
+    <span>{{localize 'SCUVANYA.Encounter.Round'}}: <strong>{{round}}</strong></span>
+    <span>{{localize 'SCUVANYA.Encounter.Counter'}}: <strong>{{#if counter}}{{counter}}{{else}}—{{/if}}</strong></span>
+  </div>
+
+  {{#if roundOver}}
+  <p class="et-round-over">{{localize 'SCUVANYA.Encounter.RoundOverHint'}}</p>
+  {{/if}}
+
+  <div class="et-list">
+    {{#each combatants as |c|}}
+    <div class="et-row {{#if c.ready}}et-row--ready{{else}}et-row--waiting{{/if}}">
+      <img class="et-row__img" src="{{c.img}}">
+      <span class="et-row__name">{{c.name}}</span>
+      <span class="et-row__init">{{#if c.initiative}}{{c.initiative}}{{else}}—{{/if}}</span>
+      {{#if c.ap}}<span class="et-row__ap">{{c.ap.value}}/{{c.ap.max}} AP</span>{{/if}}
+      {{#if c.canRoll}}
+      <a class="et-row__roll" data-action="rollInit" data-combatant-id="{{c.id}}" title="{{localize 'SCUVANYA.Encounter.RollOwn'}}">
+        <i class="fa-solid fa-dice-d20"></i>
+      </a>
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+
+  <div class="et-controls">
+    {{#if isGM}}
+    <button type="button" data-action="advanceCounter">{{localize 'SCUVANYA.Encounter.AdvanceCounter'}}</button>
+    <button type="button" data-action="nextRound">{{localize 'SCUVANYA.Encounter.NextRound'}}</button>
+    <button type="button" data-action="rerollNpcs">{{localize 'SCUVANYA.Encounter.RerollNpcs'}}</button>
+    <button type="button" data-action="rerollCharacters">{{localize 'SCUVANYA.Encounter.RerollCharacters'}}</button>
+    {{/if}}
+  </div>
+  {{/unless}}
+</div>

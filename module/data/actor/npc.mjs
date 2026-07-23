@@ -39,5 +39,8 @@ export default class NpcData extends foundry.abstract.TypeDataModel {
     this.resources.hp.max = 4 * attr.con.value + attr.str.value;
     this.resources.mana.max = 2 * attr.mnd.value + 2 * attr.mag.value + attr.con.value;
     this.resources.mentalHealth.max = 3 * attr.mnd.value + attr.int.value + attr.con.value;
+    // Wie bei Charakteren (siehe character.mjs) -- NSCs nehmen ebenfalls am AP-/Encounter-System
+    // teil (siehe module/rules/encounter.mjs "hasAnyApLeft").
+    this.resources.ap.max = SCUVANYA.turnStartAP;
   }
 }

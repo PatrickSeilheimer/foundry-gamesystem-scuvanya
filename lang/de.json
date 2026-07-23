@@ -166,6 +166,20 @@
       "zauber": "Zauber"
     },
 
+    "Encounter": {
+      "Title": "Encounter-Tracker",
+      "OpenButton": "Scuvanya-Tracker öffnen",
+      "NoCombat": "Kein aktiver Encounter.",
+      "Round": "Runde",
+      "Counter": "Init-Zähler",
+      "RoundOverHint": "Runde vorbei (Zähler bei 0 oder niemand hat noch AP) -- \"Nächste Runde\" klicken, sobald bereit.",
+      "RollOwn": "Eigene Initiative würfeln",
+      "AdvanceCounter": "Zähler weiterzählen",
+      "NextRound": "Nächste Runde",
+      "RerollNpcs": "Alle NSC neu würfeln",
+      "RerollCharacters": "Alle Akteure neu würfeln"
+    },
+
     "Action": {
       "Empty": "Keine verfügbaren Aktionen.",
       "CostAp": "AP-Kosten",
@@ -182,6 +196,7 @@
       "InsufficientAp": "Nicht genug AP ({cost} benötigt, {available} verfügbar)",
       "InsufficientMana": "Nicht genug Mana ({cost} benötigt, {available} verfügbar)",
       "NotUnlocked": "Die Voraussetzungen für \"{action}\" sind nicht erfüllt",
+      "NotYourTurn": "{name} ist im Kampf noch nicht an der Reihe (Initiative noch nicht erreicht)",
       "Range": "Reichweite",
       "Area": "Fläche",
       "AreaShape": { "kreis": "Kreis", "linie": "Linie" },

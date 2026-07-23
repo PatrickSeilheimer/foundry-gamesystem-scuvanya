@@ -20,6 +20,7 @@ import ScuvanyaNpcSheet from "./module/sheets/npc-sheet.mjs";
 import ScuvanyaItemSheet from "./module/sheets/item-sheet.mjs";
 import { initRestSocket } from "./module/rest.mjs";
 import { initResourceMaxSync } from "./module/rules/resource-sync.mjs";
+import EncounterTracker from "./module/apps/encounter-tracker.mjs";
 
 Hooks.once("init", () => {
   game.scuvanya = { config: SCUVANYA };
@@ -83,26 +84,33 @@ Hooks.once("init", () => {
 });
 
 /**
- * Rundenstruktur (siehe Konversation): jede neue Runde wird die Initiative komplett neu
- * gewürfelt -- wer die höchste Initiative hat, darf beginnen, muss aber nichts tun. Es gibt
- * bewusst KEINE erzwungene Zug-Reihenfolge (useAction prüft nirgends, ob ein Charakter "dran"
- * ist) -- man hat die gesamte Runde Zeit, seine AP einzusetzen, bis die SL manuell auf "Nächste
- * Runde" drückt. ALLE Charaktere im Encounter erhalten dabei wieder volle AP (siehe
- * resources.ap.max, aktuell immer SCUVANYA.turnStartAP -- über das Max statt einer festen
- * Zahl, damit ein künftiger Effekt "-2 max AP nächste Runde" hier automatisch greifen würde).
- *
- * "combatStart" deckt Runde 1 ab (die schon beim Start des Kampfes gilt), "combatRound" jede
- * weitere Runde (SL klickt "Nächste Runde").
+ * Encounter-/Initiative-Ablauf (siehe module/rules/encounter.mjs für die eigentliche Logik --
+ * hier nur die Anbindung): ein Button in Foundrys eingebauter Combat-Tracker-Sidebar öffnet den
+ * eigenen Encounter-Tracker (siehe module/apps/encounter-tracker.mjs), und dessen Fenster wird
+ * bei jeder relevanten Änderung neu gerendert, solange es offen ist. Bewusst KEIN automatischer
+ * Rundenwechsel/keine automatische Neuwürfelung mehr (siehe Konversation) -- das war ein früherer
+ * Ansatz (combatStart/combatRound-Hooks), der durch den expliziten "Nächste Runde"-Button und
+ * die beiden Sammel-Würfel-Buttons im Encounter-Tracker ersetzt wurde.
  */
-async function startNewCombatRound(combat) {
-  if (!combat) return;
-  await Promise.all(combat.combatants
-    .filter(c => c.actor?.type === "character")
-    .map(c => c.actor.update({ "system.resources.ap.value": c.actor.system.resources.ap.max })));
-  await combat.rollAll();
+function refreshEncounterTracker() {
+  if (EncounterTracker.current?.rendered) EncounterTracker.current.render();
 }
 
-Hooks.on("combatStart", (combat) => startNewCombatRound(combat));
-Hooks.on("combatRound", (combat) => startNewCombatRound(combat));
+Hooks.on("updateCombat", refreshEncounterTracker);
+Hooks.on("updateCombatant", refreshEncounterTracker);
+Hooks.on("createCombatant", refreshEncounterTracker);
+Hooks.on("deleteCombatant", refreshEncounterTracker);
+Hooks.on("updateActor", refreshEncounterTracker);
+
+Hooks.on("renderCombatTracker", (app, html) => {
+  const root = html instanceof HTMLElement ? html : html[0];
+  if (!root || root.querySelector(".scuvanya-open-tracker")) return;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "scuvanya-open-tracker";
+  button.textContent = game.i18n.localize("SCUVANYA.Encounter.OpenButton");
+  button.addEventListener("click", () => EncounterTracker.open());
+  root.prepend(button);
+});
 
 Hooks.once("ready", () => initRestSocket());

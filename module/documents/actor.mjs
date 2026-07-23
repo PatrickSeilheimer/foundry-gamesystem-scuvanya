@@ -1,6 +1,7 @@
 import { SCUVANYA } from "../config.mjs";
 import { tieredSkillFormula, rollToChat } from "../dice.mjs";
 import { CONDITION_COMPARATORS, evaluateConditionNode } from "../rules/conditions.mjs";
+import { getCombatGate } from "../rules/encounter.mjs";
 
 export default class ScuvanyaActor extends Actor {
   /** @override */
@@ -370,10 +371,15 @@ export default class ScuvanyaActor extends Actor {
   }
 
   /**
-   * Führt eine Aktion aus: prüft Verfügbarkeit, zieht AP/Mana ab (nach Kostenmodifikatoren),
-   * würfelt die Probe (Flavor = Aktionsname, damit der Chat-Log die AKTION zeigt, nicht nur ein
-   * blankes Talent, siehe Konversation "Gegner analysieren") und danach ggf. einen Schadenswurf
-   * (feste Formel oder aus der ausgerüsteten Waffe ausgelesen).
+   * Führt eine Aktion aus: prüft Verfügbarkeit + (nur innerhalb eines aktiven Encounters, in dem
+   * dieser Actor auch tatsächlich Kämpfer ist) die Init-Freigabe, zieht AP/Mana ab (nach
+   * Kostenmodifikatoren) und würfelt die Probe (Flavor = Aktionsname, damit der Chat-Log die
+   * AKTION zeigt, nicht nur ein blankes Talent, siehe Konversation "Gegner analysieren") und
+   * danach ggf. einen Schadenswurf (feste Formel oder aus der ausgerüsteten Waffe ausgelesen).
+   *
+   * Außerhalb eines Encounters (oder wenn dieser Actor darin gar nicht mitkämpft) werden gar
+   * keine AP verbraucht -- die Init-Sperre UND die AP-Kosten gelten nur während eines echten
+   * Kampfes, siehe module/rules/encounter.mjs getCombatGate.
    */
   async useAction(action) {
     const availability = this.isActionAvailable(action);
@@ -382,7 +388,13 @@ export default class ScuvanyaActor extends Actor {
       return null;
     }
 
-    const apCost = this.effectiveActionCostBreakdown(action, "ap").total;
+    const gate = getCombatGate(this);
+    if (gate.inCombat && !gate.ready) {
+      ui.notifications.warn(game.i18n.format("SCUVANYA.Action.NotYourTurn", { name: this.name }));
+      return null;
+    }
+
+    const apCost = gate.inCombat ? this.effectiveActionCostBreakdown(action, "ap").total : 0;
     const manaCost = this.effectiveActionCostBreakdown(action, "mana").total;
     if (apCost > this.system.resources.ap.value) {
       ui.notifications.warn(game.i18n.format("SCUVANYA.Action.InsufficientAp", {
