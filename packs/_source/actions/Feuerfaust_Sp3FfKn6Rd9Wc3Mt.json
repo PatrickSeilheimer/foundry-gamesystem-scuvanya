@@ -1,35 +1,33 @@
 {
-  "_id": "Ac2FbKr9Wt3Ls6Hn",
-  "_key": "!items!Ac2FbKr9Wt3Ls6Hn",
-  "name": "Feuerball",
+  "_id": "Sp3FfKn6Rd9Wc3Mt",
+  "_key": "!items!Sp3FfKn6Rd9Wc3Mt",
+  "name": "Feuerfaust",
   "type": "action",
-  "img": "icons/magic/fire/orb-lightning-teal.webp",
+  "img": "icons/magic/fire/hand-sparks-embers-yellow.webp",
   "system": {
-    "key": "feuerball",
-    "description": "<p>Eine explosive Feuerkugel detoniert am Zielpunkt.</p>",
+    "key": "feuerfaust",
+    "description": "<p>Du schlägst nach vorne, um aus deiner Hand einen Feuerschwall entweichen zu lassen.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
     ],
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
-    "costAp": 3,
-    "costMana": 15,
-    "range": "Sicht",
-    "areaShape": "kreis",
-    "areaSize": "Radius 3 m",
+    "costAp": 4,
+    "costMana": 6,
+    "range": "5 m",
     "savingThrow": "con",
-    "damageFormula": "3d6 + @mag",
+    "damageFormula": "2d6 + @mag",
     "damageType": "feuer",
     "damageFromWeapon": false,
     "effects": [
-      "Alle Ziele erhalten Brennend für 2 Runden."
+      "Ziel erhält Brennend für 1 Runde."
     ],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 4
+      "value": 2
     }
   },
   "effects": [],

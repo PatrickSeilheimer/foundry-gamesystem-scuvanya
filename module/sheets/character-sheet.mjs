@@ -174,6 +174,10 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
 
     const weapon = sys.rollSource === "weaponCategory" ? this.actor._primaryEquippedWeapon() : null;
     const damageFormula = sys.damageFromWeapon ? (weapon?.system.damageFormula ?? null) : (sys.damageFormula || null);
+    const damageType = sys.damageFromWeapon ? weapon?.system.damageType : sys.damageType;
+    const damageText = damageFormula
+      ? (damageType ? `${damageFormula} (${game.i18n.localize(SCUVANYA.damageTypes[damageType]?.label ?? damageType)})` : damageFormula)
+      : null;
 
     return {
       uuid: action.uuid,
@@ -185,6 +189,7 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
       rollLabel: this._actionRollLabel(action, weapon),
       tooltip: {
         description: sys.description ?? "",
+        metaLines: this._buildActionMetaLines(sys),
         apBreakdown: sys.costAp || apBreakdown.rows.length > 1 ? apBreakdown : null,
         manaBreakdown: sys.costMana || manaBreakdown.rows.length > 1 ? manaBreakdown : null,
         unlockReason: availability.reason,
@@ -193,9 +198,32 @@ export default class ScuvanyaCharacterSheet extends BaseActorSheet {
           : null,
         conditionsText: sys.unlockConditions?.type ? describeConditionNode(sys.unlockConditions) : null,
         effects: sys.effects ?? [],
-        damageFormula
+        damageFormula: damageText
       }
     };
+  }
+
+  /**
+   * Freitext-Metadaten einer Aktion für den Tooltip (Reichweite/Fläche/Dauer/Unterhalt/
+   * Rettungswurf, siehe action.mjs) -- nur die tatsächlich gesetzten Zeilen, damit ein
+   * einfacher Zauber ohne Fläche/Dauer keine leeren Zeilen zeigt.
+   */
+  _buildActionMetaLines(sys) {
+    const lines = [];
+    if (sys.range) lines.push({ label: game.i18n.localize("SCUVANYA.Action.Range"), value: sys.range });
+    if (sys.areaShape) {
+      const shapeLabel = game.i18n.localize(`SCUVANYA.Action.AreaShape.${sys.areaShape}`);
+      lines.push({ label: game.i18n.localize("SCUVANYA.Action.Area"), value: sys.areaSize ? `${shapeLabel} (${sys.areaSize})` : shapeLabel });
+    }
+    if (sys.duration) lines.push({ label: game.i18n.localize("SCUVANYA.Action.Duration"), value: sys.duration });
+    if (sys.manaUpkeep) {
+      lines.push({ label: game.i18n.localize("SCUVANYA.Action.ManaUpkeep"), value: game.i18n.format("SCUVANYA.Action.ManaUpkeepValue", { amount: sys.manaUpkeep }) });
+    }
+    if (sys.savingThrow) {
+      const attrLabel = game.i18n.localize(SCUVANYA.attributes[sys.savingThrow]?.label ?? sys.savingThrow);
+      lines.push({ label: game.i18n.localize("SCUVANYA.Action.SavingThrow"), value: attrLabel });
+    }
+    return lines;
   }
 
   /** Beschriftet, worauf eine Aktion tatsächlich würfelt -- bei "weaponCategory" abhängig von der ausgerüsteten Waffe. */

@@ -1,29 +1,33 @@
 {
-  "_id": "Ac1FkSt4Rw8Nx2Md",
-  "_key": "!items!Ac1FkSt4Rw8Nx2Md",
-  "name": "Funkenstoß",
+  "_id": "Sp5VbRn7Mc3Wt9Kd",
+  "_key": "!items!Sp5VbRn7Mc3Wt9Kd",
+  "name": "Verbrennen",
   "type": "action",
-  "img": "icons/magic/fire/projectile-meteor-comet-orange.webp",
+  "img": "icons/magic/fire/beam-jet-stream-embers.webp",
   "system": {
-    "key": "funkenstoss",
-    "description": "<p>Ein kurzer, greller Funkenstoß schießt aus deiner Hand und versengt, was er trifft.</p>",
+    "key": "verbrennen",
+    "description": "<p>Du lässt die Flammen auf einem bereits brennenden Ziel implodieren.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
     ],
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
-    "costAp": 1,
-    "costMana": 2,
-    "damageFormula": "1d6",
+    "costAp": 2,
+    "costMana": 3,
+    "range": "Sicht",
+    "damageFormula": "4d6 + @mag",
     "damageType": "feuer",
     "damageFromWeapon": false,
-    "effects": [],
+    "effects": [
+      "Kann nur auf brennende Ziele gewirkt werden.",
+      "Entfernt den Effekt Brennend nach dem Angriff."
+    ],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 1
+      "value": 5
     }
   },
   "effects": [],

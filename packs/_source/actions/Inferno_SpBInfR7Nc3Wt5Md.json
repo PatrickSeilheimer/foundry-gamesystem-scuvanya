@@ -1,35 +1,38 @@
 {
-  "_id": "Ac2FbKr9Wt3Ls6Hn",
-  "_key": "!items!Ac2FbKr9Wt3Ls6Hn",
-  "name": "Feuerball",
+  "_id": "SpBInfR7Nc3Wt5Md",
+  "_key": "!items!SpBInfR7Nc3Wt5Md",
+  "name": "Inferno",
   "type": "action",
-  "img": "icons/magic/fire/orb-lightning-teal.webp",
+  "img": "icons/magic/fire/explosion-fireball-large-orange.webp",
   "system": {
-    "key": "feuerball",
-    "description": "<p>Eine explosive Feuerkugel detoniert am Zielpunkt.</p>",
+    "key": "inferno",
+    "description": "<p>Du entfesselst ein verheerendes Flammenmeer, das alles verschlingt.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
     ],
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
-    "costAp": 3,
-    "costMana": 15,
+    "costAp": 5,
+    "costMana": 30,
     "range": "Sicht",
     "areaShape": "kreis",
-    "areaSize": "Radius 3 m",
+    "areaSize": "Radius 8 m",
+    "duration": "5 Runden",
     "savingThrow": "con",
-    "damageFormula": "3d6 + @mag",
+    "damageFormula": "8d6 + @mag",
     "damageType": "feuer",
     "damageFromWeapon": false,
     "effects": [
-      "Alle Ziele erhalten Brennend für 2 Runden."
+      "Alle Ziele erhalten Brennend für 5 Runden.",
+      "Das Gebiet bleibt 5 Runden lang in Flammen.",
+      "Beim Betreten oder zu Beginn des Zuges: 3W6 Feuerschaden und Brennend für 2 Runden."
     ],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 4
+      "value": 10
     }
   },
   "effects": [],

@@ -1,0 +1,62 @@
+{
+  "_id": "Sp5FrDl9Nc2Wt4Rm",
+  "_key": "!items!Sp5FrDl9Nc2Wt4Rm",
+  "name": "Feuerdolche",
+  "type": "action",
+  "img": "icons/weapons/daggers/dagger-flame-orange.webp",
+  "system": {
+    "key": "feuerdolche",
+    "description": "<p>Du erschaffst mehrere brennende Dolche und schleuderst sie auf deine Feinde.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "schuetze"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 3,
+    "costMana": 9,
+    "range": "Sicht",
+    "savingThrow": "con",
+    "damageFormula": "1d6 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Wähle bis zu drei Ziele -- jedes erleidet den Schaden separat.",
+      "Getroffene Ziele erhalten Brennend für 1 Runde."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 3
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.kampf.schuetze",
+          "operator": "gte",
+          "value": 3
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

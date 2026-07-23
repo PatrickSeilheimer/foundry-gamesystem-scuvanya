@@ -1,0 +1,66 @@
+{
+  "_id": "SpBHlSl4Nc7Wt9Kd",
+  "_key": "!items!SpBHlSl4Nc7Wt9Kd",
+  "name": "Höllenschlund",
+  "type": "action",
+  "img": "icons/magic/fire/beam-jet-stream-yellow.webp",
+  "system": {
+    "key": "hoellenschlund",
+    "description": "<p>Du öffnest einen brennenden Spalt, aus dem Flammen und glühende Hände hervorschlagen, die Ziele nach unten ziehen.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "schwarzmagier"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 5,
+    "costMana": 25,
+    "range": "Sicht",
+    "areaShape": "linie",
+    "areaSize": "10 m × 3 m",
+    "duration": "3 Runden",
+    "savingThrow": "con",
+    "damageFormula": "4d6 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Alle Ziele im Gebiet erhalten Brennend für 3 Runden.",
+      "Das Gebiet wird zu schwierigem Gebiet.",
+      "Alle Ziele erhalten Prone."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 8
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.schwarzmagier",
+          "operator": "gte",
+          "value": 5
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "_id": "Sp3FlKl2Nd7Wc9Rt",
+  "_key": "!items!Sp3FlKl2Nd7Wc9Rt",
+  "name": "Flammenklinge",
+  "type": "action",
+  "img": "icons/weapons/swords/sword-broad-flame.webp",
+  "system": {
+    "key": "flammenklinge",
+    "description": "<p>Du umhüllst deine oder eine andere physische Waffe mit lodernden Flammen.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "beschwoerer"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 6,
+    "manaUpkeep": 3,
+    "range": "Kontakt",
+    "duration": "Bis beendet",
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Effekt auf der Waffe: zusätzlicher Feuerschaden in Höhe von MAG mit jedem Treffer der Waffe.",
+      "Effekt kann zu einem beliebigen Zeitpunkt beendet werden."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 2
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.beschwoerer",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

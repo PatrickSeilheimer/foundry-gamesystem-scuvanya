@@ -40,6 +40,31 @@ export default class ActionData extends foundry.abstract.TypeDataModel {
 
       costAp: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
       costMana: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
+      // Zusätzliche Mana-Kosten PRO RUNDE, um einen andauernden Effekt aufrechtzuerhalten (z.B.
+      // "6 Mana, danach 3 weitere pro Runde") -- rein informativ auf dem Tooltip, kein
+      // automatischer Rundenabzug (siehe Klassenkommentar: kein Dauer-/Status-Tracking).
+      manaUpkeep: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 }),
+
+      // Freitext-Angaben zu Reichweite/Fläche/Dauer -- bewusst Freitext statt strukturierter
+      // Zahlenfelder, weil aktuell keine Foundry-Canvas-Vorlage (MeasuredTemplate) automatisch
+      // platziert wird; das ist reine Anzeigeinformation für Tooltip/Absprache am Tisch.
+      // areaShape "" = keine Fläche (Einzelziel/Selbst). "kreis"/"linie" werden bei "Umkreis"
+      // IMMER um den Wirkenden selbst zentriert (siehe Konversation), sonst an einem frei
+      // wählbaren Punkt innerhalb der Reichweite.
+      range: new fields.StringField({ required: false, blank: true, initial: "" }),
+      areaShape: new fields.StringField({ required: false, blank: true, initial: "", choices: ["", "kreis", "linie"] }),
+      areaSize: new fields.StringField({ required: false, blank: true, initial: "" }),
+      duration: new fields.StringField({ required: false, blank: true, initial: "" }),
+
+      // Rettungswurf-Attribut, das ein GETROFFENES Ziel gegen einen (noch nicht definierten)
+      // Spell Save DC des Wirkenden würfeln muss, um einen aufgezwungenen Effekt (Brennend,
+      // Prone, erzwungene Bewegung, ...) abzuwenden -- siehe Konversation: "Mach dafür in jeden
+      // Charakter einen Spell Save DC, ich weiß nur noch nicht genau wie dieser berechnet wird."
+      // Rein deklarativ/informativ (Tooltip), NICHT automatisch gewürfelt, bis die DC-Formel
+      // feststeht. "" = kein Rettungswurf nötig (reiner Schaden oder rein positiver Effekt).
+      savingThrow: new fields.StringField({
+        required: false, blank: true, initial: "", choices: ["", ...Object.keys(SCUVANYA.attributes)]
+      }),
 
       // Schadenswurf: entweder eine feste Formel ODER (bei Waffenangriffen) aus der aktuell
       // ausgerüsteten Waffe ausgelesen (system.damageFormula/damageType der Waffe).

@@ -1,0 +1,65 @@
+{
+  "_id": "Sp9SbEz5Rc3Nt8Wk",
+  "_key": "!items!Sp9SbEz5Rc3Nt8Wk",
+  "name": "Selbstentzündung",
+  "type": "action",
+  "img": "icons/magic/fire/dagger-rune-enchant-blue-gray.webp",
+  "system": {
+    "key": "selbstentzuendung",
+    "description": "<p>Du hüllst deinen gesamten Körper in magische Flammen.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "polymorph"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 3,
+    "costMana": 6,
+    "manaUpkeep": 6,
+    "range": "Selbst",
+    "duration": "Bis beendet",
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Du erhältst Immunität gegen den Effekt Brennend.",
+      "Nahkampfangriffe verursachen zusätzlich MAG Feuerschaden.",
+      "Jeder Gegner, der dich im Nahkampf trifft, erhält MAG Feuerschaden.",
+      "Effekt kann jederzeit beendet werden."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 6
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.polymorph",
+          "operator": "gte",
+          "value": 3
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "_id": "Sp6FlZg3Rc8Nt5Wd",
+  "_key": "!items!Sp6FlZg3Rc8Nt5Wd",
+  "name": "Flammende Zungen",
+  "type": "action",
+  "img": "icons/magic/fire/barrier-wall-flame-tan.webp",
+  "system": {
+    "key": "flammendeZungen",
+    "description": "<p>Mehrere lebendige Feuerzungen kreisen um dich und greifen jeden Gegner an, der sich nähert.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "beschwoerer"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 5,
+    "manaUpkeep": 5,
+    "range": "Selbst",
+    "areaShape": "kreis",
+    "areaSize": "Radius 2 m",
+    "duration": "Bis beendet",
+    "damageFormula": "2d6 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Alle Gegner innerhalb von 2 m erleiden den Schaden zu Beginn ihres Zuges oder wenn sie in deine Nahkampfreichweite kommen.",
+      "Effekt kann zu einem beliebigen Zeitpunkt beendet werden."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 4
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.beschwoerer",
+          "operator": "gte",
+          "value": 3
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

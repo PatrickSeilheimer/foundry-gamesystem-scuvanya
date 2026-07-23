@@ -1,0 +1,61 @@
+{
+  "_id": "Sp1FlPt5Nc9Wr3Km",
+  "_key": "!items!Sp1FlPt5Nc9Wr3Km",
+  "name": "Flammenpeitsche",
+  "type": "action",
+  "img": "icons/magic/fire/projectile-fireball-smoke-large-red.webp",
+  "system": {
+    "key": "flammenpeitsche",
+    "description": "<p>Du erschaffst eine glühende Peitsche aus Feuer und schlägst nach einem Gegner.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "krieger"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 6,
+    "range": "10 m",
+    "savingThrow": "con",
+    "damageFormula": "2d4 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Zieht das Ziel zu dir."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 2
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.kampf.krieger",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "_id": "Sp7FrRs7Wc4Nd2Kt",
+  "_key": "!items!Sp7FrRs7Wc4Nd2Kt",
+  "name": "Feuerresistenz verleihen",
+  "type": "action",
+  "img": "icons/magic/fire/barrier-shield-yellow.webp",
+  "system": {
+    "key": "feuerresistenzVerleihen",
+    "description": "<p>Du schützt ein Ziel vor den zerstörerischen Kräften des Feuers.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "spiritualist"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 6,
+    "range": "Kontakt",
+    "duration": "5 Runden",
+    "damageFormula": "",
+    "damageType": "",
+    "damageFromWeapon": false,
+    "effects": [
+      "Das Ziel erhält 50% Feuerresistenz für 5 Runden.",
+      "Brennend wird sofort entfernt."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 5
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.spiritualist",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

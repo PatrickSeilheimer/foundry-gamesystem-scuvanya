@@ -1,0 +1,63 @@
+{
+  "_id": "Sp2LdSp8Rc4Nt6Wm",
+  "_key": "!items!Sp2LdSp8Rc4Nt6Wm",
+  "name": "Lodernder Sprung",
+  "type": "action",
+  "img": "icons/magic/fire/explosion-fireball-small-yellow.webp",
+  "system": {
+    "key": "lodernderSprung",
+    "description": "<p>Du stößt dich mit einer Explosion vom Boden ab.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "aerothurg"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 8,
+    "range": "Selbst",
+    "areaShape": "kreis",
+    "areaSize": "Radius 2 m (bei Absprung und Landung)",
+    "damageFormula": "@mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Springe bis zu 10 m weit.",
+      "Beim Absprung und bei der Landung entsteht jeweils ein Kreis mit 2 m Radius."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 2
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.aerothurg",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

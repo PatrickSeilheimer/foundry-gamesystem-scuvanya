@@ -1,12 +1,12 @@
 {
-  "_id": "Ac2FbKr9Wt3Ls6Hn",
-  "_key": "!items!Ac2FbKr9Wt3Ls6Hn",
-  "name": "Feuerball",
+  "_id": "Sp6KtBr4Nd8Wc2Ms",
+  "_key": "!items!Sp6KtBr4Nd8Wc2Ms",
+  "name": "Kettenbrand",
   "type": "action",
-  "img": "icons/magic/fire/orb-lightning-teal.webp",
+  "img": "icons/magic/fire/dagger-rune-enchant-flame-purple.webp",
   "system": {
-    "key": "feuerball",
-    "description": "<p>Eine explosive Feuerkugel detoniert am Zielpunkt.</p>",
+    "key": "kettenbrand",
+    "description": "<p>Du lässt die Flammen eines brennenden Gegners auf weitere Ziele überspringen.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
@@ -14,22 +14,22 @@
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
     "costAp": 3,
-    "costMana": 15,
+    "costMana": 9,
     "range": "Sicht",
-    "areaShape": "kreis",
-    "areaSize": "Radius 3 m",
     "savingThrow": "con",
-    "damageFormula": "3d6 + @mag",
-    "damageType": "feuer",
+    "damageFormula": "",
+    "damageType": "",
     "damageFromWeapon": false,
     "effects": [
-      "Alle Ziele erhalten Brennend für 2 Runden."
+      "Kann nur auf ein brennendes Ziel gewirkt werden.",
+      "Wähle bis zu drei weitere Ziele im Umkreis von 5 m um das ursprüngliche Ziel.",
+      "Alle gewählten Ziele erhalten Brennend für dieselbe verbleibende Dauer."
     ],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 4
+      "value": 5
     }
   },
   "effects": [],

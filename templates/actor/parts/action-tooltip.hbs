@@ -5,6 +5,14 @@
   {{#if root.action.tooltip.description}}{{{root.action.tooltip.description}}}{{else}}<p>{{localize 'SCUVANYA.Item.NoDescription'}}</p>{{/if}}
 </div>
 
+{{#if root.action.tooltip.metaLines.length}}
+<div class="tooltip-meta">
+  {{#each root.action.tooltip.metaLines as |line|}}
+  <div class="tooltip-meta__row"><span class="tooltip-meta__label">{{line.label}}</span><span class="tooltip-meta__value">{{line.value}}</span></div>
+  {{/each}}
+</div>
+{{/if}}
+
 {{#if root.action.tooltip.apBreakdown}}
 <div class="tooltip-section-title">{{localize 'SCUVANYA.Action.CostAp'}}</div>
 {{> "systems/scuvanya/templates/actor/parts/breakdown-tooltip.hbs" name=(localize 'SCUVANYA.Action.CostAp') breakdown=root.action.tooltip.apBreakdown}}

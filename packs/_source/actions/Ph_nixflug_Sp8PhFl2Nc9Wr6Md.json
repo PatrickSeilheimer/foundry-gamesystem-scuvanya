@@ -1,0 +1,68 @@
+{
+  "_id": "Sp8PhFl2Nc9Wr6Md",
+  "_key": "!items!Sp8PhFl2Nc9Wr6Md",
+  "name": "Phönixflug",
+  "type": "action",
+  "img": "icons/creatures/birds/bird-phoenix-fire-orange.webp",
+  "system": {
+    "key": "phoenixflug",
+    "description": "<p>Du verwandelst dich kurzzeitig in einen Strom aus Flammen und schießt durch die Luft.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "aerothurg",
+      "polymorph"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 3,
+    "costMana": 13,
+    "range": "Selbst (15 m Bewegung)",
+    "damageFormula": "2d6 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Bewegung ignoriert Hindernisse und Gelegenheitsangriffe.",
+      "Alle durchquerten Ziele erleiden den Schaden."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 7
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.aerothurg",
+          "operator": "gte",
+          "value": 3
+        },
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.polymorph",
+          "operator": "gte",
+          "value": 6
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}

@@ -1,12 +1,12 @@
 {
-  "_id": "Ac2FbKr9Wt3Ls6Hn",
-  "_key": "!items!Ac2FbKr9Wt3Ls6Hn",
-  "name": "Feuerball",
+  "_id": "SpALzNc4Rt9Wm2Kd",
+  "_key": "!items!SpALzNc4Rt9Wm2Kd",
+  "name": "Feuerlanze",
   "type": "action",
-  "img": "icons/magic/fire/orb-lightning-teal.webp",
+  "img": "icons/magic/fire/beam-arrow-large-orange.webp",
   "system": {
-    "key": "feuerball",
-    "description": "<p>Eine explosive Feuerkugel detoniert am Zielpunkt.</p>",
+    "key": "feuerlanze",
+    "description": "<p>Du bündelst gewaltige Hitze zu einer durchdringenden Lanze aus Feuer.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
@@ -14,22 +14,22 @@
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
     "costAp": 3,
-    "costMana": 15,
+    "costMana": 12,
     "range": "Sicht",
-    "areaShape": "kreis",
-    "areaSize": "Radius 3 m",
+    "areaShape": "linie",
+    "areaSize": "20 m × 1 m",
     "savingThrow": "con",
-    "damageFormula": "3d6 + @mag",
+    "damageFormula": "4d6 + @mag",
     "damageType": "feuer",
     "damageFromWeapon": false,
     "effects": [
-      "Alle Ziele erhalten Brennend für 2 Runden."
+      "Alle getroffenen Ziele erhalten Brennend für 2 Runden."
     ],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 4
+      "value": 9
     }
   },
   "effects": [],

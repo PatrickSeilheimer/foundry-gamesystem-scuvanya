@@ -1,35 +1,32 @@
 {
-  "_id": "Ac2FbKr9Wt3Ls6Hn",
-  "_key": "!items!Ac2FbKr9Wt3Ls6Hn",
-  "name": "Feuerball",
+  "_id": "Sp4HzWl2Nt8Kc5Rm",
+  "_key": "!items!Sp4HzWl2Nt8Kc5Rm",
+  "name": "Hitzewelle",
   "type": "action",
-  "img": "icons/magic/fire/orb-lightning-teal.webp",
+  "img": "icons/magic/fire/explosion-fireball-medium-red-orange.webp",
   "system": {
-    "key": "feuerball",
-    "description": "<p>Eine explosive Feuerkugel detoniert am Zielpunkt.</p>",
+    "key": "hitzewelle",
+    "description": "<p>Eine gewaltige Druckwelle aus glühender Hitze breitet sich um dich herum aus.</p>",
     "category": "zauber",
     "tags": [
       "pyro"
     ],
     "rollSource": "discipline",
     "rollPath": "disziplinen.magie.pyrokinet",
-    "costAp": 3,
-    "costMana": 15,
-    "range": "Sicht",
+    "costAp": 4,
+    "costMana": 10,
+    "range": "Selbst",
     "areaShape": "kreis",
-    "areaSize": "Radius 3 m",
-    "savingThrow": "con",
-    "damageFormula": "3d6 + @mag",
+    "areaSize": "Radius 5 m",
+    "damageFormula": "1d6 + @mag",
     "damageType": "feuer",
     "damageFromWeapon": false,
-    "effects": [
-      "Alle Ziele erhalten Brennend für 2 Runden."
-    ],
+    "effects": [],
     "unlockConditions": {
       "type": "compare",
       "path": "disziplinen.magie.pyrokinet",
       "operator": "gte",
-      "value": 4
+      "value": 3
     }
   },
   "effects": [],

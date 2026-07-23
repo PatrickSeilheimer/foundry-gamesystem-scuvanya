@@ -1,0 +1,74 @@
+{
+  "_id": "Sp4FlMn6Wt3Nc8Kd",
+  "_key": "!items!Sp4FlMn6Wt3Nc8Kd",
+  "name": "Flammenklinge manifestieren",
+  "type": "action",
+  "img": "icons/weapons/swords/sword-katana-fire-orange.webp",
+  "system": {
+    "key": "flammenklingeManifestieren",
+    "description": "<p>Du erschaffst eine vollständig aus Feuer bestehende Klinge.</p>",
+    "category": "zauber",
+    "tags": [
+      "pyro",
+      "krieger",
+      "gauner"
+    ],
+    "rollSource": "discipline",
+    "rollPath": "disziplinen.magie.pyrokinet",
+    "costAp": 2,
+    "costMana": 6,
+    "manaUpkeep": 6,
+    "range": "Selbst",
+    "duration": "Bis beendet",
+    "damageFormula": "2d8 + @mag",
+    "damageType": "feuer",
+    "damageFromWeapon": false,
+    "effects": [
+      "Effekt kann zu einem beliebigen Zeitpunkt beendet werden."
+    ],
+    "unlockConditions": {
+      "type": "and",
+      "children": [
+        {
+          "type": "compare",
+          "path": "disziplinen.magie.pyrokinet",
+          "operator": "gte",
+          "value": 3
+        },
+        {
+          "type": "or",
+          "children": [
+            {
+              "type": "compare",
+              "path": "disziplinen.kampf.krieger",
+              "operator": "gte",
+              "value": 3
+            },
+            {
+              "type": "compare",
+              "path": "disziplinen.kampf.gauner",
+              "operator": "gte",
+              "value": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "scuvanya",
+    "systemVersion": "0.1.0",
+    "coreVersion": "14",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "duplicateSource": null
+  }
+}
