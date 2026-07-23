@@ -224,6 +224,7 @@
       "OnlyOne": "Es kann nur eine Rasse bzw. ein Beruf pro Charakter vergeben werden ({type})",
       "NoFreePoints": "Keine freien Attributpunkte mehr übrig",
       "NotEnoughSkillPoints": "Nicht genug Skillpunkte (Kosten: {cost}, verfügbar: {available})",
+      "SkillPointsOverspent": "Du hast mehr Skillpunkte ausgegeben, als verfügbar sind -- bitte zuerst anpassen.",
       "SlotMismatch": "Dieses Item passt nicht in diesen Slot",
       "ConditionsNotMet": "Die Voraussetzungen für \"{item}\" sind nicht erfüllt"
     },
@@ -258,6 +259,7 @@
       "StepRaceDetails": "Rassen-Details",
       "StepProfession": "Beruf wählen",
       "StepProfessionDetails": "Berufs-Details",
+      "StepSkillPoints": "Fähigkeiten verteilen",
       "StepSummary": "Zusammenfassung",
       "Next": "Weiter",
       "Back": "Zurück",

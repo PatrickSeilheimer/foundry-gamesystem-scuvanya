@@ -5,7 +5,8 @@
     <span class="step-indicator {{#if (eq step 2)}}active{{/if}}">2. {{localize 'SCUVANYA.Wizard.StepRaceDetails'}}</span>
     <span class="step-indicator {{#if (eq step 3)}}active{{/if}}">3. {{localize 'SCUVANYA.Wizard.StepProfession'}}</span>
     <span class="step-indicator {{#if (eq step 4)}}active{{/if}}">4. {{localize 'SCUVANYA.Wizard.StepProfessionDetails'}}</span>
-    <span class="step-indicator {{#if (eq step 5)}}active{{/if}}">5. {{localize 'SCUVANYA.Wizard.StepSummary'}}</span>
+    <span class="step-indicator {{#if (eq step 5)}}active{{/if}}">5. {{localize 'SCUVANYA.Wizard.StepSkillPoints'}}</span>
+    <span class="step-indicator {{#if (eq step 6)}}active{{/if}}">6. {{localize 'SCUVANYA.Wizard.StepSummary'}}</span>
   </nav>
 
   <section class="wizard-body">
@@ -114,6 +115,44 @@
     {{/if}}
 
     {{#if (eq step 5)}}
+    <h3>{{localize 'SCUVANYA.Wizard.StepSkillPoints'}}</h3>
+
+    <div class="sp-summary">
+      <span>{{localize 'SCUVANYA.SkillPoints.total'}}: <strong>{{skillPointsTotal}}</strong></span>
+      <span>{{localize 'SCUVANYA.SkillPoints.spentSuffix'}}: <strong>{{skillPointsSpent}}</strong></span>
+      <span class="sp-summary__available {{#if (lt skillPointsAvailable 0)}}negative{{/if}}">{{localize 'SCUVANYA.SkillPoints.available'}}: <strong>{{skillPointsAvailable}}</strong></span>
+    </div>
+
+    {{#each skillPointCategories as |category|}}
+    <details class="sp-category" open>
+      <summary>{{category.label}}</summary>
+      <div class="sp-row-grid">
+        {{#each category.rows as |row|}}
+        <div class="distribute-row sp-row" title="{{#if row.shift}}{{row.value}} + {{row.shift}}{{/if}}">
+          <span>{{row.label}}</span>
+          <a class="{{#unless row.canSell}}disabled{{/unless}}" data-action="sellPoint" data-path="{{row.path}}">-</a>
+          <span class="sp-row__value">{{row.effective}}</span>
+          <a class="{{#unless row.canBuy}}disabled{{/unless}}" data-action="buyPoint" data-path="{{row.path}}">+</a>
+          <span class="sp-row__cost">{{#if row.nextCost}}{{row.nextCost}} {{localize 'SCUVANYA.SkillPoints.CostHint'}}{{/if}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </details>
+    {{/each}}
+
+    <details class="sp-category" open>
+      <summary>{{localize 'SCUVANYA.Category.extra'}}</summary>
+      <div class="extra-grants-grid">
+        {{#each extraSkillRows as |row|}}
+        <a class="extra-grant-toggle {{#if row.checked}}active{{/if}} {{#if row.disabled}}sp-disabled{{/if}}" data-action="toggleExtra" data-key="{{row.key}}" title="{{row.hintText}}">
+          {{row.label}}{{#unless row.granted}} ({{row.cost}} {{localize 'SCUVANYA.SkillPoints.CostHint'}}){{/unless}}
+        </a>
+        {{/each}}
+      </div>
+    </details>
+    {{/if}}
+
+    {{#if (eq step 6)}}
     <h3>{{localize 'SCUVANYA.Wizard.StepSummary'}}</h3>
     <p><strong>{{localize 'SCUVANYA.Item.race'}}:</strong> {{#if selectedRace}}{{selectedRace.name}}{{else}}—{{/if}}</p>
     <p><strong>{{localize 'SCUVANYA.Item.profession'}}:</strong> {{#if selectedProfession}}{{selectedProfession.name}}{{else}}—{{/if}}</p>
@@ -130,7 +169,7 @@
   <footer class="wizard-footer">
     <button type="button" data-action="cancel">{{localize 'SCUVANYA.Wizard.Cancel'}}</button>
     {{#if (lt 1 step)}}<button type="button" data-action="prevStep">{{localize 'SCUVANYA.Wizard.Back'}}</button>{{/if}}
-    {{#if (lt step 5)}}<button type="button" data-action="nextStep">{{localize 'SCUVANYA.Wizard.Next'}}</button>{{/if}}
-    {{#if (eq step 5)}}<button type="button" data-action="finish" class="finish-button">{{localize 'SCUVANYA.Wizard.Finish'}}</button>{{/if}}
+    {{#if (lt step 6)}}<button type="button" data-action="nextStep">{{localize 'SCUVANYA.Wizard.Next'}}</button>{{/if}}
+    {{#if (eq step 6)}}<button type="button" data-action="finish" class="finish-button">{{localize 'SCUVANYA.Wizard.Finish'}}</button>{{/if}}
   </footer>
 </form>

@@ -79,11 +79,24 @@ Hooks.once("init", () => {
 });
 
 /**
- * Aktionspunkte-Reset zu Rundenbeginn (siehe Konversation: "Zu Anfang eines Zuges erhält der
- * Charakter 5 AP", SCUVANYA.turnStartAP). Bewusst minimal -- kein Übertrag, keine Sonderregeln,
- * nur ein einfacher Reset auf den vollen Wert für den Actor, der gerade am Zug ist.
+ * Rundenstruktur (siehe Konversation): jede neue Runde wird die Initiative komplett neu
+ * gewürfelt -- wer die höchste Initiative hat, darf beginnen, muss aber nichts tun. Es gibt
+ * bewusst KEINE erzwungene Zug-Reihenfolge (useAction prüft nirgends, ob ein Charakter "dran"
+ * ist) -- man hat die gesamte Runde Zeit, seine AP einzusetzen, bis die SL manuell auf "Nächste
+ * Runde" drückt. ALLE Charaktere im Encounter erhalten dabei wieder volle AP (siehe
+ * resources.ap.max, aktuell immer SCUVANYA.turnStartAP -- über das Max statt einer festen
+ * Zahl, damit ein künftiger Effekt "-2 max AP nächste Runde" hier automatisch greifen würde).
+ *
+ * "combatStart" deckt Runde 1 ab (die schon beim Start des Kampfes gilt), "combatRound" jede
+ * weitere Runde (SL klickt "Nächste Runde").
  */
-Hooks.on("combatTurn", (combat) => {
-  const actor = combat.combatant?.actor;
-  if (actor?.type === "character") actor.update({ "system.resources.ap.value": SCUVANYA.turnStartAP });
-});
+async function startNewCombatRound(combat) {
+  if (!combat) return;
+  await Promise.all(combat.combatants
+    .filter(c => c.actor?.type === "character")
+    .map(c => c.actor.update({ "system.resources.ap.value": c.actor.system.resources.ap.max })));
+  await combat.rollAll();
+}
+
+Hooks.on("combatStart", (combat) => startNewCombatRound(combat));
+Hooks.on("combatRound", (combat) => startNewCombatRound(combat));

@@ -1,7 +1,18 @@
 import { SCUVANYA } from "../config.mjs";
 import { buildBadge, EMBER_STYLES } from "./badge-util.mjs";
 import { activeRaceBundles } from "../data/item/race-resolve.mjs";
+import { resolveBundles } from "../data/item/path-resolve.mjs";
 import { describePath } from "../path-labels.mjs";
+import {
+  attributeLevelCost, attributeSpentCost,
+  talentLevelCost, talentSpentCost,
+  tieredLevelCost, tieredSpentCost,
+  specialtyLevelCost, specialtySpentCost,
+  EXTRA_TALENT_COST
+} from "../rules/costs.mjs";
+
+const seedLevels = (source, keys) => Object.fromEntries(keys.map(k => [k, source?.[k]?.level ?? 0]));
+const seedKnown = (source, keys) => Object.fromEntries(keys.map(k => [k, source?.[k]?.known ?? false]));
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
@@ -28,6 +39,9 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       selectSubrace: CharacterCreationWizard.#onSelectSubrace,
       chooseOption: CharacterCreationWizard.#onChooseOption,
       distributePoint: CharacterCreationWizard.#onDistributePoint,
+      buyPoint: CharacterCreationWizard.#onBuyPoint,
+      sellPoint: CharacterCreationWizard.#onSellPoint,
+      toggleExtra: CharacterCreationWizard.#onToggleExtra,
       nextStep: CharacterCreationWizard.#onNextStep,
       prevStep: CharacterCreationWizard.#onPrevStep,
       finish: CharacterCreationWizard.#onFinish,
@@ -46,6 +60,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
     const existingRace = actor.items.find(i => i.type === "race");
     const existingProfession = actor.items.find(i => i.type === "profession");
+    const sys = actor.system;
 
     this.wizardData = {
       raceId: existingRace?.flags?.scuvanya?.sourceId ?? null,
@@ -59,8 +74,40 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       },
       // Je bonus.key: ein String (choice) oder ein { [optionPath]: punkte }-Objekt (distribute).
       raceChoices: foundry.utils.deepClone(existingRace?.system.choiceSelections ?? {}),
-      professionChoices: foundry.utils.deepClone(existingProfession?.system.choiceSelections ?? {})
+      professionChoices: foundry.utils.deepClone(existingProfession?.system.choiceSelections ?? {}),
+
+      // Vorbelegt mit den AKTUELL gespeicherten Rohwerten des Charakters (bei einem brandneuen
+      // Charakter sind das die Schema-Standardwerte, siehe character.mjs) -- so verliert ein
+      // erneutes Öffnen des Wizards (z.B. für ein künftiges Level-Up) bereits getätigte Käufe
+      // nicht. Siehe _prepareSkillPointsContext/#onFinish für die Verwendung.
+      purchases: {
+        attributes: Object.fromEntries(Object.keys(SCUVANYA.attributes).map(k => [k, sys.attributes[k]?.value ?? SCUVANYA.attributeStartingValue])),
+        talents: {
+          sozial: {
+            positiv: seedLevels(sys.talents.sozial.positiv, SCUVANYA.socialSkills.positive),
+            negativ: seedLevels(sys.talents.sozial.negativ, SCUVANYA.socialSkills.negative)
+          },
+          wissenschaften: {
+            sozial: seedLevels(sys.talents.wissenschaften.sozial, SCUVANYA.scienceSkills.sozial),
+            natur: seedLevels(sys.talents.wissenschaften.natur, SCUVANYA.scienceSkills.natur)
+          },
+          koerperlich: seedLevels(sys.talents.koerperlich, SCUVANYA.physicalSkills),
+          sonder: seedLevels(sys.talents.sonder, Object.keys(SCUVANYA.sonderSkills)),
+          handwerk: seedLevels(sys.talents.handwerk, SCUVANYA.craftSkills),
+          spezial: seedLevels(sys.talents.spezial, SCUVANYA.spezialSkills),
+          extra: seedKnown(sys.talents.extra, SCUVANYA.extraSkills)
+        },
+        disziplinen: {
+          kampf: seedLevels(sys.disziplinen.kampf, Object.keys(SCUVANYA.combatDisciplines)),
+          magie: seedLevels(sys.disziplinen.magie, Object.keys(SCUVANYA.magicDisciplines))
+        }
+      }
     };
+
+    // Pfad -> {min, max, levelCostFn}, gefüllt von _buildCounterRow bei jedem _prepareContext --
+    // erlaubt buyPoint/sellPoint, Grenzen/Kostenformel eines Pfads nachzuschlagen, ohne Funktionen
+    // durch data-Attribute schleusen zu müssen (siehe #onBuyPoint/#onSellPoint).
+    this._skillPointMeta = new Map();
   }
 
   get title() {
@@ -106,7 +153,176 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     context.raceDecisions = this._collectDecisions(raceBundles, this.wizardData.raceChoices);
     context.professionDecisions = this._collectDecisions(professionBundles, this.wizardData.professionChoices);
 
+    await this._prepareSkillPointsContext(context);
+
     return context;
+  }
+
+  /**
+   * Löst Rassen-/Berufsboni (inkl. der bisher getroffenen Wahlmöglichkeiten) zu EINEM flachen
+   * { [path]: amount }-Satz auf -- exakt dieselbe Funktion, die auch CharacterData.
+   * _computeProgressionBonus für den fertigen Charakter nutzt (siehe path-resolve.mjs), damit
+   * die Vorschau im Wizard 1:1 dem entspricht, was nach dem Fertigstellen tatsächlich gilt.
+   */
+  async _computeShiftMap() {
+    const raceBundles = await this._raceBundles();
+    const profession = this.wizardData.professionId ? await this._getSourceItem(this.wizardData.professionId) : null;
+    const professionBundles = profession ? [profession.system] : [];
+
+    const raceResolved = resolveBundles(raceBundles, this.wizardData.raceChoices);
+    const professionResolved = resolveBundles(professionBundles, this.wizardData.professionChoices);
+
+    const shifts = {};
+    for (const [path, amount] of Object.entries(raceResolved.pathBonuses)) shifts[path] = (shifts[path] ?? 0) + amount;
+    for (const [path, amount] of Object.entries(professionResolved.pathBonuses)) shifts[path] = (shifts[path] ?? 0) + amount;
+    return shifts;
+  }
+
+  /**
+   * Summe aller bereits ausgegebenen Skillpunkte über Attribute/Talente/Disziplinen (siehe
+   * character.mjs _computeSkillPoints, hier auf wizardData.purchases statt echten Actor-Daten
+   * angewendet, weil vor dem Fertigstellen noch nichts gespeichert wird).
+   */
+  _computeTotalSpent(shifts) {
+    const p = this.wizardData.purchases;
+    let spent = 0;
+
+    for (const key of Object.keys(SCUVANYA.attributes)) {
+      spent += attributeSpentCost(p.attributes[key], SCUVANYA.attributeStartingValue, shifts[`attributes.${key}`] ?? 0);
+    }
+
+    const leveledGroups = [
+      [p.talents.sozial.positiv, "talents.sozial.positiv"],
+      [p.talents.sozial.negativ, "talents.sozial.negativ"],
+      [p.talents.wissenschaften.sozial, "talents.wissenschaften.sozial"],
+      [p.talents.wissenschaften.natur, "talents.wissenschaften.natur"],
+      [p.talents.koerperlich, "talents.koerperlich"],
+      [p.talents.sonder, "talents.sonder"]
+    ];
+    for (const [tree, prefix] of leveledGroups) {
+      for (const [key, level] of Object.entries(tree)) {
+        spent += talentSpentCost(level, shifts[`${prefix}.${key}`] ?? 0);
+      }
+    }
+
+    for (const [key, level] of Object.entries(p.talents.handwerk)) {
+      spent += tieredSpentCost(level, SCUVANYA.craftStartingLevel, shifts[`talents.handwerk.${key}`] ?? 0);
+    }
+    for (const [key, level] of Object.entries(p.talents.spezial)) {
+      spent += specialtySpentCost(level, SCUVANYA.specialtyStartingLevel, shifts[`talents.spezial.${key}`] ?? 0);
+    }
+    for (const known of Object.values(p.talents.extra)) {
+      if (known) spent += EXTRA_TALENT_COST;
+    }
+
+    for (const [key, level] of Object.entries(p.disziplinen.kampf)) {
+      spent += tieredSpentCost(level, 0, shifts[`disziplinen.kampf.${key}`] ?? 0);
+    }
+    for (const [key, level] of Object.entries(p.disziplinen.magie)) {
+      spent += tieredSpentCost(level, 0, shifts[`disziplinen.magie.${key}`] ?? 0);
+    }
+
+    return spent;
+  }
+
+  /**
+   * Baut EINE Zähler-Zeile (Attribut/Talent/Handwerk/Spezial/Disziplin) für die Fähigkeiten-
+   * Verteilung (Schritt 5) und merkt sich gleichzeitig Grenzen + Kostenformel unter "path" in
+   * this._skillPointMeta -- damit buyPoint/sellPoint dieselbe Formel nutzen, ohne Funktionen
+   * durch data-Attribute schleusen zu müssen.
+   */
+  _buildCounterRow({ key, path, label, value, shift, min, max, levelCostFn }) {
+    this._skillPointMeta.set(path, { min, max, levelCostFn });
+    const nextCost = value < max ? levelCostFn(value + shift + 1) : null;
+    const refund = value > min ? levelCostFn(value + shift) : null;
+    return {
+      key, path, label, value, shift, effective: value + shift,
+      nextCost, refund, canBuy: nextCost !== null, canSell: refund !== null
+    };
+  }
+
+  /** Baut alle Kategorien für Schritt 5 (Fähigkeiten verteilen) -- siehe character-creation.hbs. */
+  async _prepareSkillPointsContext(context) {
+    this._skillPointMeta.clear();
+    const shifts = await this._computeShiftMap();
+    const p = this.wizardData.purchases;
+
+    const buildLeveled = (keys, tree, pathPrefix) => keys.map(key => this._buildCounterRow({
+      key, path: `${pathPrefix}.${key}`,
+      label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
+      value: tree[key], shift: shifts[`${pathPrefix}.${key}`] ?? 0,
+      min: 0, max: 30, levelCostFn: talentLevelCost
+    }));
+
+    const attributeRows = Object.entries(SCUVANYA.attributes).map(([key, cfg]) => this._buildCounterRow({
+      key, path: `attributes.${key}`,
+      label: `${cfg.abbr} · ${game.i18n.localize(cfg.label)}`,
+      value: p.attributes[key], shift: shifts[`attributes.${key}`] ?? 0,
+      min: SCUVANYA.attributeStartingValue, max: 30, levelCostFn: attributeLevelCost
+    }));
+
+    const handwerkRows = SCUVANYA.craftSkills.map(key => this._buildCounterRow({
+      key, path: `talents.handwerk.${key}`,
+      label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
+      value: p.talents.handwerk[key], shift: shifts[`talents.handwerk.${key}`] ?? 0,
+      min: SCUVANYA.craftStartingLevel, max: SCUVANYA.tieredSkillMaxLevel, levelCostFn: tieredLevelCost
+    }));
+
+    const spezialRows = SCUVANYA.spezialSkills.map(key => this._buildCounterRow({
+      key, path: `talents.spezial.${key}`,
+      label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
+      value: p.talents.spezial[key], shift: shifts[`talents.spezial.${key}`] ?? 0,
+      min: SCUVANYA.specialtyStartingLevel, max: SCUVANYA.tieredSkillMaxLevel, levelCostFn: specialtyLevelCost
+    }));
+
+    const kampfRows = Object.entries(SCUVANYA.combatDisciplines).map(([key, cfg]) => this._buildCounterRow({
+      key, path: `disziplinen.kampf.${key}`,
+      label: game.i18n.localize(cfg.label),
+      value: p.disziplinen.kampf[key], shift: shifts[`disziplinen.kampf.${key}`] ?? 0,
+      min: 0, max: SCUVANYA.disciplineMaxLevel, levelCostFn: tieredLevelCost
+    }));
+
+    const magieRows = Object.entries(SCUVANYA.magicDisciplines).map(([key, cfg]) => this._buildCounterRow({
+      key, path: `disziplinen.magie.${key}`,
+      label: game.i18n.localize(cfg.label),
+      value: p.disziplinen.magie[key], shift: shifts[`disziplinen.magie.${key}`] ?? 0,
+      min: 0, max: SCUVANYA.disciplineMaxLevel, levelCostFn: tieredLevelCost
+    }));
+
+    context.skillPointCategories = [
+      { key: "attribute", label: game.i18n.localize("SCUVANYA.Section.attribute"), rows: attributeRows },
+      { key: "sozialPositiv", label: game.i18n.localize("SCUVANYA.Category.sozialPositiv"), rows: buildLeveled(SCUVANYA.socialSkills.positive, p.talents.sozial.positiv, "talents.sozial.positiv") },
+      { key: "sozialNegativ", label: game.i18n.localize("SCUVANYA.Category.sozialNegativ"), rows: buildLeveled(SCUVANYA.socialSkills.negative, p.talents.sozial.negativ, "talents.sozial.negativ") },
+      { key: "wissenschaftenSozial", label: game.i18n.localize("SCUVANYA.Category.wissenschaftenSozial"), rows: buildLeveled(SCUVANYA.scienceSkills.sozial, p.talents.wissenschaften.sozial, "talents.wissenschaften.sozial") },
+      { key: "wissenschaftenNatur", label: game.i18n.localize("SCUVANYA.Category.wissenschaftenNatur"), rows: buildLeveled(SCUVANYA.scienceSkills.natur, p.talents.wissenschaften.natur, "talents.wissenschaften.natur") },
+      { key: "koerperlich", label: game.i18n.localize("SCUVANYA.Category.koerperlich"), rows: buildLeveled(SCUVANYA.physicalSkills, p.talents.koerperlich, "talents.koerperlich") },
+      { key: "sonder", label: game.i18n.localize("SCUVANYA.Category.sonder"), rows: buildLeveled(Object.keys(SCUVANYA.sonderSkills), p.talents.sonder, "talents.sonder") },
+      { key: "handwerk", label: game.i18n.localize("SCUVANYA.Category.handwerk"), rows: handwerkRows },
+      { key: "spezial", label: game.i18n.localize("SCUVANYA.Category.spezial"), rows: spezialRows },
+      { key: "kampfdisziplinen", label: game.i18n.localize("SCUVANYA.Category.kampfdisziplinen"), rows: kampfRows },
+      { key: "magiedisziplinen", label: game.i18n.localize("SCUVANYA.Category.magiedisziplinen"), rows: magieRows }
+    ];
+
+    context.extraSkillRows = SCUVANYA.extraSkills.map(key => {
+      const granted = (shifts[`talents.extra.${key}`] ?? 0) > 0;
+      const requiredKey = SCUVANYA.extraSkillDependencies[key] ?? null;
+      const requiredActive = !requiredKey || p.talents.extra[requiredKey] || (shifts[`talents.extra.${requiredKey}`] ?? 0) > 0;
+      return {
+        key,
+        label: game.i18n.localize(`SCUVANYA.Skill.${key}`),
+        checked: granted || p.talents.extra[key],
+        granted,
+        disabled: granted || !requiredActive,
+        hintText: !granted && !requiredActive
+          ? game.i18n.format("SCUVANYA.Hint.RequiresSkill", { skill: game.i18n.localize(`SCUVANYA.Skill.${requiredKey}`) })
+          : null,
+        cost: EXTRA_TALENT_COST
+      };
+    });
+
+    context.skillPointsTotal = SCUVANYA.startingSkillPoints;
+    context.skillPointsSpent = this._computeTotalSpent(shifts);
+    context.skillPointsAvailable = context.skillPointsTotal - context.skillPointsSpent;
   }
 
   /** Standard-Rassen aus dem Compendium-Pack + eigene Ergänzungen der SL als Welt-Item. */
@@ -373,7 +589,88 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         return;
       }
     }
-    this.step = Math.min(5, this.step + 1);
+    if (this.step === 5) {
+      // Sicherheitsnetz: buyPoint verhindert Überkauf bereits beim Klick, aber ein Sprung zurück
+      // zu Schritt 1 (Rassenwechsel) kann die Verschiebung nachträglich ändern und bereits
+      // getätigte Käufe teurer machen -- vor dem Weitergehen noch einmal frisch prüfen.
+      const shifts = await this._computeShiftMap();
+      if (this._computeTotalSpent(shifts) > SCUVANYA.startingSkillPoints) {
+        ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.SkillPointsOverspent"));
+        return;
+      }
+    }
+    this.step = Math.min(6, this.step + 1);
+    this.render();
+  }
+
+  /** Schaut Grenzen/Kostenformel eines Pfads nach (siehe _buildCounterRow), inklusive Fallback für den Fall, dass noch nicht gerendert wurde. */
+  _skillMeta(path) {
+    return this._skillPointMeta.get(path) ?? null;
+  }
+
+  static async #onBuyPoint(event, target) {
+    const path = target.dataset.path;
+    const meta = this._skillMeta(path);
+    if (!meta) return;
+    const current = foundry.utils.getProperty(this.wizardData.purchases, path) ?? 0;
+    if (current >= meta.max) return;
+
+    const shifts = await this._computeShiftMap();
+    const shift = shifts[path] ?? 0;
+    const cost = meta.levelCostFn(current + shift + 1);
+    const spent = this._computeTotalSpent(shifts);
+    if (spent + cost > SCUVANYA.startingSkillPoints) {
+      ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.NotEnoughSkillPoints", {
+        cost, available: SCUVANYA.startingSkillPoints - spent
+      }));
+      return;
+    }
+
+    foundry.utils.setProperty(this.wizardData.purchases, path, current + 1);
+    this.render();
+  }
+
+  static #onSellPoint(event, target) {
+    const path = target.dataset.path;
+    const meta = this._skillMeta(path);
+    if (!meta) return;
+    const current = foundry.utils.getProperty(this.wizardData.purchases, path) ?? 0;
+    if (current <= meta.min) return;
+    foundry.utils.setProperty(this.wizardData.purchases, path, current - 1);
+    this.render();
+  }
+
+  static async #onToggleExtra(event, target) {
+    const key = target.dataset.key;
+    const extra = this.wizardData.purchases.talents.extra;
+
+    if (extra[key]) {
+      extra[key] = false;
+      this.render();
+      return;
+    }
+
+    const shifts = await this._computeShiftMap();
+    if ((shifts[`talents.extra.${key}`] ?? 0) > 0) return; // bereits durch Rasse/Beruf gewährt
+
+    const requiredKey = SCUVANYA.extraSkillDependencies[key];
+    const requiredActive = !requiredKey || extra[requiredKey] || (shifts[`talents.extra.${requiredKey}`] ?? 0) > 0;
+    if (!requiredActive) {
+      ui.notifications.warn(game.i18n.format("SCUVANYA.Hint.RequiresSkill", {
+        skill: game.i18n.localize(`SCUVANYA.Skill.${requiredKey}`)
+      }));
+      return;
+    }
+
+    const spent = this._computeTotalSpent(shifts);
+    if (spent + EXTRA_TALENT_COST > SCUVANYA.startingSkillPoints) {
+      ui.notifications.warn(game.i18n.format("SCUVANYA.Warning.NotEnoughSkillPoints", {
+        cost: EXTRA_TALENT_COST, available: SCUVANYA.startingSkillPoints - spent
+      }));
+      return;
+    }
+
+    extra[key] = true;
     this.render();
   }
 
@@ -428,9 +725,34 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     }
     if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
 
+    // Letzte Sicherheitsprüfung -- verhindert ein Übernehmen, falls ein Rassen-/Berufswechsel
+    // nach dem Verteilen der Punkte die Verschiebung nachträglich geändert hat (siehe #onNextStep).
+    const shifts = await this._computeShiftMap();
+    if (this._computeTotalSpent(shifts) > SCUVANYA.startingSkillPoints) {
+      ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.SkillPointsOverspent"));
+      return;
+    }
+
+    const p = this.wizardData.purchases;
+    const toValueObject = flat => Object.fromEntries(Object.entries(flat).map(([k, v]) => [k, { value: v }]));
+    const toLevelObject = flat => Object.fromEntries(Object.entries(flat).map(([k, v]) => [k, { level: v }]));
+    const toKnownObject = flat => Object.fromEntries(Object.entries(flat).map(([k, v]) => [k, { known: v }]));
+
     await actor.update({
       "system.body": this.wizardData.body,
-      "system.geschlecht": this.wizardData.gender
+      "system.geschlecht": this.wizardData.gender,
+      "system.attributes": toValueObject(p.attributes),
+      "system.talents.sozial.positiv": toLevelObject(p.talents.sozial.positiv),
+      "system.talents.sozial.negativ": toLevelObject(p.talents.sozial.negativ),
+      "system.talents.wissenschaften.sozial": toLevelObject(p.talents.wissenschaften.sozial),
+      "system.talents.wissenschaften.natur": toLevelObject(p.talents.wissenschaften.natur),
+      "system.talents.koerperlich": toLevelObject(p.talents.koerperlich),
+      "system.talents.sonder": toLevelObject(p.talents.sonder),
+      "system.talents.handwerk": toLevelObject(p.talents.handwerk),
+      "system.talents.spezial": toLevelObject(p.talents.spezial),
+      "system.talents.extra": toKnownObject(p.talents.extra),
+      "system.disziplinen.kampf": toLevelObject(p.disziplinen.kampf),
+      "system.disziplinen.magie": toLevelObject(p.disziplinen.magie)
     });
 
     ui.notifications.info(game.i18n.localize("SCUVANYA.Wizard.Done"));

@@ -911,6 +911,73 @@
   50%      { box-shadow: 0 0 16px rgba(255, 216, 115, 0.95), 0 0 4px rgba(255, 216, 115, 0.8) inset; }
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   Wizard-Schritt "Fähigkeiten verteilen" (500 Skillpunkte, siehe
+   character-creation.mjs _prepareSkillPointsContext) -- eine Zähler-Zeile
+   pro Attribut/Talent/Disziplin, wiederverwendet .distribute-row als Basis.
+   ══════════════════════════════════════════════════════════════════ */
+.character-creation .sp-summary {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 1.2rem;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.6rem;
+  background: var(--scv-surface);
+  border: 1px solid var(--scv-accent-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.character-creation .sp-summary__available.negative { color: #d9534f; font-weight: bold; }
+
+.character-creation .sp-category {
+  border: 1px solid var(--scv-border);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.character-creation .sp-category > summary {
+  cursor: pointer;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  color: var(--scv-accent);
+  padding: 0.3rem 0;
+}
+
+.character-creation .sp-row-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.2rem 0.8rem;
+}
+
+.character-creation .sp-row { font-size: 11px; }
+.character-creation .sp-row__value { min-width: 1.6em; text-align: center; font-weight: bold; }
+.character-creation .sp-row__cost { flex-shrink: 0; color: var(--scv-text-muted); font-size: 10px; white-space: nowrap; }
+
+.character-creation .distribute-row a.disabled { opacity: 0.3; pointer-events: none; }
+
+.character-creation .extra-grant-toggle {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--scv-border);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--scv-text-muted);
+  transition: all var(--scv-transition);
+}
+
+.character-creation .extra-grant-toggle.active {
+  border-color: var(--scv-accent-border);
+  color: var(--scv-accent);
+  background: var(--scv-accent-dim);
+  font-weight: bold;
+}
+
+.character-creation .extra-grant-toggle.sp-disabled { opacity: 0.4; pointer-events: none; }
+
 @keyframes scv-epic-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(255, 138, 118, 0.55); }
   50%      { box-shadow: 0 0 18px rgba(255, 138, 118, 1), 0 0 5px rgba(255, 138, 118, 0.85) inset; }
