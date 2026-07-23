@@ -18,6 +18,10 @@ SCUVANYA.attributes = {
 
 SCUVANYA.attributeStartingValue = 6;
 
+// Skillpunkte, mit denen ein neuer Charakter startet (siehe character.mjs skillPoints.total) --
+// weiterhin frei durch die SL editierbar (z.B. bei Level-Ups), 500 ist nur der Startwert.
+SCUVANYA.startingSkillPoints = 500;
+
 // Soziale Talente: positiv und negativ, beide skalieren mit CHA-Mod.
 SCUVANYA.socialSkills = {
   positive: ["anfeuern", "beruhigen", "charme", "feilschen", "ueberreden"],

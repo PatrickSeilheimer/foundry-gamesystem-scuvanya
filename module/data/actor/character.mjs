@@ -56,7 +56,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       // Skillpunkt-Guthaben: "total" wird von der SL gesetzt, "spent"/"available" werden
       // aus den investierten Stufen über alle Kategorien errechnet (siehe _computeSkillPoints).
       skillPoints: new fields.SchemaField({
-        total: new fields.NumberField({ required: true, integer: true, initial: 0, min: 0 })
+        total: new fields.NumberField({ required: true, integer: true, initial: SCUVANYA.startingSkillPoints, min: 0 })
       }),
 
       talents: new fields.SchemaField({
