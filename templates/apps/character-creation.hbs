@@ -134,11 +134,11 @@
       <summary>{{category.label}}</summary>
       <div class="sp-row-grid">
         {{#each category.rows as |row|}}
-        <div class="distribute-row sp-row" title="{{#if row.shift}}{{row.value}} + {{row.shift}}{{/if}}">
-          <span>{{row.label}}</span>
-          <a class="{{#unless row.canSell}}disabled{{/unless}}" data-action="sellPoint" data-path="{{row.path}}">-</a>
+        <div class="sp-row">
+          <span class="sp-row__label" title="{{row.label}}{{#if row.shift}} ({{row.value}} + {{row.shift}}){{/if}}">{{row.label}}</span>
+          <a class="sp-row__btn {{#unless row.canSell}}disabled{{/unless}}" data-action="sellPoint" data-path="{{row.path}}">-</a>
           <span class="sp-row__value">{{row.effective}}</span>
-          <a class="{{#unless row.canBuy}}disabled{{/unless}}" data-action="buyPoint" data-path="{{row.path}}">+</a>
+          <a class="sp-row__btn {{#unless row.canBuy}}disabled{{/unless}}" data-action="buyPoint" data-path="{{row.path}}">+</a>
           <span class="sp-row__cost">{{#if row.nextCost}}{{row.nextCost}} {{localize 'SCUVANYA.SkillPoints.CostHint'}}{{/if}}</span>
         </div>
         {{/each}}

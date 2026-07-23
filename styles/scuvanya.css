@@ -915,7 +915,7 @@
 /* ══════════════════════════════════════════════════════════════════
    Wizard-Schritt "Fähigkeiten verteilen" (500 Skillpunkte, siehe
    character-creation.mjs _prepareSkillPointsContext) -- eine Zähler-Zeile
-   pro Attribut/Talent/Disziplin, wiederverwendet .distribute-row als Basis.
+   pro Attribut/Talent/Disziplin, eigenständiges Layout (siehe .sp-row unten).
    ══════════════════════════════════════════════════════════════════ */
 .character-creation .sp-summary {
   position: sticky;
@@ -949,15 +949,53 @@
 
 .character-creation .sp-row-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 0.2rem 0.8rem;
 }
 
-.character-creation .sp-row { font-size: 11px; }
-.character-creation .sp-row__value { min-width: 1.6em; text-align: center; font-weight: bold; }
-.character-creation .sp-row__cost { flex-shrink: 0; color: var(--scv-text-muted); font-size: 10px; white-space: nowrap; }
+/* Eigenständiges Layout statt .distribute-row-Wiederverwendung (siehe Konversation): lange
+   Talentnamen ("Schlösser knacken", "Überlebenstechniken") sollen die -/Wert/+/Kosten-Cluster
+   nicht mehr zusammenquetschen -- der Name bekommt den variablen Platz UND wird bei Bedarf mit
+   Ellipsis abgeschnitten (voller Name via title-Tooltip), die Steuerelemente bleiben fix breit. */
+.character-creation .sp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 11px;
+}
 
-.character-creation .distribute-row a.disabled { opacity: 0.3; pointer-events: none; }
+.character-creation .sp-row__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.character-creation .sp-row__btn {
+  flex: 0 0 auto;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  color: var(--scv-accent);
+}
+
+.character-creation .sp-row__btn.disabled { opacity: 0.3; pointer-events: none; }
+
+.character-creation .sp-row__value {
+  flex: 0 0 auto;
+  min-width: 1.6em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.character-creation .sp-row__cost {
+  flex: 0 0 auto;
+  min-width: 3.6em;
+  color: var(--scv-text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+  text-align: right;
+}
 
 .character-creation .extra-grant-toggle {
   display: inline-block;

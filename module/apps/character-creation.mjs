@@ -66,6 +66,14 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     const existingProfession = actor.items.find(i => i.type === "profession");
     const sys = actor.system;
 
+    // Nur bei einem BEREITS FERTIGEN Charakter (schon einmal durch den Wizard gelaufen, hat also
+    // Rasse UND Beruf) soll ein Rassen-/Berufswechsel die HÖHE jedes Skills bewahren (siehe
+    // _withShiftReconciliation) -- bei einer frischen Ersterstellung ist noch nichts "investiert",
+    // ein Attribut soll dort einfach roh(Schema-Standard) + Verschiebung zeigen, ohne künstlich
+    // gegen einen negativen Rassenbonus geschützt zu werden. Bewusst EINMALIG beim Öffnen
+    // festgehalten, nicht während der Sitzung neu bewertet.
+    this._preserveSkillHeights = Boolean(existingRace && existingProfession);
+
     this.wizardData = {
       raceId: existingRace?.flags?.scuvanya?.sourceId ?? null,
       professionId: existingProfession?.flags?.scuvanya?.sourceId ?? null,
@@ -186,14 +194,23 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
   }
 
   /**
-   * Führt eine Rassen-/Berufs-/Wahl-Änderung aus und gleicht dabei wizardData.purchases so an,
-   * dass sich an der HÖHE jedes Skills (Start + investierte Punkte) NICHTS ändert (siehe
-   * Konversation) -- nur die Aufteilung zwischen "kostenlos durch Rasse/Beruf" und "gekauft"
+   * Führt eine Rassen-/Berufs-/Wahl-Änderung aus und gleicht dabei -- NUR bei einem bereits
+   * fertigen Charakter (siehe _preserveSkillHeights im Konstruktor) -- wizardData.purchases so
+   * an, dass sich an der HÖHE jedes Skills (Start + investierte Punkte) NICHTS ändert (siehe
+   * Konversation): nur die Aufteilung zwischen "kostenlos durch Rasse/Beruf" und "gekauft"
    * verschiebt sich, was beim nächsten _computeTotalSpent automatisch zur erwarteten
-   * Rückerstattung (oder Mehrkosten) führt. Jeder Klick, der raceId/professionId/gender/
-   * subraceKey/raceChoices/professionChoices verändert, muss durch diesen Wrapper laufen.
+   * Rückerstattung (oder Mehrkosten) führt. Bei einer frischen Ersterstellung bleibt
+   * wizardData.purchases unangetastet -- ein Attribut zeigt dort einfach roh + neue
+   * Verschiebung, ohne künstlichen Schutz vor einem negativen Rassenbonus.
+   *
+   * Jeder Klick, der raceId/professionId/gender/subraceKey/raceChoices/professionChoices
+   * verändert, muss durch diesen Wrapper laufen.
    */
   async _withShiftReconciliation(mutate) {
+    if (!this._preserveSkillHeights) {
+      await mutate();
+      return;
+    }
     const oldShifts = await this._computeShiftMap();
     await mutate();
     const newShifts = await this._computeShiftMap();
@@ -514,12 +531,17 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
               amount: bonus.amount, options, selected: selections?.[bonus.key] ?? null
             });
           } else {
+            // Number(v) statt v: eine gespeicherte Zuteilung kann aus einer älteren Sitzung/
+            // einem älteren Berufsstand stammen (z.B. Pfade, die es in dieser Bündel-Version
+            // nicht mehr gibt) -- ein einzelner nicht-numerischer/undefinierter Eintrag darf
+            // "spent"/"remaining" nie auf NaN kippen lassen (siehe Konversation).
             const allocation = (selections?.[bonus.key] && typeof selections[bonus.key] === "object") ? selections[bonus.key] : {};
-            const spent = Object.values(allocation).reduce((s, v) => s + v, 0);
+            const spent = Object.values(allocation).reduce((s, v) => s + (Number(v) || 0), 0);
+            const amount = Number(bonus.amount) || 0;
             decisions.push({
               key: bonus.key, kind: "distribute", eigenschaftName: eig.name, eigenschaftDescription: eig.description,
-              amount: bonus.amount, perOptionMax: bonus.perOptionMax, spent, remaining: bonus.amount - spent,
-              options: options.map(o => ({ ...o, points: allocation[o.path] ?? 0 }))
+              amount, perOptionMax: bonus.perOptionMax, spent, remaining: amount - spent,
+              options: options.map(o => ({ ...o, points: Number(allocation[o.path]) || 0 }))
             });
           }
         }
