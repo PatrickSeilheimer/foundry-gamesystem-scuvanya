@@ -186,6 +186,57 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
   }
 
   /**
+   * Führt eine Rassen-/Berufs-/Wahl-Änderung aus und gleicht dabei wizardData.purchases so an,
+   * dass sich an der HÖHE jedes Skills (Start + investierte Punkte) NICHTS ändert (siehe
+   * Konversation) -- nur die Aufteilung zwischen "kostenlos durch Rasse/Beruf" und "gekauft"
+   * verschiebt sich, was beim nächsten _computeTotalSpent automatisch zur erwarteten
+   * Rückerstattung (oder Mehrkosten) führt. Jeder Klick, der raceId/professionId/gender/
+   * subraceKey/raceChoices/professionChoices verändert, muss durch diesen Wrapper laufen.
+   */
+  async _withShiftReconciliation(mutate) {
+    const oldShifts = await this._computeShiftMap();
+    await mutate();
+    const newShifts = await this._computeShiftMap();
+    this._rebalancePurchases(oldShifts, newShifts);
+  }
+
+  /**
+   * Passt jeden rohen (gekauften) Wert um genau die Differenz der Verschiebung an:
+   * neuerWert = alterWert - (neueVerschiebung - alteVerschiebung), sodass
+   * neuerWert + neueVerschiebung === alterWert + alteVerschiebung (die Höhe bleibt gleich).
+   * Nur am natürlichen Boden (bzw. Deckel, wo das Schema einen hat) geklemmt -- reicht der
+   * Boden allein schon über den alten Effektivwert hinaus, darf der Effektivwert steigen
+   * (reines Plus durch eine großzügigere Rasse/Beruf, kein "Wegkämpfen" nötig). Extra-
+   * Fähigkeiten sind Booleans (gewährt statt gekauft) und brauchen diesen Ausgleich nicht.
+   */
+  _rebalancePurchases(oldShifts, newShifts) {
+    const p = this.wizardData.purchases;
+
+    const rebalance = (tree, keys, pathPrefix, min, max = Infinity) => {
+      for (const key of keys) {
+        const path = `${pathPrefix}.${key}`;
+        const delta = (newShifts[path] ?? 0) - (oldShifts[path] ?? 0);
+        if (!delta) continue;
+        tree[key] = Math.min(max, Math.max(min, tree[key] - delta));
+      }
+    };
+
+    const attributesAsTree = p.attributes;
+    rebalance(attributesAsTree, Object.keys(SCUVANYA.attributes), "attributes", SCUVANYA.attributeStartingValue);
+
+    rebalance(p.talents.sozial.positiv, SCUVANYA.socialSkills.positive, "talents.sozial.positiv", 0);
+    rebalance(p.talents.sozial.negativ, SCUVANYA.socialSkills.negative, "talents.sozial.negativ", 0);
+    rebalance(p.talents.wissenschaften.sozial, SCUVANYA.scienceSkills.sozial, "talents.wissenschaften.sozial", 0);
+    rebalance(p.talents.wissenschaften.natur, SCUVANYA.scienceSkills.natur, "talents.wissenschaften.natur", 0);
+    rebalance(p.talents.koerperlich, SCUVANYA.physicalSkills, "talents.koerperlich", 0);
+    rebalance(p.talents.sonder, Object.keys(SCUVANYA.sonderSkills), "talents.sonder", 0);
+    rebalance(p.talents.handwerk, SCUVANYA.craftSkills, "talents.handwerk", SCUVANYA.craftStartingLevel, SCUVANYA.tieredSkillMaxLevel);
+    rebalance(p.talents.spezial, SCUVANYA.spezialSkills, "talents.spezial", SCUVANYA.specialtyStartingLevel, SCUVANYA.tieredSkillMaxLevel);
+    rebalance(p.disziplinen.kampf, Object.keys(SCUVANYA.combatDisciplines), "disziplinen.kampf", 0, SCUVANYA.disciplineMaxLevel);
+    rebalance(p.disziplinen.magie, Object.keys(SCUVANYA.magicDisciplines), "disziplinen.magie", 0, SCUVANYA.disciplineMaxLevel);
+  }
+
+  /**
    * Summe aller bereits ausgegebenen Skillpunkte über Attribute/Talente/Disziplinen (siehe
    * character.mjs _computeSkillPoints, hier auf wizardData.purchases statt echten Actor-Daten
    * angewendet, weil vor dem Fertigstellen noch nichts gespeichert wird).
@@ -544,51 +595,61 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
 
   static async #onPickRace(event, target) {
     const id = target.closest("[data-id]")?.dataset.id;
-    this.wizardData.raceId = id;
-    this.wizardData.raceChoices = {};
-    this.wizardData.subraceKey = "";
-    const race = await this._getSourceItem(id);
-    if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
+    await this._withShiftReconciliation(async () => {
+      this.wizardData.raceId = id;
+      this.wizardData.raceChoices = {};
+      this.wizardData.subraceKey = "";
+      const race = await this._getSourceItem(id);
+      if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
+    });
     this.render();
   }
 
   static async #onSetGender(event, target) {
-    this.wizardData.gender = target.dataset.gender;
-    // Geschlecht kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
-    // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
-    this.wizardData.raceChoices = {};
-    // Körpermaß-Bereiche sind pro Geschlecht getrennt -- bereits gewählte Werte auf den
-    // Mittelwert des neuen Geschlechts zurücksetzen, statt sie außerhalb der neuen Grenzen zu lassen.
-    const race = await this._getSourceItem(this.wizardData.raceId);
-    if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
+    await this._withShiftReconciliation(async () => {
+      this.wizardData.gender = target.dataset.gender;
+      // Geschlecht kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
+      // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+      this.wizardData.raceChoices = {};
+      // Körpermaß-Bereiche sind pro Geschlecht getrennt -- bereits gewählte Werte auf den
+      // Mittelwert des neuen Geschlechts zurücksetzen, statt sie außerhalb der neuen Grenzen zu lassen.
+      const race = await this._getSourceItem(this.wizardData.raceId);
+      if (race) this.wizardData.body = this._bodyMidpoint(race, this.wizardData.gender);
+    });
     this.render();
   }
 
-  static #onSelectSubrace(event, target) {
-    // Wahl bleibt erhalten, wenn dieselbe Subrasse erneut angeklickt wird; "" (Keine) via
-    // eigenem Chip mit data-key="" wählbar (siehe character-creation.hbs).
-    this.wizardData.subraceKey = target.dataset.key ?? "";
-    // Subrasse kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
-    // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
-    this.wizardData.raceChoices = {};
+  static async #onSelectSubrace(event, target) {
+    await this._withShiftReconciliation(() => {
+      // Wahl bleibt erhalten, wenn dieselbe Subrasse erneut angeklickt wird; "" (Keine) via
+      // eigenem Chip mit data-key="" wählbar (siehe character-creation.hbs).
+      this.wizardData.subraceKey = target.dataset.key ?? "";
+      // Subrasse kann eigene Wahl-/Verteil-Boni mitbringen -- bei Wechsel sollen alte, nicht
+      // mehr angebotene Auswahlen nicht unsichtbar weiter aktiv bleiben.
+      this.wizardData.raceChoices = {};
+    });
     this.render();
   }
 
-  static #onPickProfession(event, target) {
+  static async #onPickProfession(event, target) {
     const id = target.closest("[data-id]")?.dataset.id;
-    this.wizardData.professionId = id;
-    this.wizardData.professionChoices = {};
+    await this._withShiftReconciliation(() => {
+      this.wizardData.professionId = id;
+      this.wizardData.professionChoices = {};
+    });
     this.render();
   }
 
-  static #onChooseOption(event, target) {
-    const scope = target.dataset.scope;
-    const bucket = scope === "race" ? "raceChoices" : "professionChoices";
-    this.wizardData[bucket][target.dataset.key] = target.dataset.option;
+  static async #onChooseOption(event, target) {
+    await this._withShiftReconciliation(() => {
+      const scope = target.dataset.scope;
+      const bucket = scope === "race" ? "raceChoices" : "professionChoices";
+      this.wizardData[bucket][target.dataset.key] = target.dataset.option;
+    });
     this.render();
   }
 
-  static #onDistributePoint(event, target) {
+  static async #onDistributePoint(event, target) {
     const scope = target.dataset.scope;
     const bucket = scope === "race" ? "raceChoices" : "professionChoices";
     const key = target.dataset.key;
@@ -609,9 +670,11 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       return;
     }
 
-    const updated = { ...current, [path]: nextPoints };
-    if (nextPoints === 0) delete updated[path];
-    this.wizardData[bucket][key] = updated;
+    await this._withShiftReconciliation(() => {
+      const updated = { ...current, [path]: nextPoints };
+      if (nextPoints === 0) delete updated[path];
+      this.wizardData[bucket][key] = updated;
+    });
     this.render();
   }
 

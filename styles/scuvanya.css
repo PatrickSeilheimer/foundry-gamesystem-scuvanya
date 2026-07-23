@@ -598,7 +598,8 @@
   font-weight: bold;
 }
 
-.character-creation .subrace-grid {
+.character-creation .subrace-grid,
+.character-creation .profession-grid {
   margin-bottom: 1.5rem;
   gap: 0.6rem;
 }

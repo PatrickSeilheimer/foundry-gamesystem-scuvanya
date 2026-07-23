@@ -96,7 +96,7 @@
     {{#if (eq step 3)}}
     <h3>{{localize 'SCUVANYA.Wizard.StepProfession'}}</h3>
     {{#unless professions.length}}<p class="hint">{{localize 'SCUVANYA.Wizard.NoProfessionItems'}}</p>{{/unless}}
-    <div class="choice-option-grid">
+    <div class="choice-option-grid profession-grid">
       {{#each professions as |profession|}}
       <a class="wizard-chip {{#if (eq profession.id ../selectedProfession.id)}}selected{{/if}}" data-action="pickProfession" data-id="{{profession.id}}">{{profession.name}}</a>
       {{/each}}
