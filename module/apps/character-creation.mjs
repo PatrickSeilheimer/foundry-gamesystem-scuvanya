@@ -364,19 +364,20 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       min: 0, max: SCUVANYA.disciplineMaxLevel, levelCostFn: tieredLevelCost
     }));
 
-    context.skillPointCategories = [
-      { key: "attribute", label: game.i18n.localize("SCUVANYA.Section.attribute"), rows: attributeRows },
-      { key: "sozialPositiv", label: game.i18n.localize("SCUVANYA.Category.sozialPositiv"), rows: buildLeveled(SCUVANYA.socialSkills.positive, p.talents.sozial.positiv, "talents.sozial.positiv") },
-      { key: "sozialNegativ", label: game.i18n.localize("SCUVANYA.Category.sozialNegativ"), rows: buildLeveled(SCUVANYA.socialSkills.negative, p.talents.sozial.negativ, "talents.sozial.negativ") },
-      { key: "wissenschaftenSozial", label: game.i18n.localize("SCUVANYA.Category.wissenschaftenSozial"), rows: buildLeveled(SCUVANYA.scienceSkills.sozial, p.talents.wissenschaften.sozial, "talents.wissenschaften.sozial") },
-      { key: "wissenschaftenNatur", label: game.i18n.localize("SCUVANYA.Category.wissenschaftenNatur"), rows: buildLeveled(SCUVANYA.scienceSkills.natur, p.talents.wissenschaften.natur, "talents.wissenschaften.natur") },
-      { key: "koerperlich", label: game.i18n.localize("SCUVANYA.Category.koerperlich"), rows: buildLeveled(SCUVANYA.physicalSkills, p.talents.koerperlich, "talents.koerperlich") },
-      { key: "sonder", label: game.i18n.localize("SCUVANYA.Category.sonder"), rows: buildLeveled(Object.keys(SCUVANYA.sonderSkills), p.talents.sonder, "talents.sonder") },
-      { key: "handwerk", label: game.i18n.localize("SCUVANYA.Category.handwerk"), rows: handwerkRows },
-      { key: "spezial", label: game.i18n.localize("SCUVANYA.Category.spezial"), rows: spezialRows },
-      { key: "kampfdisziplinen", label: game.i18n.localize("SCUVANYA.Category.kampfdisziplinen"), rows: kampfRows },
-      { key: "magiedisziplinen", label: game.i18n.localize("SCUVANYA.Category.magiedisziplinen"), rows: magieRows }
-    ];
+    // Einzeln benannte Zeilen-Arrays statt einer generischen Liste -- die Vorlage paart sie
+    // explizit genauso wie der Bogen (siehe character-sheet.hbs .cc-category-pair), Attribute
+    // und Disziplinen bewusst NICHT gepaart (siehe Konversation). Disziplinen kombiniert in
+    // EINEM 3-Spalten-Raster: 3 Kampf- oben, darunter 9 Magiedisziplinen in 3 Zeilen.
+    context.spAttributeRows = attributeRows;
+    context.spKoerperlichRows = buildLeveled(SCUVANYA.physicalSkills, p.talents.koerperlich, "talents.koerperlich");
+    context.spSpezialRows = spezialRows;
+    context.spSozialPositivRows = buildLeveled(SCUVANYA.socialSkills.positive, p.talents.sozial.positiv, "talents.sozial.positiv");
+    context.spSozialNegativRows = buildLeveled(SCUVANYA.socialSkills.negative, p.talents.sozial.negativ, "talents.sozial.negativ");
+    context.spWissenschaftenNaturRows = buildLeveled(SCUVANYA.scienceSkills.natur, p.talents.wissenschaften.natur, "talents.wissenschaften.natur");
+    context.spWissenschaftenSozialRows = buildLeveled(SCUVANYA.scienceSkills.sozial, p.talents.wissenschaften.sozial, "talents.wissenschaften.sozial");
+    context.spSonderRows = buildLeveled(Object.keys(SCUVANYA.sonderSkills), p.talents.sonder, "talents.sonder");
+    context.spHandwerkRows = handwerkRows;
+    context.spDisziplinenRows = [...kampfRows, ...magieRows];
 
     context.extraSkillRows = SCUVANYA.extraSkills.map(key => {
       const granted = (shifts[`talents.extra.${key}`] ?? 0) > 0;
@@ -531,17 +532,19 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
               amount: bonus.amount, options, selected: selections?.[bonus.key] ?? null
             });
           } else {
-            // Number(v) statt v: eine gespeicherte Zuteilung kann aus einer älteren Sitzung/
-            // einem älteren Berufsstand stammen (z.B. Pfade, die es in dieser Bündel-Version
-            // nicht mehr gibt) -- ein einzelner nicht-numerischer/undefinierter Eintrag darf
+            // Zuteilung ist ein ARRAY aus { path, points } (siehe path-resolve.mjs resolveBundles
+            // für den ausführlichen Grund: dotted-path-Objekt-Schlüssel würden von Foundrys
+            // expandObject beim Speichern zerlegt). Number(v) statt v zusätzlich als Schutz gegen
+            // eine ältere/fehlerhafte Zuteilung -- ein einzelner kaputter Eintrag darf
             // "spent"/"remaining" nie auf NaN kippen lassen (siehe Konversation).
-            const allocation = (selections?.[bonus.key] && typeof selections[bonus.key] === "object") ? selections[bonus.key] : {};
-            const spent = Object.values(allocation).reduce((s, v) => s + (Number(v) || 0), 0);
+            const allocation = Array.isArray(selections?.[bonus.key]) ? selections[bonus.key] : [];
+            const pointsByPath = new Map(allocation.map(e => [e.path, Number(e.points) || 0]));
+            const spent = allocation.reduce((s, e) => s + (Number(e.points) || 0), 0);
             const amount = Number(bonus.amount) || 0;
             decisions.push({
               key: bonus.key, kind: "distribute", eigenschaftName: eig.name, eigenschaftDescription: eig.description,
               amount, perOptionMax: bonus.perOptionMax, spent, remaining: amount - spent,
-              options: options.map(o => ({ ...o, points: Number(allocation[o.path]) || 0 }))
+              options: options.map(o => ({ ...o, points: pointsByPath.get(o.path) ?? 0 }))
             });
           }
         }
@@ -680,21 +683,24 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     const amount = Number(target.dataset.amount);
     const perOptionMax = Number(target.dataset.perOptionMax);
 
-    const current = (this.wizardData[bucket][key] && typeof this.wizardData[bucket][key] === "object")
-      ? this.wizardData[bucket][key] : {};
-    const currentPoints = current[path] ?? 0;
+    // Zuteilung als Array aus { path, points } statt eines { [path]: points }-Objekts (siehe
+    // path-resolve.mjs resolveBundles): ein Objekt-Schlüssel wie "talents.koerperlich.klettern"
+    // enthält Punkte und würde von Foundrys expandObject beim Speichern in verschachtelte
+    // Objekte zerlegt, sodass die Zuteilung beim nächsten Öffnen des Wizards leer erscheint.
+    const current = Array.isArray(this.wizardData[bucket][key]) ? this.wizardData[bucket][key] : [];
+    const currentPoints = current.find(e => e.path === path)?.points ?? 0;
     const nextPoints = Math.max(0, currentPoints + delta);
     if (perOptionMax > 0 && nextPoints > perOptionMax) return;
 
-    const otherSpent = Object.entries(current).reduce((s, [p, v]) => s + (p === path ? 0 : v), 0);
+    const otherSpent = current.reduce((s, e) => s + (e.path === path ? 0 : e.points), 0);
     if (delta > 0 && otherSpent + nextPoints > amount) {
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Warning.NoFreePoints"));
       return;
     }
 
     await this._withShiftReconciliation(() => {
-      const updated = { ...current, [path]: nextPoints };
-      if (nextPoints === 0) delete updated[path];
+      const updated = current.filter(e => e.path !== path);
+      if (nextPoints > 0) updated.push({ path, points: nextPoints });
       this.wizardData[bucket][key] = updated;
     });
     this.render();

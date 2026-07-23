@@ -692,14 +692,14 @@ export const DEFAULT_ACTIONS = [
       category: "talenteinsatz",
       tags: [],
       rollSource: "skill",
-      rollPath: "talents.wissenschaften.sozial.mythologie",
+      rollPath: "talents.wissenschaften.sozial.arkana",
       costAp: 1,
       costMana: 0,
       damageFormula: "",
       damageType: "",
       damageFromWeapon: false,
       effects: [],
-      unlockConditions: gte("talents.wissenschaften.sozial.mythologie", 3)
+      unlockConditions: gte("talents.wissenschaften.sozial.arkana", 3)
     }
   },
   {

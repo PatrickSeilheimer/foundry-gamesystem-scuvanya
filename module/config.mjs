@@ -30,7 +30,7 @@ SCUVANYA.socialSkills = {
 
 // Wissenschaftstalente: sozial und natur, beide skalieren mit INT-Mod.
 SCUVANYA.scienceSkills = {
-  sozial: ["geschichte", "gesellschaft", "kultur", "arkana", "theologie", "mythologie"],
+  sozial: ["geschichte", "gesellschaft", "kultur", "arkana", "theologie"],
   natur: ["botanik", "geologie", "mechanik", "medizin", "zoologie"]
 };
 

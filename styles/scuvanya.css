@@ -933,6 +933,14 @@
 
 .character-creation .sp-summary__available.negative { color: #d9534f; font-weight: bold; }
 
+/* Zwei Kategorien nebeneinander, wie auf dem Bogen (siehe character-sheet .cc-category-pair) --
+   Attribute und Disziplinen bewusst NICHT gepaart, siehe Konversation. */
+.character-creation .sp-category-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
 .character-creation .sp-category {
   border: 1px solid var(--scv-border);
   border-radius: 4px;
@@ -951,6 +959,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 0.2rem 0.8rem;
+}
+
+/* Disziplinen: EIN gemeinsames 3-Spalten-Raster -- 3 Kampfdisziplinen füllen exakt die erste
+   Zeile, die 9 Magiedisziplinen laufen darunter automatisch in drei weiteren Zeilen weiter
+   (siehe spDisziplinenRows: kampf zuerst, dann magie, siehe Konversation). */
+.character-creation .sp-row-grid--disziplinen {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Eigenständiges Layout statt .distribute-row-Wiederverwendung (siehe Konversation): lange

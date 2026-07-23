@@ -129,22 +129,32 @@
       <span class="sp-summary__available {{#if (lt skillPointsAvailable 0)}}negative{{/if}}">{{localize 'SCUVANYA.SkillPoints.available'}}: <strong>{{skillPointsAvailable}}</strong></span>
     </div>
 
-    {{#each skillPointCategories as |category|}}
-    <details class="sp-category" open>
-      <summary>{{category.label}}</summary>
-      <div class="sp-row-grid">
-        {{#each category.rows as |row|}}
-        <div class="sp-row">
-          <span class="sp-row__label" title="{{row.label}}{{#if row.shift}} ({{row.value}} + {{row.shift}}){{/if}}">{{row.label}}</span>
-          <a class="sp-row__btn {{#unless row.canSell}}disabled{{/unless}}" data-action="sellPoint" data-path="{{row.path}}">-</a>
-          <span class="sp-row__value">{{row.effective}}</span>
-          <a class="sp-row__btn {{#unless row.canBuy}}disabled{{/unless}}" data-action="buyPoint" data-path="{{row.path}}">+</a>
-          <span class="sp-row__cost">{{#if row.nextCost}}{{row.nextCost}} {{localize 'SCUVANYA.SkillPoints.CostHint'}}{{/if}}</span>
-        </div>
-        {{/each}}
-      </div>
-    </details>
-    {{/each}}
+    {{! Attribute + Disziplinen bewusst NICHT gepaart (siehe Konversation) -- alle anderen
+        Kategorien wie auf dem Bogen zu zweit nebeneinander (siehe .cc-category-pair dort). }}
+    {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Section.attribute') rows=spAttributeRows}}
+
+    <div class="sp-category-pair">
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.koerperlich') rows=spKoerperlichRows}}
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.spezial') rows=spSpezialRows}}
+    </div>
+
+    <div class="sp-category-pair">
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.sozialPositiv') rows=spSozialPositivRows}}
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.sozialNegativ') rows=spSozialNegativRows}}
+    </div>
+
+    <div class="sp-category-pair">
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenNatur') rows=spWissenschaftenNaturRows}}
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.wissenschaftenSozial') rows=spWissenschaftenSozialRows}}
+    </div>
+
+    <div class="sp-category-pair">
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.sonder') rows=spSonderRows}}
+      {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Category.handwerk') rows=spHandwerkRows}}
+    </div>
+
+    {{! Disziplinen: EIN 3-Spalten-Raster -- 3 Kampf- oben, danach 9 Magiedisziplinen in 3 Zeilen. }}
+    {{> "systems/scuvanya/templates/apps/parts/sp-category.hbs" title=(localize 'SCUVANYA.Tab.kampf') rows=spDisziplinenRows gridClass="sp-row-grid--disziplinen"}}
 
     <details class="sp-category" open>
       <summary>{{localize 'SCUVANYA.Category.extra'}}</summary>

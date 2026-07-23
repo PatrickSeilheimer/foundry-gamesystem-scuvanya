@@ -33,10 +33,17 @@ export function resolveBundles(bundles, selections) {
           const selected = selections?.[bonus.key];
           if (selected && bonus.options?.includes(selected)) add(selected, bonus.amount);
         } else if (bonus.kind === "distribute") {
+          // Absichtlich ein ARRAY aus { path, points } statt eines { [path]: points }-Objekts:
+          // Ziel-Pfade wie "talents.koerperlich.klettern" enthalten Punkte, und ein Punkt in
+          // einem Objekt-SCHLÜSSEL wird von Foundrys internem expandObject (läuft bei jedem
+          // Document.update()/createEmbeddedDocuments() über die kompletten Update-Daten) als
+          // verschachtelter Pfad missverstanden -- die Zuteilung würde beim Speichern in
+          // { talents: { koerperlich: { klettern: N } } } zerlegt und beim nächsten Öffnen als
+          // leer gelesen (siehe Konversation: "die frei verteilbaren Punkte sind alle auf 0").
           const allocation = selections?.[bonus.key];
-          if (allocation && typeof allocation === "object") {
-            for (const [path, points] of Object.entries(allocation)) {
-              if (bonus.options?.includes(path) && points > 0) add(path, points);
+          if (Array.isArray(allocation)) {
+            for (const entry of allocation) {
+              if (entry?.path && bonus.options?.includes(entry.path) && entry.points > 0) add(entry.path, entry.points);
             }
           }
         } else if (bonus.kind === "text" && bonus.text) {

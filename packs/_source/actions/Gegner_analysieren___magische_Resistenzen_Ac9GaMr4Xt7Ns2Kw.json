@@ -10,7 +10,7 @@
     "category": "talenteinsatz",
     "tags": [],
     "rollSource": "skill",
-    "rollPath": "talents.wissenschaften.sozial.mythologie",
+    "rollPath": "talents.wissenschaften.sozial.arkana",
     "costAp": 1,
     "costMana": 0,
     "damageFormula": "",
@@ -19,7 +19,7 @@
     "effects": [],
     "unlockConditions": {
       "type": "compare",
-      "path": "talents.wissenschaften.sozial.mythologie",
+      "path": "talents.wissenschaften.sozial.arkana",
       "operator": "gte",
       "value": 3
     }
