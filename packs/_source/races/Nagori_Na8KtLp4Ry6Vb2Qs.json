@@ -82,6 +82,7 @@
       {
         "key": "pelagori",
         "name": "Pelagori",
+        "description": "Diese Linie lebt überwiegend an Küsten, Flussdeltas und auf Inseln im offenen Meer und bewegt sich im Wasser so mühelos wie an Land.",
         "bonuses": {
           "attributeStart": {
             "spd": 1,
@@ -122,6 +123,7 @@
       {
         "key": "saurori",
         "name": "Saurori",
+        "description": "Diese im Landesinneren und in warmen Sümpfen entwickelte Unterart trägt einen kräftigeren, robusteren Körper mit verhärteter Haut.",
         "bonuses": {
           "attributeStart": {
             "str": 2,

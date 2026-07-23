@@ -98,6 +98,7 @@
       {
         "key": "lorveth",
         "name": "Lor'veth",
+        "description": "Wissenssammler, die kaum eine Bibliothek auslassen.",
         "bonuses": {
           "attributeStart": {
             "dex": -1,
@@ -144,6 +145,7 @@
       {
         "key": "noxveth",
         "name": "Nox'veth",
+        "description": "Spione und Informanten, die sich lautlos durch jede Stadt bewegen.",
         "bonuses": {
           "attributeStart": {
             "int": -1,
@@ -190,6 +192,7 @@
       {
         "key": "aureveth",
         "name": "Aure'veth",
+        "description": "Glanzsammler, die für ein seltenes Stück jedes Schloss knacken und jeden Preis verhandeln.",
         "bonuses": {
           "attributeStart": {},
           "eigenschaften": [
@@ -243,6 +246,7 @@
       {
         "key": "morveth",
         "name": "Mor'veth",
+        "description": "Mystische Nebelkrähen, die sich abseits der Städte den arkanen Künsten widmen.",
         "bonuses": {
           "attributeStart": {
             "dex": -2,

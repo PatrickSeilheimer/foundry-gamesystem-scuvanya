@@ -314,6 +314,8 @@
       "subracesHint": "Subrassen-Boni kommen zusätzlich zu Basis und Geschlecht hinzu, wenn im Erstellungs-Wizard diese Subrasse gewählt wird.",
       "subraceKey": "Interner Schlüssel",
       "subraceName": "Name",
+      "subraceDescription": "Kurzbeschreibung",
+      "subraceDescriptionHint": "Kurzer Teaser-Text, wird im Erstellungs-Wizard beim Hovern über den Subrassen-Chip angezeigt.",
       "genderImages": "Bilder je Geschlecht"
     },
 

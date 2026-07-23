@@ -62,6 +62,10 @@ export default class RaceData extends foundry.abstract.TypeDataModel {
         // blank:true, damit eine frisch per "+" angelegte Subrasse (noch ohne Name) speicherbar ist.
         key: new fields.StringField({ required: true, blank: true }),
         name: new fields.StringField({ required: true, blank: true }),
+        // Kurzer Fließtext für die Subrasse (siehe Wizard-Hover-Popup auf dem Subrassen-Chip) --
+        // bewusst kürzer/knapper als die große Rassen-description, daher ein einfaches
+        // StringField statt HTMLField (kein Rich-Text-Bedarf für einen Ein-Satz-Teaser).
+        description: new fields.StringField({ required: false, blank: true, initial: "" }),
         bonuses: new fields.SchemaField(bonusBundleSchema())
       })),
 

@@ -53,6 +53,10 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
     form: { template: "systems/scuvanya/templates/apps/character-creation.hbs", scrollable: [".wizard-body"] }
   };
 
+  // Hover-Popup für Rassen-Karten/Subrassen-Chips (siehe _wireHoverTooltips) -- vor jedem
+  // Re-Render entfernt, sonst würde bei jeder Änderung ein weiteres Element angehängt.
+  #hoverTooltipEl = null;
+
   constructor(actor, options = {}) {
     super({ id: `scuvanya-character-creation-${actor.id}`, ...options });
     this.actor = actor;
@@ -128,7 +132,10 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       id: race.id,
       name: race.name,
       img: this._genderImage(race, this.wizardData.gender),
-      category: race.system.category
+      category: race.system.category,
+      // Für das Hover-Popup auf der Rassen-Karte (siehe _wireHoverTooltips) -- die vollständige,
+      // rassenweite Beschreibung, unabhängig vom gewählten Geschlecht.
+      description: race.system.description ?? ""
     }));
     context.professions = await this._availableProfessions();
     context.selectedRace = this.wizardData.raceId ? await this._getSourceItem(this.wizardData.raceId) : null;
@@ -487,6 +494,52 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         if (output) output.textContent = value;
       });
     }
+    this._wireHoverTooltips();
+  }
+
+  /**
+   * 1-Sekunde-Hover-Popup für Rassen-Karten/Subrassen-Chips (siehe Konversation) -- dieselbe
+   * .scv-tooltip-Karte wie auf dem Charakterbogen (siehe character-sheet.mjs _wireTooltips),
+   * hier aber bewusst als eigene, einfachere Kopie: der Wizard kennt nur einen einzigen
+   * Trigger-Typ (verzögerter Hover), kein Klick-Toggle und keinen Außenklick-Handler.
+   */
+  _wireHoverTooltips() {
+    this.#hoverTooltipEl?.remove();
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "scv-tooltip";
+    this.element.appendChild(tooltip);
+    this.#hoverTooltipEl = tooltip;
+
+    const hide = () => tooltip.classList.remove("scv-tooltip--visible");
+    const show = el => {
+      const contentEl = el.querySelector(":scope > .tooltip-content");
+      if (!contentEl) return;
+      tooltip.innerHTML = contentEl.innerHTML;
+      tooltip.classList.add("scv-tooltip--visible");
+
+      const rect = el.getBoundingClientRect();
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      let left = rect.left;
+      let top = rect.bottom + 8;
+      if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
+      if (top + th > window.innerHeight - 8) top = rect.top - th - 8;
+      tooltip.style.left = `${Math.max(8, left)}px`;
+      tooltip.style.top = `${Math.max(8, top)}px`;
+    };
+
+    for (const el of this.element.querySelectorAll("[data-hover-tooltip]")) {
+      let timer = null;
+      el.addEventListener("mouseenter", () => { timer = setTimeout(() => show(el), 1000); });
+      el.addEventListener("mouseleave", () => { clearTimeout(timer); hide(); });
+    }
+  }
+
+  /** @override -- entfernt das Tooltip-Element, damit es nicht als Deko-Leiche im DOM bleibt. */
+  async close(options) {
+    this.#hoverTooltipEl?.remove();
+    return super.close(options);
   }
 
   static async #onPickRace(event, target) {
@@ -578,18 +631,19 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
       ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
       return;
     }
-    if (this.step === 3 && !this.wizardData.professionId) {
-      ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedProfession"));
-      return;
-    }
-    if (this.step === 4 && this.wizardData.professionId) {
+    if (this.step === 3) {
+      // Beruf wählen + Details sind zu EINEM Schritt zusammengelegt (siehe Konversation).
+      if (!this.wizardData.professionId) {
+        ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedProfession"));
+        return;
+      }
       const profession = await this._getSourceItem(this.wizardData.professionId);
       if (!this._decisionsComplete([profession?.system], this.wizardData.professionChoices)) {
         ui.notifications.warn(game.i18n.localize("SCUVANYA.Wizard.NeedChoice"));
         return;
       }
     }
-    if (this.step === 5) {
+    if (this.step === 4) {
       // Sicherheitsnetz: buyPoint verhindert Überkauf bereits beim Klick, aber ein Sprung zurück
       // zu Schritt 1 (Rassenwechsel) kann die Verschiebung nachträglich ändern und bereits
       // getätigte Käufe teurer machen -- vor dem Weitergehen noch einmal frisch prüfen.
@@ -599,7 +653,7 @@ export default class CharacterCreationWizard extends HandlebarsApplicationMixin(
         return;
       }
     }
-    this.step = Math.min(6, this.step + 1);
+    this.step = Math.min(5, this.step + 1);
     this.render();
   }
 

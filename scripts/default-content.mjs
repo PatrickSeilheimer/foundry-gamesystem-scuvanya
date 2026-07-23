@@ -328,6 +328,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "pelagori",
           name: "Pelagori",
+          description: "Diese Linie lebt überwiegend an Küsten, Flussdeltas und auf Inseln im offenen Meer und bewegt sich im Wasser so mühelos wie an Land.",
           bonuses: {
             attributeStart: { spd: 1, mag: -1 },
             eigenschaften: [
@@ -352,6 +353,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "saurori",
           name: "Saurori",
+          description: "Diese im Landesinneren und in warmen Sümpfen entwickelte Unterart trägt einen kräftigeren, robusteren Körper mit verhärteter Haut.",
           bonuses: {
             attributeStart: { str: 2, dex: -1, con: 1, spd: -2 },
             eigenschaften: [
@@ -481,6 +483,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "ashkari",
           name: "Ashkari",
+          description: "Ascheblütige Varkesh, in Wüsten und Vulkanregionen entwickelt: Feuer ist für dich fast ein Zuhause, Kälte trifft dich dafür härter.",
           bonuses: {
             attributeStart: { dex: -1, con: 2, mag: 1, cha: -2 },
             eigenschaften: [
@@ -505,6 +508,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "umbrari",
           name: "Umbrari",
+          description: "Schattenblütige Varkesh, über Generationen im Untergrund dicht besiedelter Städte geformt.",
           bonuses: {
             attributeStart: { dex: 1, spd: 3, mag: -1, cha: -3 },
             eigenschaften: [
@@ -541,6 +545,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "oratori",
           name: "Oratori",
+          description: "Silberzungen, die ihr volles Potential aus der Kommunikation schöpfen und je nach Ziel zu den besten oder den schlechtesten Beratern werden.",
           bonuses: {
             attributeStart: { dex: -2, int: 1, mnd: 1, mag: -1, cha: 1 },
             eigenschaften: [
@@ -697,6 +702,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "karavathi",
           name: "Karavathi",
+          description: "Ewig reisende Nomaden, denen kaum ein Ort oder eine Sitte noch fremd ist.",
           bonuses: {
             attributeStart: { str: 2, con: 2, spd: -3, cha: -1 },
             eigenschaften: [
@@ -735,6 +741,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "mercadia",
           name: "Mercadia",
+          description: "Händler und Kuriere, die aus jedem Handel das Beste herausholen.",
           bonuses: {
             attributeStart: {},
             eigenschaften: [
@@ -808,6 +815,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "lorveth",
           name: "Lor'veth",
+          description: "Wissenssammler, die kaum eine Bibliothek auslassen.",
           bonuses: {
             attributeStart: { dex: -1, int: 1 },
             eigenschaften: [
@@ -835,6 +843,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "noxveth",
           name: "Nox'veth",
+          description: "Spione und Informanten, die sich lautlos durch jede Stadt bewegen.",
           bonuses: {
             attributeStart: { int: -1, cha: 1 },
             eigenschaften: [
@@ -862,6 +871,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "aureveth",
           name: "Aure'veth",
+          description: "Glanzsammler, die für ein seltenes Stück jedes Schloss knacken und jeden Preis verhandeln.",
           bonuses: {
             attributeStart: {},
             eigenschaften: [
@@ -891,6 +901,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "morveth",
           name: "Mor'veth",
+          description: "Mystische Nebelkrähen, die sich abseits der Städte den arkanen Künsten widmen.",
           bonuses: {
             attributeStart: { dex: -2, mag: 3, cha: -1 },
             eigenschaften: [
@@ -979,6 +990,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "rosaris",
           name: "Rosaris",
+          description: "Florathi Rosaris tragen eine Rosenblüte am Kopf: Schönheit, Charisma und Eleganz in Person.",
           bonuses: {
             attributeStart: { str: 1, int: -1, mnd: -1, mag: -2, cha: 3 },
             eigenschaften: [
@@ -997,6 +1009,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "lotaris",
           name: "Lotaris",
+          description: "Florathi Lotaris tragen eine Lotusblüte am Kopf: spirituelle Heiler, versiert in Meditation und Magie.",
           bonuses: {
             attributeStart: { str: -1, mag: 1 },
             eigenschaften: [
@@ -1015,6 +1028,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "lavaris",
           name: "Lavaris",
+          description: "Florathi Lavaris tragen eine Lavendelblüte am Kopf: eine beruhigende Persönlichkeit, oft als Alchemisten und Parfümeure tätig.",
           bonuses: {
             attributeStart: { str: -1, con: -2, int: 1, mnd: 1, cha: 1 },
             eigenschaften: [
@@ -1036,6 +1050,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "helioris",
           name: "Helioris",
+          description: "Florathi Helioris tragen eine Sonnenblume am Kopf: optimistisch und voller Energie.",
           bonuses: {
             attributeStart: { con: 1, int: -1, mnd: 1, mag: -2, cha: 1 },
             eigenschaften: [
@@ -1060,6 +1075,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "quercaris",
           name: "Quercaris",
+          description: "Florathi Quercaris tragen eine Art verzweigte Baumkrone auf dem Kopf: hart gesotten, stabil und oft groß und breit gebaut.",
           bonuses: {
             attributeStart: { str: 3, con: 2, int: -2, mnd: -1, mag: -2 },
             eigenschaften: [
@@ -1078,6 +1094,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "dionaris",
           name: "Dionaris",
+          description: "Florathi Dionaris tragen keine Blüte, sondern Zacken und Zähne an mehreren Körperstellen: die fleischfressende Art der Florathi.",
           bonuses: {
             attributeStart: { str: 3, dex: 1, con: 1, spd: 2, int: -2, mnd: -2, mag: -3 },
             eigenschaften: [
@@ -1093,6 +1110,7 @@ export const DEFAULT_ITEMS = [
         {
           key: "mycelio",
           name: "Mycelio",
+          description: "Florathi Mycelio tragen weder Blüten noch Blätter, sondern sind pilzartig gewachsen und praktisch immun gegen jedes Toxin.",
           bonuses: {
             attributeStart: { con: -1, mnd: 1, mag: 1, cha: -1 },
             eigenschaften: [

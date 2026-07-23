@@ -247,6 +247,10 @@
         <input type="text" name="system.subraces.{{subraceIndex}}.name" value="{{subrace.name}}" placeholder="{{localize 'SCUVANYA.Race.subraceName'}}">
         <a data-action="removeSubrace" data-subrace-index="{{subraceIndex}}">{{localize 'SCUVANYA.Delete'}}</a>
       </summary>
+      <div class="form-group">
+        <label>{{localize 'SCUVANYA.Race.subraceDescription'}}</label>
+        <input type="text" name="system.subraces.{{subraceIndex}}.description" value="{{subrace.description}}" placeholder="{{localize 'SCUVANYA.Race.subraceDescriptionHint'}}">
+      </div>
       {{> "systems/scuvanya/templates/item/parts/bonus-bundle.hbs" prefix=(concat "system.subraces." subraceIndex ".bonuses") bundle=subrace.bonuses config=../config}}
     </details>
     {{/each}}

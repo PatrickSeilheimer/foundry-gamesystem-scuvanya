@@ -124,6 +124,7 @@
       {
         "key": "rosaris",
         "name": "Rosaris",
+        "description": "Florathi Rosaris tragen eine Rosenblüte am Kopf: Schönheit, Charisma und Eleganz in Person.",
         "bonuses": {
           "attributeStart": {
             "str": 1,
@@ -156,6 +157,7 @@
       {
         "key": "lotaris",
         "name": "Lotaris",
+        "description": "Florathi Lotaris tragen eine Lotusblüte am Kopf: spirituelle Heiler, versiert in Meditation und Magie.",
         "bonuses": {
           "attributeStart": {
             "str": -1,
@@ -185,6 +187,7 @@
       {
         "key": "lavaris",
         "name": "Lavaris",
+        "description": "Florathi Lavaris tragen eine Lavendelblüte am Kopf: eine beruhigende Persönlichkeit, oft als Alchemisten und Parfümeure tätig.",
         "bonuses": {
           "attributeStart": {
             "str": -1,
@@ -224,6 +227,7 @@
       {
         "key": "helioris",
         "name": "Helioris",
+        "description": "Florathi Helioris tragen eine Sonnenblume am Kopf: optimistisch und voller Energie.",
         "bonuses": {
           "attributeStart": {
             "con": 1,
@@ -268,6 +272,7 @@
       {
         "key": "quercaris",
         "name": "Quercaris",
+        "description": "Florathi Quercaris tragen eine Art verzweigte Baumkrone auf dem Kopf: hart gesotten, stabil und oft groß und breit gebaut.",
         "bonuses": {
           "attributeStart": {
             "str": 3,
@@ -300,6 +305,7 @@
       {
         "key": "dionaris",
         "name": "Dionaris",
+        "description": "Florathi Dionaris tragen keine Blüte, sondern Zacken und Zähne an mehreren Körperstellen: die fleischfressende Art der Florathi.",
         "bonuses": {
           "attributeStart": {
             "str": 3,
@@ -329,6 +335,7 @@
       {
         "key": "mycelio",
         "name": "Mycelio",
+        "description": "Florathi Mycelio tragen weder Blüten noch Blätter, sondern sind pilzartig gewachsen und praktisch immun gegen jedes Toxin.",
         "bonuses": {
           "attributeStart": {
             "con": -1,

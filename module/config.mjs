@@ -80,7 +80,6 @@ SCUVANYA.extraSkills = [
 // (siehe "granted" -- Rassen-/Berufsboni sind die neue Norm, keine Voraussetzung greift dort).
 SCUVANYA.extraSkillDependencies = {
   schreiben: "lesen",
-  lippenLesen: "lesen",
   kutscheFahren: "reiten"
 };
 

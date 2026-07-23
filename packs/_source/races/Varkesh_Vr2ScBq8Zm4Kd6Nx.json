@@ -136,6 +136,7 @@
       {
         "key": "ashkari",
         "name": "Ashkari",
+        "description": "Ascheblütige Varkesh, in Wüsten und Vulkanregionen entwickelt: Feuer ist für dich fast ein Zuhause, Kälte trifft dich dafür härter.",
         "bonuses": {
           "attributeStart": {
             "dex": -1,
@@ -179,6 +180,7 @@
       {
         "key": "umbrari",
         "name": "Umbrari",
+        "description": "Schattenblütige Varkesh, über Generationen im Untergrund dicht besiedelter Städte geformt.",
         "bonuses": {
           "attributeStart": {
             "dex": 1,
@@ -244,6 +246,7 @@
       {
         "key": "oratori",
         "name": "Oratori",
+        "description": "Silberzungen, die ihr volles Potential aus der Kommunikation schöpfen und je nach Ziel zu den besten oder den schlechtesten Beratern werden.",
         "bonuses": {
           "attributeStart": {
             "dex": -2,

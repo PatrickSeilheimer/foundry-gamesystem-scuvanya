@@ -95,6 +95,7 @@
       {
         "key": "karavathi",
         "name": "Karavathi",
+        "description": "Ewig reisende Nomaden, denen kaum ein Ort oder eine Sitte noch fremd ist.",
         "bonuses": {
           "attributeStart": {
             "str": 2,
@@ -183,6 +184,7 @@
       {
         "key": "mercadia",
         "name": "Mercadia",
+        "description": "Händler und Kuriere, die aus jedem Handel das Beste herausholen.",
         "bonuses": {
           "attributeStart": {},
           "eigenschaften": [
